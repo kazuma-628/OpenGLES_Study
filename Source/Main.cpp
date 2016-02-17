@@ -1,6 +1,5 @@
 #include <Main.hpp>
 
-
 ///////////////////////////////////////////////////////////
 //	OpenGLの初期化を行う
 //
@@ -39,7 +38,8 @@ GLFWwindow *const OpenGLES_init()
 ///////////////////////////////////////////////////////////
 //	シェーダーソースの読み込みを行う
 //
-GLint Shader_SourceLoad(const char* shader_source, const GLenum GL_XXXX_SHADER) {
+GLint Shader_SourceLoad(const char* shader_source, const GLenum GL_XXXX_SHADER)
+{
 
 	const GLint shader = glCreateShader(GL_XXXX_SHADER);
 	assert(GL_NO_ERROR == glGetError());
@@ -108,7 +108,8 @@ void Shader_FileLoad(const char* shader_name, char* shader_source, int source_si
 ///////////////////////////////////////////////////////////
 //	頂点・フラグメントシェーダーをリンクし、ShaderProgramを作成する
 //
-GLuint Shader_CreateProgram(const char* vertex_shader_file, const char* fragment_shader_file) {
+GLuint Shader_CreateProgram(const char* vertex_shader_file, const char* fragment_shader_file)
+{
 
 	//ファイルからソースを読み込む（「Shader」フォルダに格納されている必要があります）
 	char vertex_shader_source[SHADER_STRING_ALL_MAX] = { 0 };		//頂点シェーダ
