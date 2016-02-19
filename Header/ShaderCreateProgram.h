@@ -1,15 +1,10 @@
+#ifndef SHADERCREATEPROGRAM_H
+#define SHAdERCREATEPROGRAM_H
+
 //include定義
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <string.h>
-#include <math.h>
-#include <glew.h>
-#include <glfw3.h>
+#include "Common.h"
 
 //Define定義
-#define WINDOW_HEIGHT				480			//ウィンドウサイズ（高さ）
-#define WINDOW_WIDTH				640			//ウィンドウサイズ（幅）
 #define SHADER_STRING_LINE_MAX		256			//シェーダーの1行の最大文字数
 #define SHADER_STRING_ALL_MAX		10240		//シェーダーの全文の最大文字数
 #define SHADER_FILE_NAME_MAX		64			//シェーダーのファイル名最大文字数（ディレクトリ名含む）
@@ -59,3 +54,5 @@ void Shader_FileLoad(const char* shader_file_name, char* shader_source, int sour
 *	　なし
 *-------------------------------------------------------------------------------*/
 GLint Shader_SourceLoad(const char* shader_source, const GLuint gl_xxxx_shader);
+
+#endif

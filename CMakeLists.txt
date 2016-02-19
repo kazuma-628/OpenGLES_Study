@@ -21,9 +21,12 @@ add_executable(
 
 #「Source File」を指定する
 	Source/Main.cpp
+	Source/ShaderCreateProgram.cpp
 
 #「Header File」を指定する
-	Header/Main.hpp
+	Header/Common.h
+	Header/Main.h
+	Header/ShaderCreateProgram.h
 
 #「Shader File」を指定します
 	Shader/Main.frag
@@ -51,10 +54,10 @@ set_target_properties(
 #############################################
 #「Visual Studio上でのフォルダ」を指定する
 #############################################
-source_group(Resource Resource)
-source_group(Source Source)
-source_group(Header Header)
-source_group(Shader Shader)
+source_group(Resource REGULAR_EXPRESSION Resource)
+source_group(Shader REGULAR_EXPRESSION Shader)
+source_group(Source REGULAR_EXPRESSION Source)
+source_group(Header REGULAR_EXPRESSION Header)
 
 #############################################
 #「インクルードするヘッダーの場所」を指定する
