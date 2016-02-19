@@ -15,6 +15,10 @@ add_executable(
 # 「プロジェクト名」を指定する
 	Main
 
+#「Resource File」を指定します
+	Resource/ExeIcon.rc
+	Resource/ExeIcon.ico
+
 #「Source File」を指定する
 	Source/Main.cpp
 
@@ -47,6 +51,7 @@ set_target_properties(
 #############################################
 #「Visual Studio上でのフォルダ」を指定する
 #############################################
+source_group(Resource Resource)
 source_group(Source Source)
 source_group(Header Header)
 source_group(Shader Shader)
