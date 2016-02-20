@@ -22,23 +22,31 @@ GLuint Shader_CreateProgram(const char* vertex_shader_file, const char* fragment
 	//ファイルからソースを読み込む（「Shader」フォルダに格納されている必要があります）
 	char vertex_shader_source[SHADER_STRING_ALL_MAX] = { 0 };		//頂点シェーダ
 	Shader_FileLoad(vertex_shader_file, vertex_shader_source, SHADER_STRING_ALL_MAX);
-	char fragment_shader_source[SHADER_STRING_ALL_MAX] = { 0 };	//フラグメントシェーダ
-	Shader_FileLoad(fragment_shader_file, fragment_shader_source, SHADER_STRING_ALL_MAX);
-
 	//ソースをアップロードする
 	const GLuint vertex_shader = Shader_SourceLoad(vertex_shader_source, GL_VERTEX_SHADER);			//頂点シェーダ
+
+	//ファイルからソースを読み込む（「Shader」フォルダに格納されている必要があります）
+	char fragment_shader_source[SHADER_STRING_ALL_MAX] = { 0 };		//フラグメントシェーダ
+	Shader_FileLoad(fragment_shader_file, fragment_shader_source, SHADER_STRING_ALL_MAX);
+	//ソースをアップロードする
 	const GLuint fragment_shader = Shader_SourceLoad(fragment_shader_source, GL_FRAGMENT_SHADER);	//フラグメントシェーダ
 
-	//Programの生成
+	//プログラムオブジェクトの生成
 	const GLuint program = glCreateProgram();
-	assert(GL_NO_ERROR == glGetError());
-	assert(program != 0);
+	if (GL_NO_ERROR != glGetError() || 0 == program)
+	{
+		ERROR_MESSAGE("プログラムオブジェクトの作成に失敗しました。");
+	}
 
 	glAttachShader(program, vertex_shader);		// バーテックスシェーダーとプログラムを関連付ける
 	glAttachShader(program, fragment_shader);	// フラグメントシェーダーとプログラムを関連付ける
-	assert(GL_NO_ERROR == glGetError());
+	if (GL_NO_ERROR != glGetError())
+	{
+		ERROR_MESSAGE("シェーダーとシェーダープログラムの関連付けに失敗しました。");
+	}
 
-	// コンパイルを行う
+	// シェーダープログラムのリンクを行う
+	printf("シェーダープログラムのリンクを開始します... ");
 	glLinkProgram(program);
 
 	// リンクエラーをチェックする
@@ -52,11 +60,18 @@ GLuint Shader_CreateProgram(const char* vertex_shader_file, const char* fragment
 		if (infoLen > 1) {
 			GLchar *message = (GLchar*)calloc(infoLen, sizeof(GLchar));
 			glGetProgramInfoLog(program, infoLen, NULL, message);
+
+			//エラーメッセージ表示
+			printf("\n\nリンクエラーの情報は以下です。\n");
 			printf("%s", message);
 			free((void*)message);
 		}
 	}
-	assert(linkSuccess == GL_TRUE);
+	if (GL_TRUE != linkSuccess)
+	{
+		ERROR_MESSAGE("シェーダープログラムのリンクに失敗しました。");
+	}
+	printf("正常完了\n");
 
 	// リンク済みのため、個々のシェーダーオブジェクトの解放フラグを立てる
 	glDeleteShader(vertex_shader);
@@ -87,17 +102,26 @@ void Shader_FileLoad(const char* shader_file_name, char* shader_source, int sour
 	strcat_s(shader_dir_file_name, shader_file_name);
 
 	//ファイルのオープン
-	assert(0 == fopen_s(&fp, shader_dir_file_name, "r"));
+	printf("「%s」シェーダーファイルの読み込みを開始します... ", shader_file_name);
+	if(0 != fopen_s(&fp, shader_dir_file_name, "r"))
+	{
+		ERROR_MESSAGE("シェーダーファイルのオープンに失敗しました");
+	}
 
 	//ファイルの読み込み
 	while (fgets(String_Line, sizeof(String_Line), fp) != NULL)
 	{
 		//1行つづ読み込むので文字列を結合
-		assert(0 == strcat_s(shader_source, source_size, String_Line));
+		if (0 != strcat_s(shader_source, source_size, String_Line))
+		{
+			ERROR_MESSAGE("ファイルの読み込みに失敗しました。");
+		}
 	}
 
 	//ファイルクローズ
 	fclose(fp);
+
+	printf("正常完了\n");
 }
 
 
@@ -113,10 +137,18 @@ void Shader_FileLoad(const char* shader_file_name, char* shader_source, int sour
 GLint Shader_SourceLoad(const char* shader_source, const GLuint gl_xxxx_shader)
 {
 
+	//シェーダーオブジェクトの生成
 	const GLint shader = glCreateShader(gl_xxxx_shader);
-	assert(GL_NO_ERROR == glGetError());
+	if (GL_NO_ERROR != glGetError())
+	{
+		ERROR_MESSAGE("シェーダーオブジェクトの作成に失敗しました");
+	}
 
+	//ソースプログラムを読み込む
 	glShaderSource(shader, 1, &shader_source, NULL);
+
+	//シェーダーのコンパイルを開始
+	printf("シェーダーのコンパイルを開始します... ");
 	glCompileShader(shader);
 
 	// コンパイルエラーをチェックする
@@ -130,21 +162,21 @@ GLint Shader_SourceLoad(const char* shader_source, const GLuint gl_xxxx_shader)
 		if (infoLen > 1) {
 			GLchar *message = (GLchar*)calloc(infoLen, sizeof(GLchar));
 			glGetShaderInfoLog(shader, infoLen, NULL, message);
-			if (GL_VERTEX_SHADER == gl_xxxx_shader)
-			{
-				printf("GL_VERTEX_SHADER ERROR\n");
-			}
-			else
-			{
-				printf("GL_FRAGMENT_SHADER ERROR\n");
-			}
+
+			//エラーメッセージ表示
+			printf("\n\nコンパイルエラーの情報は以下です。\n");
 			printf("%s", message);
 			free((void*)message);
 		}
 	}
 
 	// コンパイル失敗していたらここでプログラムを停止する
-	assert(GL_TRUE == compileSuccess);
+	if(GL_TRUE != compileSuccess)
+	{
+		ERROR_MESSAGE("シェーダーのコンパイルに失敗しました。");
+	}
+
+	printf("正常完了\n");
 
 	return shader;
 }
