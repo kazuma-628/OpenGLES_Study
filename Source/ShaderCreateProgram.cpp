@@ -71,7 +71,7 @@ GLuint Shader_CreateProgram(const char* vertex_shader_file, const char* fragment
 	{
 		ERROR_MESSAGE("シェーダープログラムのリンクに失敗しました。");
 	}
-	printf("正常完了\n");
+	printf("完了\n");
 
 	// リンク済みのため、個々のシェーダーオブジェクトの解放フラグを立てる
 	glDeleteShader(vertex_shader);
@@ -121,7 +121,7 @@ void Shader_FileLoad(const char* shader_file_name, char* shader_source, int sour
 	//ファイルクローズ
 	fclose(fp);
 
-	printf("正常完了\n");
+	printf("完了\n");
 }
 
 
@@ -176,7 +176,7 @@ GLint Shader_SourceLoad(const char* shader_source, const GLuint gl_xxxx_shader)
 		ERROR_MESSAGE("シェーダーのコンパイルに失敗しました。");
 	}
 
-	printf("正常完了\n");
+	printf("完了\n");
 
 	return shader;
 }

@@ -124,7 +124,7 @@ GLFWwindow *const OpenGLES_init()
 	{
 		ERROR_MESSAGE("GLFWの初期化に失敗しました");
 	}
-	printf("正常完了\n");
+	printf("完了\n");
 
 	//プログラム終了時の処理を登録する（GLFWの終了処理をする）
 	atexit(glfwTerminate);
@@ -152,7 +152,7 @@ GLFWwindow *const OpenGLES_init()
 					  "設定では、OpenGLES3.0に対応するOpenGL4.3を設定しています。\n"\
 					  "お使いの環境が対応しているかネットなどで調べてみてください。");
 	}
-	printf("正常完了\n");
+	printf("完了\n");
 
 	// 作成したウィンドウをOpenGLの処理対象にする
 	glfwMakeContextCurrent(window);
@@ -164,7 +164,7 @@ GLFWwindow *const OpenGLES_init()
 	{
 		ERROR_MESSAGE("GLEWの初期化に失敗しました");
 	}
-	printf("正常完了\n");
+	printf("完了\n");
 
 	// カラーバッファの入れ替えタイミング（通常は1を入力）
 	glfwSwapInterval(1);
