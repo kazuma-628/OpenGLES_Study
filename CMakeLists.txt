@@ -15,7 +15,7 @@ add_executable(
 # 「プロジェクト名」を指定する
 	Main
 
-#「Resource File」を指定します
+#「Resource File」を指定する
 	Resource/ExeIcon.rc
 	Resource/ExeIcon.ico
 
@@ -28,7 +28,7 @@ add_executable(
 	Header/Main.h
 	Header/ShaderCreateProgram.h
 
-#「Shader File」を指定します
+#「Shader File」を指定する
 	Shader/Main.frag
 	Shader/Main.vert
 )
