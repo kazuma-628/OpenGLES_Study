@@ -28,6 +28,11 @@
 　※画面下部の選択肢は何もせずにそのままでOKです。
 　「Finish」を押して正常終了すれば「Configuring done」が表示されます。
 　
+　「CMAKE_CXX_COMPILER could be fpimd.」というエラーが表示された場合は、
+　C++開発ができるVisual Studioのバージョンが正しく選択されていません、
+　（選択したバージョンがインストールされていないか、C++の開発環境が含まれていません）
+　「メニューバー」の「File」→「Delete Chash」を押してから、本項目の最初からやり直してください。
+　
 　次に先ほど押下した「Configure」の隣にある「Generate」を押下します。
 　正常終了すれば「Generating done」が表示されます。
 　
