@@ -4,6 +4,10 @@
  *　まだ作り始めで何もできませんが（最低限の動作確認しかできません）、
  *	今後、行列を簡単に設定できるようにしたり、マウスでの操作など様々な機能を提供していく予定です。
  *
+ *	変数名について
+ *	・「 p_ 」で始まるものは関数の引数（パラメーター）を表しています。
+ *	・「 m_ 」で始まるものはクラスの変数（メンバ）を表しています。
+ *
  *	DEBUG用のメッセージ処理について
  *	・ERROR_MESSAGE("ここにテキストを記述します");	//続行不可能なエラーが発生した場合、メッセージボックスを表示します
 	・printf("ここにテキストを記述します");			//続行不可能なエラー以外はprintfで普通に表示してください
@@ -25,25 +29,19 @@ void main(void)
 	//OpenGLの初期化 と ウィンドウハンドルの取得
 	GLFWwindow *const window = OpenGLES_init();
 
+	//Mainシェーダー用のオブジェクト生成
+	ShaderManager *MainShader = new ShaderManager;
+
 	//シェーダーの読み込みを行う
 	//「Shader」フォルダに格納されている必要があります。
-	GLint shader_program = CreateShaderProgram("Main.vert", "Main.frag");
+	MainShader->CreateShaderProgram("Main.vert", "Main.frag");
+	
+	GLint attr_pos = MainShader->GetAttribLocation("attr_pos");
 
-	GLint attr_pos = glGetAttribLocation(shader_program, "attr_pos");
-	glewExperimental = GL_TRUE;
-	if (attr_pos < 0)
-	{
-		ERROR_MESSAGE("シェーダー変数[attr_pos]の読み込みに失敗しました。");
-	}
-
-	GLint attr_color = glGetAttribLocation(shader_program, "attr_color");
-	if (attr_color < 0)
-	{
-		ERROR_MESSAGE("シェーダー変数[attr_color]の読み込みに失敗しました。");
-	}
+	GLint attr_color = MainShader->GetAttribLocation("attr_color");
 
 	// シェーダープログラムの利用を開始する
-	glUseProgram(shader_program);
+	glUseProgram(MainShader->GetShaderProgram());
 	if (GL_NO_ERROR != glGetError())
 	{
 		ERROR_MESSAGE("シェーダープログラムの利用に失敗しました。");
@@ -81,6 +79,7 @@ void main(void)
 	};
 
 
+
 	//背景色指定
 	glClearColor(0.0f, 0.0f, 0.9f, 1.0f);
 
@@ -105,6 +104,9 @@ void main(void)
 		//イベント取り出し
 		glfwPollEvents();
 	}
+
+	//終了処理
+	delete MainShader;
 }
 
 /*-------------------------------------------------------------------------------
@@ -158,11 +160,11 @@ GLFWwindow *const OpenGLES_init()
 	glfwMakeContextCurrent(window);
 
 	// GLEWを初期化する
-	printf("GLFWの初期化を開始します... ");
+	printf("GLEWの初期化を開始します... ");
 	glewExperimental = GL_TRUE;
 	if (GLEW_OK != glewInit())
 	{
-		ERROR_MESSAGE("GLEWの初期化に失敗しました");
+		ERROR_MESSAGE("GLEWの初期化に失敗しました。");
 	}
 	printf("完了\n");
 
