@@ -27,7 +27,7 @@ void main(void)
 
 	//シェーダーの読み込みを行う
 	//「Shader」フォルダに格納されている必要があります。
-	GLint shader_program = Shader_CreateProgram("Main.vert", "Main.frag");
+	GLint shader_program = CreateShaderProgram("Main.vert", "Main.frag");
 
 	GLint attr_pos = glGetAttribLocation(shader_program, "attr_pos");
 	glewExperimental = GL_TRUE;

@@ -16,7 +16,7 @@
 *	戻り値
 *	　リンク済みのプログラム
 *-------------------------------------------------------------------------------*/
-GLuint Shader_CreateProgram(const char* vertex_shader_file, const char* fragment_shader_file)
+GLuint CreateShaderProgram(const char* vertex_shader_file, const char* fragment_shader_file)
 {
 
 	//ファイルからソースを読み込む（「Shader」フォルダに格納されている必要があります）

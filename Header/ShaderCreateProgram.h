@@ -30,7 +30,7 @@ GLFWwindow *const OpenGLES_init();
 *	戻り値
 *	　リンク済みのプログラム
 *-------------------------------------------------------------------------------*/
-GLuint Shader_CreateProgram(const char* vertex_shader_file, const char* fragment_shader_file);
+GLuint CreateShaderProgram(const char* vertex_shader_file, const char* fragment_shader_file);
 
 /*-------------------------------------------------------------------------------
 *	関数説明
