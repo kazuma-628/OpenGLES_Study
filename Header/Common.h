@@ -18,7 +18,7 @@
 *	　本関数は外部からユーザーが使うことはありません。
 *	　エラーメッセージを表示したい場合は、「ERROR_MESSAGE」マクロを使用してしてください。
 *
-*	　続行不可能なエラーが発生した場合、メッセージボックスを表示する関数です。
+*	　続行不可能なエラーが発生した場合、メッセージボックスを表示して、自滅リセットする関数です。
 *	　
 *	引数
 *	　Message	：[I/ ]　表示したいエラーメッセージ
@@ -31,7 +31,7 @@
 #define ERR_ALL_MES_MAX 512		//エラーメッセージの全文の最大文字数
 #define ERR_TMP_MES_MAX 256		//エラーメッセージのテンプ領域の最大文字数
 
-void inline error_message_func(char* Message, char* File, int Line)
+inline void error_message_func(char* Message, char* File, int Line)
 {
 	char All_Message[ERR_ALL_MES_MAX] = { 0 };
 	char tmp_char[ERR_TMP_MES_MAX] = { 0 };
@@ -48,7 +48,13 @@ void inline error_message_func(char* Message, char* File, int Line)
 
 	//メッセージボックス表示
 	MessageBox(NULL, All_Message, "Debug Message", MB_OK | MB_ICONSTOP);
-	exit(EXIT_FAILURE);
+
+	//デバックで呼び出し履歴が分かるように自滅リセット
+	//エラーが発生したら「中断（デバッグの停止じゃない）」して、
+	//メニューバーの「ウィンドウ」→「デバッグ」→「呼び出し履歴」で関数コール順序が見れるます。
+	free((void*)0xFF);		
+	
+	exit(EXIT_FAILURE);		//プログラムを終了する（自滅リセットでここまで来ることはないと思うけど。。。）
 }
 
 #endif
