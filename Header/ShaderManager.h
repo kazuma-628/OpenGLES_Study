@@ -15,10 +15,10 @@ class ShaderManager
 public:
 
 	//コンストラクタ
-	ShaderManager::ShaderManager();
+	ShaderManager();
 
 	//デストラクタ
-	ShaderManager::~ShaderManager();
+	~ShaderManager();
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -43,15 +43,32 @@ public:
 	*-------------------------------------------------------------------------------*/
 	GLint GetAttribLocation(const GLchar* p_attribute_name);
 
+	/*-------------------------------------------------------------------------------
+	*	関数説明
+	*	　Uniform変数のロケーションIDを生成（ほぼ glGetUniformLocation と同じです）
+	*	　分かりやすいように引数を少なくしたのと、エラー管理を一元化した点が違うのみです。
+	*	引数
+	*	　p_uniform_name			：[I/ ]　シェーダーで使用するUniform変数の名前
+	*	戻り値
+	*	　なし
+	*-------------------------------------------------------------------------------*/
+	GLint GetUniformLocation(const GLchar* p_uniform_name);
+
+	/*-------------------------------------------------------------------------------
+	*	関数説明
+	*	　シェーダープログラムの利用を開始する（ほぼ glUseProgram と同じです）
+	*	　分かりやすいように引数を少なくしたのと、エラー管理を一元化した点が違うのみです。
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　なし
+	*-------------------------------------------------------------------------------*/
+	void UseProgram(void);
+
 	//シェーダープログラム返却
-	inline GLint GetShaderProgram()	{ return m_ShaderProgram; }
+	inline GLint GetShaderProgram(void)	{ return m_ProgramObject; }
 
 private:
-
-	//変数定義
-	GLint m_ShaderProgram;		//プログラムオブジェクト
-	char m_vertex_shader_file[SHADER_FILE_NAME_MAX];	//バーテックスシェーダーファイル名
-	char m_fragment_shader_file[SHADER_FILE_NAME_MAX];	//フラグメントシェーダーファイル名
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -75,5 +92,10 @@ private:
 	*	　なし
 	*-------------------------------------------------------------------------------*/
 	GLint Shader_SourceLoad(const char* p_shader_source, const GLuint p_gl_xxxx_shader);
+
+	//変数定義
+	GLint m_ProgramObject;		//プログラムオブジェクト
+	char m_vertex_shader_file[SHADER_FILE_NAME_MAX];	//バーテックスシェーダーファイル名
+	char m_fragment_shader_file[SHADER_FILE_NAME_MAX];	//フラグメントシェーダーファイル名
 };
 #endif

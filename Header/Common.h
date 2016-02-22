@@ -12,6 +12,9 @@
 //続行不可能なエラーが発生した場合のメッセージ出力用定義
 #define ERROR_MESSAGE(Message) (error_message_func(Message, __FILE__ ,__LINE__))
 
+//Define定義
+#define WINDOW_HEIGHT				480			//ウィンドウサイズ（高さ）
+#define WINDOW_WIDTH				640			//ウィンドウサイズ（幅）
 
 /*-------------------------------------------------------------------------------
 *	関数説明

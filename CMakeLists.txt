@@ -21,12 +21,14 @@ add_executable(
 
 #「Source File」を指定する
 	Source/Main.cpp
-	Source/ShaderCreateProgram.cpp
+	Source/MainDraw.cpp
+	Source/ShaderManager.cpp
 
 #「Header File」を指定する
 	Header/Common.h
 	Header/Main.h
-	Header/ShaderCreateProgram.h
+	Header/MainDraw.h
+	Header/ShaderManager.h
 
 #「Shader File」を指定する
 	Shader/Main.frag

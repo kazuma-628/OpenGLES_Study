@@ -2,11 +2,7 @@
 #define MAIN_H
 
 #include "Common.h"
-
-//Define定義
-#define WINDOW_HEIGHT				480			//ウィンドウサイズ（高さ）
-#define WINDOW_WIDTH				640			//ウィンドウサイズ（幅）
-
+#include "MainDraw.h"
 
 //関数定義
 /*-------------------------------------------------------------------------------
