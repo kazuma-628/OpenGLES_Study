@@ -4,6 +4,7 @@
 //include定義
 #include "Common.h"
 #include "ShaderManager.h"
+#include "Matrix.h"
 
 //Define定義
 
@@ -43,5 +44,9 @@ private:
 	ShaderManager *m_MainShader;		//メインシェーダーオブジェクト
 	GLint m_attr_pos;					//頂点データ
 	GLint m_attr_color;					//カラーデータ
+	GLint m_move_matrix;				//マトリックスデータ
+
+	float move_x;						//移動量を管理する変数（X値）
+	float move_y;						//移動量を管理する変数（Y値）
 };
 #endif

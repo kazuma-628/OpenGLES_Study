@@ -3,13 +3,18 @@
 //コンストラクタ
 MainDraw::MainDraw()
 {
-	//Mainシェーダー用のオブジェクト生成
+	//Mainシェーダー管理用のオブジェクト生成
 	m_MainShader = new ShaderManager;
+
+	//移動量管理の変数初期化
+	move_x = 0;
+	move_y = 0;
 }
 
 //デストラクタ
 MainDraw::~MainDraw()
 {
+	//Mainシェーダー管理用のオブジェクト破棄
 	delete m_MainShader;
 }
 
@@ -33,6 +38,9 @@ void MainDraw::Prep()
 	//シェーダー内で使用する変数を取得します（カラーデータ）
 	m_attr_color = m_MainShader->GetAttribLocation("attr_color");
 
+	//シェーダー内で使用する変数を取得します（マトリックスデータ）
+	m_move_matrix = m_MainShader->GetUniformLocation("move_matrix");
+
 }
 
 /*-------------------------------------------------------------------------------
@@ -47,6 +55,22 @@ void MainDraw::Draw(GLFWwindow *const p_window)
 {
 	// シェーダープログラムの利用を開始する
 	m_MainShader->UseProgram();
+
+	//オブジェクトを移動させるための行列を宣言
+	Matrix Move;
+
+	//指定量移動させる
+	Move.Translate(move_x, move_y, 0);
+
+	//移動量を増加させる。
+	move_x = move_x + 0.001;
+	move_y = move_y + 0.001;
+
+	//値をリセットする（動作確認用の一時的なプログラム）
+	if (move_x > 1.0 || move_y > 1.0)
+	{
+		move_x = move_y = 0;
+	}
 
 	//シェーダーの変数を有効化
 	glEnableVertexAttribArray(m_attr_pos);
@@ -91,6 +115,7 @@ void MainDraw::Draw(GLFWwindow *const p_window)
 	//変数を転送
 	glVertexAttribPointer(m_attr_pos, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)position);
 	glVertexAttribPointer(m_attr_color, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, color);
+	glUniformMatrix4fv(m_move_matrix, 1, GL_FALSE, Move.GetMatrix());
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 	//描画処理
