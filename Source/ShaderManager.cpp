@@ -11,7 +11,8 @@ ShaderManager::ShaderManager()
 //デストラクタ
 ShaderManager::~ShaderManager()
 {
-	//特に何もしない
+	//プログラムオブジェクトを削除する
+	glDeleteProgram(m_ProgramObject);
 }
 
 /*-------------------------------------------------------------------------------
