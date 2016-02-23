@@ -60,11 +60,13 @@ void MainDraw::Draw(GLFWwindow *const p_window)
 	Matrix Move;
 
 	//指定量移動させる
-	Move.Translate(move_x, move_y, 0);
+	Move.Translate(move_x, move_y, 0.5);
+	Move.Scale(move_x, move_y, 0.5);
+	Move.Rotate(1000 * move_x * move_y, 1.0, 0.0, 0.0);
 
 	//移動量を増加させる。
-	move_x = move_x + 0.001;
-	move_y = move_y + 0.001;
+	move_x = move_x + 0.001f;
+	move_y = move_y + 0.001f;
 
 	//値をリセットする（動作確認用の一時的なプログラム）
 	if (move_x > 1.0 || move_y > 1.0)
@@ -81,13 +83,13 @@ void MainDraw::Draw(GLFWwindow *const p_window)
 	const GLfloat position[] =
 	{
 		// v0
-		-0.5f, 0.5f,
+		-0.8f, 0.0f,
 		// v1
-		0.5f, 0.5f,
+		0.0f, 0.0f,
 		// v2
-		0.5f, -0.5f,
+		0.0f, -0.8f,
 		// v3
-		-0.5, -0.5
+		-0.8f, -0.8f
 	};
 
 	// 頂点カラーを設定する

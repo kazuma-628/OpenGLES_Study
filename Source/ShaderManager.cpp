@@ -107,7 +107,9 @@ GLint ShaderManager::GetAttribLocation(const GLchar* p_attribute_name)
 {
 	printf("シェーダー「%s」用の\n", m_vertex_shader_file);
 	printf("アトリビュート変数「%s」のロケーションIDの生成を開始します... ", p_attribute_name);
+
 	GLint AttribLocationID = glGetAttribLocation(m_ProgramObject, p_attribute_name);
+
 	if (AttribLocationID < 0)
 	{
 		ERROR_MESSAGE("Attribute変数のロケーションIDを生成に失敗しました。");
@@ -130,7 +132,9 @@ GLint ShaderManager::GetUniformLocation(const GLchar* p_uniform_name)
 {
 	printf("シェーダー「%s」及び「%s」用の\n", m_vertex_shader_file, m_fragment_shader_file);
 	printf("ユニホーム変数「%s」のロケーションIDの生成を開始します... ", p_uniform_name);
+
 	GLint UniformLocationID = glGetUniformLocation(m_ProgramObject, p_uniform_name);
+
 	if (UniformLocationID < 0)
 	{
 		ERROR_MESSAGE("Uniform変数のロケーションIDを生成に失敗しました。");
@@ -153,6 +157,7 @@ void ShaderManager::UseProgram(void)
 {
 	// シェーダープログラムの利用を開始する
 	glUseProgram(m_ProgramObject);
+
 	if (GL_NO_ERROR != glGetError())
 	{
 		printf("シェーダー「%s」及び「%s」用の処理でエラーが発生しました。\n", m_vertex_shader_file, m_fragment_shader_file);

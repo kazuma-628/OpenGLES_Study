@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <glew.h>
 #include <glfw3.h>
+#include <math.h>
 
 //続行不可能なエラーが発生した場合のメッセージ出力用定義
 #define ERROR_MESSAGE(Message) (error_message_func(Message, __FILE__ ,__LINE__))
