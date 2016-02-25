@@ -38,8 +38,11 @@ void MainDraw::Prep()
 	//シェーダー内で使用する変数を取得します（カラーデータ）
 	m_attr_color = m_MainShader->GetAttribLocation("attr_color");
 
-	//シェーダー内で使用する変数を取得します（マトリックスデータ）
-	m_move_matrix = m_MainShader->GetUniformLocation("move_matrix");
+	//シェーダー内で使用する変数を取得します（オブジェクト移動用のマトリックス）
+	m_ModelView_matrix = m_MainShader->GetUniformLocation("ModelView_matrix");
+
+	//シェーダー内で使用する変数を取得します（3D空間にするためのマトリクス）
+	m_Proj_matrix = m_MainShader->GetUniformLocation("Proj_matrix");
 
 }
 
@@ -57,22 +60,45 @@ void MainDraw::Draw(GLFWwindow *const p_window)
 	m_MainShader->UseProgram();
 
 	//オブジェクトを移動させるための行列を宣言
-	Matrix Move;
+	Matrix ModelView;
 
-	//指定量移動させる
-	Move.Translate(move_x, move_y, 0.5);
-	Move.Scale(move_x, move_y, 0.5);
-	Move.Rotate(1000 * move_x * move_y, 1.0, 0.0, 0.0);
+	Matrix Projection;
 
+	//座標を弄る用の変数
+	double x_pos = 0;
+	double y_pos = 0;
+	double x_pos2 = 0;
+	double y_pos2 = 0;
+
+	//マウスの座標を取得します。
+	//ウィンドウ系の座標が入ります。
+	glfwGetCursorPos(p_window, &x_pos, &y_pos);
+
+	//ウィンドウ座標が、-10～10にマッチするように変換します。
+	x_pos2 = (20.0 / WINDOW_WIDTH) * x_pos - 10.0;
+	y_pos2 = (20.0 / WINDOW_HEIGHT) * (WINDOW_HEIGHT - y_pos) - 10.0;
+
+	//デバッグ用プリント文
+//	printf("x_pos = %lf x_pos2 = %lf y_pos = %lf y_pos2 = %lf\n", x_pos, x_pos2, y_pos, y_pos2);
+
+	//カメラの映る位置に移動させ、マウスでも移動できるようにする。
+	ModelView.Translate(x_pos2, y_pos2, -20.0);
+	
+	//回転させる
+	ModelView.Rotate(1000 * move_y, 0.0, 1.0, 0.0);
+	
 	//移動量を増加させる。
-	move_x = move_x + 0.001f;
+//	move_x = move_x + 0.001f;
 	move_y = move_y + 0.001f;
 
 	//値をリセットする（動作確認用の一時的なプログラム）
-	if (move_x > 1.0 || move_y > 1.0)
+	if (move_x > 10 || move_y > 10 )
 	{
 		move_x = move_y = 0;
 	}
+
+	//透視投影行列を適用する
+	Projection.Perspective(-10.0, 10.0, -10.0, 10.0, 10.0, 30.0);
 
 	//シェーダーの変数を有効化
 	glEnableVertexAttribArray(m_attr_pos);
@@ -83,13 +109,13 @@ void MainDraw::Draw(GLFWwindow *const p_window)
 	const GLfloat position[] =
 	{
 		// v0
-		-0.8f, 0.0f,
+		-10.0f, 10.0f, 0.0f,
 		// v1
-		0.0f, 0.0f,
+		10.0f, 10.0f, 0.0f,
 		// v2
-		0.0f, -0.8f,
+		10.0f, -10.0f, 0.0f,
 		// v3
-		-0.8f, -0.8f
+		-10.0f, -10.0f, 0.0f
 	};
 
 	// 頂点カラーを設定する
@@ -115,9 +141,10 @@ void MainDraw::Draw(GLFWwindow *const p_window)
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	//変数を転送
-	glVertexAttribPointer(m_attr_pos, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)position);
+	glVertexAttribPointer(m_attr_pos, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)position);
 	glVertexAttribPointer(m_attr_color, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, color);
-	glUniformMatrix4fv(m_move_matrix, 1, GL_FALSE, Move.GetMatrix());
+	glUniformMatrix4fv(m_ModelView_matrix, 1, GL_FALSE, ModelView.GetMatrix());
+	glUniformMatrix4fv(m_Proj_matrix, 1, GL_FALSE, Projection.GetMatrix());
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 	//描画処理

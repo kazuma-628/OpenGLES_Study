@@ -17,6 +17,8 @@ Matrix::~Matrix()
 *	関数説明
 *	　演算子のオーバーロード定義
 *-------------------------------------------------------------------------------*/
+
+//マトリクス同士の乗算
 Matrix operator*(Matrix& p_left, Matrix& p_right)
 {
 	//参考用のメモ
@@ -27,27 +29,18 @@ Matrix operator*(Matrix& p_left, Matrix& p_right)
 
 	Matrix t_matrix;
 
-	//行列の乗算
-	t_matrix.m_val[0] = p_left.m_val[0] * p_right.m_val[0] + p_left.m_val[1] * p_right.m_val[4] + p_left.m_val[2] * p_right.m_val[8] + p_left.m_val[3] * p_right.m_val[12];
-	t_matrix.m_val[1] = p_left.m_val[0] * p_right.m_val[1] + p_left.m_val[1] * p_right.m_val[5] + p_left.m_val[2] * p_right.m_val[9] + p_left.m_val[3] * p_right.m_val[13];
-	t_matrix.m_val[2] = p_left.m_val[0] * p_right.m_val[2] + p_left.m_val[1] * p_right.m_val[6] + p_left.m_val[2] * p_right.m_val[10] + p_left.m_val[3] * p_right.m_val[14];
-	t_matrix.m_val[3] = p_left.m_val[0] * p_right.m_val[3] + p_left.m_val[1] * p_right.m_val[7] + p_left.m_val[2] * p_right.m_val[11] + p_left.m_val[3] * p_right.m_val[15];
-
-	t_matrix.m_val[4] = p_left.m_val[4] * p_right.m_val[0] + p_left.m_val[5] * p_right.m_val[4] + p_left.m_val[6] * p_right.m_val[8] + p_left.m_val[7] * p_right.m_val[12];
-	t_matrix.m_val[5] = p_left.m_val[4] * p_right.m_val[1] + p_left.m_val[5] * p_right.m_val[5] + p_left.m_val[6] * p_right.m_val[9] + p_left.m_val[7] * p_right.m_val[13];
-	t_matrix.m_val[6] = p_left.m_val[4] * p_right.m_val[2] + p_left.m_val[5] * p_right.m_val[6] + p_left.m_val[6] * p_right.m_val[10] + p_left.m_val[7] * p_right.m_val[14];
-	t_matrix.m_val[7] = p_left.m_val[4] * p_right.m_val[3] + p_left.m_val[5] * p_right.m_val[7] + p_left.m_val[6] * p_right.m_val[11] + p_left.m_val[7] * p_right.m_val[15];
-
-	t_matrix.m_val[8] = p_left.m_val[8] * p_right.m_val[0] + p_left.m_val[9] * p_right.m_val[4] + p_left.m_val[10] * p_right.m_val[8] + p_left.m_val[11] * p_right.m_val[12];
-	t_matrix.m_val[9] = p_left.m_val[8] * p_right.m_val[1] + p_left.m_val[9] * p_right.m_val[5] + p_left.m_val[10] * p_right.m_val[9] + p_left.m_val[11] * p_right.m_val[13];
-	t_matrix.m_val[10] = p_left.m_val[8] * p_right.m_val[2] + p_left.m_val[9] * p_right.m_val[6] + p_left.m_val[10] * p_right.m_val[10] + p_left.m_val[11] * p_right.m_val[14];
-	t_matrix.m_val[11] = p_left.m_val[8] * p_right.m_val[3] + p_left.m_val[9] * p_right.m_val[7] + p_left.m_val[10] * p_right.m_val[11] + p_left.m_val[11] * p_right.m_val[15];
-
-	t_matrix.m_val[12] = p_left.m_val[12] * p_right.m_val[0] + p_left.m_val[13] * p_right.m_val[4] + p_left.m_val[14] * p_right.m_val[8] + p_left.m_val[15] * p_right.m_val[12];
-	t_matrix.m_val[13] = p_left.m_val[12] * p_right.m_val[1] + p_left.m_val[13] * p_right.m_val[5] + p_left.m_val[14] * p_right.m_val[9] + p_left.m_val[15] * p_right.m_val[13];
-	t_matrix.m_val[14] = p_left.m_val[12] * p_right.m_val[2] + p_left.m_val[13] * p_right.m_val[6] + p_left.m_val[14] * p_right.m_val[10] + p_left.m_val[15] * p_right.m_val[14];
-	t_matrix.m_val[15] = p_left.m_val[12] * p_right.m_val[3] + p_left.m_val[13] * p_right.m_val[7] + p_left.m_val[14] * p_right.m_val[11] + p_left.m_val[15] * p_right.m_val[15];
-
+	//行列の乗算（OpenGLは行ベクトルではなく列ベクトルなことに注意、乗算は一般的な行列の乗算と違う）
+	for (int i = 0; i < 4; i++)
+	{
+		t_matrix.m_val[i]		= p_left.m_val[i] * p_right.m_val[0]  + p_left.m_val[i + 4] * p_right.m_val[1]
+									+ p_left.m_val[i + 8] * p_right.m_val[2] + p_left.m_val[i + 12] * p_right.m_val[3];
+		t_matrix.m_val[i + 4]	= p_left.m_val[i] * p_right.m_val[4]  + p_left.m_val[i + 4] * p_right.m_val[5] 
+									+ p_left.m_val[i + 8] * p_right.m_val[6] + p_left.m_val[i + 12] * p_right.m_val[7];
+		t_matrix.m_val[i + 8]	= p_left.m_val[i] * p_right.m_val[8]  + p_left.m_val[i + 4] * p_right.m_val[9]
+									+ p_left.m_val[i + 8] * p_right.m_val[10] + p_left.m_val[i + 12] * p_right.m_val[11];
+		t_matrix.m_val[i + 12]	= p_left.m_val[i] * p_right.m_val[12] + p_left.m_val[i + 4] * p_right.m_val[13]
+									+ p_left.m_val[i + 8] * p_right.m_val[14] + p_left.m_val[i + 12] * p_right.m_val[15];
+	}
 	return t_matrix;
 }
 
@@ -80,7 +73,7 @@ void Matrix::Identity()
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　移動行列を適応する
+*	　移動行列を適用する
 *	引数
 *	　p_x	：[I/ ]　X 座標の移動量
 *	　p_y	：[I/ ]　Y 座標の移動量
@@ -98,7 +91,7 @@ void Matrix::Translate(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 
 	Matrix t_matrix;
 
-	//移動行列を適応
+	//移動行列を適用
 	t_matrix.m_val[12] = p_x;
 	t_matrix.m_val[13] = p_y;
 	t_matrix.m_val[14] = p_z;
@@ -108,7 +101,7 @@ void Matrix::Translate(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　回転行列を適応する
+*	　回転行列を適用する
 *	引数
 *	　p_x	：[I/ ]　X 座標の倍率
 *	　p_y	：[I/ ]　Y 座標の倍率
@@ -126,7 +119,7 @@ void Matrix::Scale(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 
 	Matrix t_matrix;
 
-	//拡大縮小行列を適応
+	//拡大縮小行列を適用
 	t_matrix.m_val[0] = p_x;
 	t_matrix.m_val[5] = p_y;
 	t_matrix.m_val[10] =  p_z;
@@ -136,13 +129,13 @@ void Matrix::Scale(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　回転行列を適応する
+*	　回転行列を適用する
 *	引数
 *	　rotate：[I/ ]　回転角度（360度系）
 *	　下記、回転軸となる正規化された方向ベクトルを設定する
-*	　p_x	：[I/ ]　X 座標（X 成分に効かせる場合は 1.0 を指定）
-*	　p_y	：[I/ ]　X 座標（Y 成分に効かせる場合は 1.0 を指定）
-*	　p_z	：[I/ ]　X 座標（Z 成分に効かせる場合は 1.0 を指定）
+*	　p_x	：[I/ ]　X 成分（X 成分に効かせる場合は 1.0 を指定）
+*	　p_y	：[I/ ]　Y 成分（Y 成分に効かせる場合は 1.0 を指定）
+*	　p_z	：[I/ ]　Z 成分（Z 成分に効かせる場合は 1.0 を指定）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -156,7 +149,7 @@ void Matrix::Rotate(const GLfloat rotate, const GLfloat p_x, const GLfloat p_y, 
 
 	Matrix t_matrix;
 
-	//回転行列を適応
+	//回転行列を適用
 	GLfloat c = cosf(DEGREE_TO_RADIAN(rotate));
 	GLfloat s = sinf(DEGREE_TO_RADIAN(rotate));
 
@@ -171,6 +164,60 @@ void Matrix::Rotate(const GLfloat rotate, const GLfloat p_x, const GLfloat p_y, 
 	t_matrix.m_val[8] = (p_z * p_x) * (1.0f - c) - p_y * s;
 	t_matrix.m_val[9] = (p_z * p_y) * (1.0f - c) + p_x * s;
 	t_matrix.m_val[10] = (p_z * p_z) * (1.0f - c) + c;
+
+	*this = *this * t_matrix;
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　透視投影変換行列を適用する
+*	引数
+*	　p_left	：[I/ ]　近くの面(p_near面)の左側までの距離
+*	　p_right	：[I/ ]　近くの面(p_near面)の右側までの距離
+*	　p_bottom	：[I/ ]　近くの面(p_near面)の下側までの距離
+*	　p_top		：[I/ ]　近くの面(p_near面)の上側までの距離
+*	　p_near	：[I/ ]　近くの面までの距離
+*	　p_far		：[I/ ]　遠くの面までの距離
+*
+*	　図は下記URLの「透視投影変換」項目参照
+*	　http://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20090829
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void Matrix::Perspective(float p_left, float p_right,
+						 float p_bottom, float p_top,
+						 float p_near, float p_far)
+{
+	//参考用のメモ
+	//[ 0][ 1][ 2][ 3]
+	//[ 4][ 5][ 6][ 7]
+	//[ 8][ 9][10][11]
+	//[12][13][14][15]
+
+	Matrix t_matrix;
+
+	//透視投影変換行列を適用する
+	float dx = p_right - p_left;
+	float dy = p_top - p_bottom;
+	float dz = p_far - p_near;
+
+	if (0 == dx || 0 == dy || 0 == dz)
+	{
+		printf("デバッグ情報\n");
+		printf("p_right = %f, p_left = %f, p_top = %f, p_bottom = %f, p_far = %f, p_near = %f\n",
+			p_right, p_left, p_top, p_bottom, p_far, p_near);
+		ERROR_MESSAGE("透視投影変換行列の引数異常です");
+	}
+	
+	
+	t_matrix.m_val[0] = 2.0f * p_near / dx;
+	t_matrix.m_val[5] = 2.0f * p_near / dy;
+	t_matrix.m_val[8] = (p_right + p_left) / dx;
+	t_matrix.m_val[9] = (p_top + p_bottom) / dy;
+	t_matrix.m_val[10] = -(p_far + p_near) / dz;
+	t_matrix.m_val[11] = -1.0f;
+	t_matrix.m_val[14] = -2.0f * p_far * p_near / dz;
+	t_matrix.m_val[15] = 0.0f;
 
 	*this = *this * t_matrix;
 }
