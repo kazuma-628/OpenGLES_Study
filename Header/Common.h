@@ -53,12 +53,14 @@ inline void error_message_func(char* Message, char* File, int Line)
 	//メッセージボックス表示
 	MessageBox(NULL, All_Message, "Debug Message", MB_OK | MB_ICONSTOP);
 
-	//デバックで呼び出し履歴が分かるように自滅リセット
+	//デバックで呼び出し履歴が分かるように自滅リセットさせる（有効にする場合はコメントを外す）
 	//エラーが発生したら「中断（デバッグの停止じゃない）」して、
-	//メニューバーの「ウィンドウ」→「デバッグ」→「呼び出し履歴」で関数コール順序が見れます。
-	free((void*)0xFF);		
-	
-	exit(EXIT_FAILURE);		//プログラムを終了する（自滅リセットでここまで来ることはないと思うけど。。。）
+	//メニューバーの「ウィンドウ」→「デバッグ」→「呼び出し履歴」で関数コール順序が見れます。	
+//	typedef char(*ResetFunc)(char);
+//	ResetFunc test = (ResetFunc)0xFF;
+//	test(0);
+
+	exit(EXIT_FAILURE);		//プログラムを終了する
 }
 
 #endif
