@@ -32,13 +32,6 @@
 *-------------------------------------------------------------------------------*/
 void main(void)
 {
-	//OpenGLの初期化 と ウィンドウハンドルの取得
-	/*
-	GLFWwindow *const m_window = OpenGLES_init();
-	GLFWwindow *const m_window2 = OpenGLES_init();
-	GLFWwindow *const m_window3 = OpenGLES_init();
-	*/
-
 	//////////////////////////////////////////////////////
 	//	各オブジェクト生成
 

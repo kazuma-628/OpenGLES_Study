@@ -13,6 +13,10 @@ ShaderManager::~ShaderManager()
 {
 	//プログラムオブジェクトを削除する
 	glDeleteProgram(m_ProgramObject);
+
+	m_ProgramObject = -1;
+	memset(m_vertex_shader_file, 0, sizeof(m_vertex_shader_file));
+	memset(m_fragment_shader_file, 0, sizeof(m_fragment_shader_file));
 }
 
 /*-------------------------------------------------------------------------------
