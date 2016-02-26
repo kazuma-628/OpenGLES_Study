@@ -24,6 +24,7 @@ add_executable(
 	Source/MainDraw.cpp
 	Source/ShaderManager.cpp
 	Source/Matrix.cpp
+	Source/WindowManager.cpp
 
 #「Header File」を指定する
 	Header/Common.h
@@ -31,6 +32,7 @@ add_executable(
 	Header/MainDraw.h
 	Header/ShaderManager.h
 	Header/Matrix.h
+	Header/WindowManager.h
 
 #「Shader File」を指定する
 	Shader/Main.frag
