@@ -66,6 +66,8 @@ void main(void)
 
 	//////////////////////////////////////////////////////
 	//	メインループ
+
+	//作成したウィンドウハンドルを取得
 	GLFWwindow* const Window = m_WindowManager->GetWindow();
 
 	//ウィンドウが開いている間はループ
@@ -85,5 +87,4 @@ void main(void)
 	delete m_MainDraw;
 	delete m_KeyManager;
 	delete m_WindowManager;
-
 }
