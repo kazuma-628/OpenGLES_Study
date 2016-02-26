@@ -26,7 +26,7 @@ MainDraw::~MainDraw()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void MainDraw::Prep()
+void MainDraw::Prepare()
 {
 	//シェーダーの読み込みを行う
 	//「Shader」フォルダに格納されている必要があります。
@@ -54,7 +54,7 @@ void MainDraw::Prep()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void MainDraw::Draw(GLFWwindow *const p_window)
+void MainDraw::Drawing(GLFWwindow *const p_window)
 {
 	// シェーダープログラムの利用を開始する
 	m_MainShader->UseProgram();

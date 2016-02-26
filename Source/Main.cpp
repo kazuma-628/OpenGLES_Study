@@ -39,7 +39,7 @@ void main(void)
 	MainDraw *MainDrawing = new MainDraw;
 
 	//メイン描画準備
-	MainDrawing->Prep();
+	MainDrawing->Prepare();
 
 	//ウィンドウが開いている間はループ
 	while (glfwWindowShouldClose(window) == GL_FALSE)
@@ -48,7 +48,7 @@ void main(void)
 		glfwPollEvents();
 
 		//メイン描画開始
-		MainDrawing->Draw(window);
+		MainDrawing->Drawing(window);
 	}
 
 	//終了処理
