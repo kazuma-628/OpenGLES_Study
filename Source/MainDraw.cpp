@@ -90,7 +90,7 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, KeyManager* p_KeyManager)
 	m_Rotate.y = m_Rotate.y + MouseButton.Right.DiffPos.y;
 
 	//カメラの映る位置に移動させる
-	ModelView.Translate(0.0, 0.0, -30.0f);
+	ModelView.Translate(0.0, 0.0, -35.0f);
 	//マウスでのオブジェクトの移動
 	ModelView.Translate(m_Translate.x / 6.0f, -m_Translate.y / 6.0f, m_Translate.z);
 	
@@ -102,7 +102,7 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, KeyManager* p_KeyManager)
 
 	
 	//透視投影行列を適用する
-	Projection.Perspective(-10.0, 10.0, -10.0, 10.0, 10.0, 100.0);
+	Projection.Perspective(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
 
 	//シェーダーの変数を有効化
 	glEnableVertexAttribArray(m_attr_pos);
