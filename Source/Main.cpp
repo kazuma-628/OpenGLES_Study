@@ -15,6 +15,10 @@
 *	・「 p_ 」で始まるものは関数の引数（パラメーター）を表しています。
 *	・「 m_ 」で始まるものはクラスの変数（メンバ）を表しています。（main関数は特別にクラスでなくても付与してます）
 *
+*	操作について
+*	　右クリック 及び 左クリック 及び スクロールの操作に対応しています。
+*	　サンプルプログラムでは、「右クリック = 移動、左クリック = 回転、スクロール = 拡大」となっています。
+*
 *	DEBUG用のメッセージ処理について
 *	・ERROR_MESSAGE("ここにテキストを記述します");	//続行不可能なエラーが発生した場合、メッセージボックスを表示します
 *	・printf("ここにテキストを記述します");			//続行不可能なエラー以外はprintfで普通に表示してください
@@ -46,13 +50,17 @@ void main(void)
 
 
 	//////////////////////////////////////////////////////
-	//	各オブジェクト初期化
+	//	各オブジェクト初期化 及び 準備
 	
-	//キー管理用のオブジェクト初期化（マウスやキーボード制御のコールバックなどを登録）
-	m_KeyManager->Initialize();
-
 	//ウインドウを作成
-	m_WindowManager->CreateNewWindow();
+	m_WindowManager->CreateNewWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGLES_Study");
+	//作成したウィンドウハンドルを取得
+	GLFWwindow* const window = m_WindowManager->GetWindow();
+
+	//キー管理用のオブジェクト初期化（マウスやキーボード制御のコールバックなどを登録）
+	//この関数コールの前にウィンドウが生成されている必要がある
+	//※ ウィンドウを複数生成して、それぞれKey管理することはまだ対応していないので注意 ※
+	m_KeyManager->Initialize(window);
 
 	//メイン描画準備
 	m_MainDraw->Prepare();
@@ -60,17 +68,14 @@ void main(void)
 	//////////////////////////////////////////////////////
 	//	メインループ
 
-	//作成したウィンドウハンドルを取得
-	GLFWwindow* const Window = m_WindowManager->GetWindow();
-
 	//ウィンドウが開いている間はループ
-	while (glfwWindowShouldClose(Window) == GL_FALSE)
+	while (glfwWindowShouldClose(window) == GL_FALSE)
 	{
 		//イベント取り出し（マウス状態などのイベントを取得）
 		glfwPollEvents();
 
 		//メイン描画開始
-		m_MainDraw->Drawing(Window);
+		m_MainDraw->Drawing(m_WindowManager, m_KeyManager);
 	}
 
 	//////////////////////////////////////////////////////

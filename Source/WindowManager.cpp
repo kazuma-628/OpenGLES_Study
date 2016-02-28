@@ -16,12 +16,18 @@ WindowManager::~WindowManager()
 *	関数説明
 *	　ウィンドウを作成する
 *	引数
-*	　なし
+*	　p_Width	：[I/ ]　ウィンドウの幅
+*	　p_Height	：[I/ ]　ウィンドウの高さ
+*	　p_Title	：[I/ ]　ウィンドウの名前（ウィンドウ左上やタスクバーに表示される）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void WindowManager::CreateNewWindow()
+void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const char* p_Title)
 {
+
+	//////////////////////////////////////////////////////
+	//	GLFW初期化
+
 	// GLFW初期化とエラーチェック
 	printf("GLFWの初期化を開始します... ");
 	if (GL_TRUE != glfwInit())
@@ -41,10 +47,13 @@ void WindowManager::CreateNewWindow()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
-	//ウィンドウ生成
+
+	//////////////////////////////////////////////////////
+	//	ウィンドウ生成
+
 	//ここでウィンドウサイズも指定しています。サイズを変更したい場合はDefine値を変更してください。
 	printf("ウィンドウ（%d × %d）の生成を開始します... ", WINDOW_WIDTH, WINDOW_HEIGHT);
-	GLFWwindow *const window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGLES_Study", NULL, NULL);
+	GLFWwindow *const window = glfwCreateWindow(p_Width, p_Height, p_Title, NULL, NULL);
 
 	//ウィンドウが生成できているかチェック
 	if (NULL == window)
@@ -61,6 +70,12 @@ void WindowManager::CreateNewWindow()
 	// 作成したウィンドウをOpenGLの処理対象にする
 	glfwMakeContextCurrent(window);
 
+	// カラーバッファの入れ替えタイミング（通常は1を入力）
+	glfwSwapInterval(1);
+
+	//////////////////////////////////////////////////////
+	//	GLEW初期化
+
 	// GLEWを初期化する
 	printf("GLEWの初期化を開始します... ");
 	glewExperimental = GL_TRUE;
@@ -69,9 +84,14 @@ void WindowManager::CreateNewWindow()
 		ERROR_MESSAGE("GLEWの初期化に失敗しました。");
 	}
 	printf("完了\n");
+	
+	//////////////////////////////////////////////////////
+	//	生成した情報を保存
 
-	// カラーバッファの入れ替えタイミング（通常は1を入力）
-	glfwSwapInterval(1);
-
+	//生成したウィンドウハンドルを保存
 	m_window = window;
+
+	//生成した時のウィンドウの幅高さを保存
+	m_Width = p_Width;
+	m_Height = p_Height;
 }

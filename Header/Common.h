@@ -14,8 +14,8 @@
 #define ERROR_MESSAGE(Message) (error_message_func(Message, __FILE__ ,__LINE__))
 
 //Define定義
-#define WINDOW_HEIGHT				480			//ウィンドウサイズ（高さ）
-#define WINDOW_WIDTH				640			//ウィンドウサイズ（幅）
+#define WINDOW_WIDTH				800			//ウィンドウサイズ（幅）
+#define WINDOW_HEIGHT				600			//ウィンドウサイズ（高さ）
 
 /*-------------------------------------------------------------------------------
 *	関数説明

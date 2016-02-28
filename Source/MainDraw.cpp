@@ -6,9 +6,14 @@ MainDraw::MainDraw()
 	//Mainシェーダー管理用のオブジェクト生成
 	m_MainShader = new ShaderManager;
 
-	//移動量管理の変数初期化
-	move_x = 0;
-	move_y = 0;
+	//変数初期化
+	memset(&m_Rotate, 0, sizeof(m_Rotate));
+	memset(&m_Translate, 0, sizeof(m_Translate));
+	m_attr_pos = -1;
+	m_attr_color = -1;
+	m_ModelView_matrix = 0;
+	m_Proj_matrix = 0;
+
 }
 
 //デストラクタ
@@ -50,63 +55,54 @@ void MainDraw::Prepare()
 *	関数説明
 *	　メイン描画を開始する
 *	引数
-*	　window		：[I/ ]　描画先のウィンドウを指定する
+*	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
+*	　p_KeyManager			：[I/ ]　Key管理オブジェクト
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void MainDraw::Drawing(GLFWwindow *const p_window)
+void MainDraw::Drawing(WindowManager* p_WindowManager, KeyManager* p_KeyManager)
 {
+	//作成したウィンドウハンドルを取得
+	GLFWwindow* const window = p_WindowManager->GetWindow();
+	//マウスの情報を取得
+	MouseInfo MouseButton = p_KeyManager->GetMouseInfo();
+
 	// シェーダープログラムの利用を開始する
 	m_MainShader->UseProgram();
 
-	//オブジェクトを移動させるための行列を宣言
+	//オブジェクトを移動させるための行列
 	Matrix ModelView;
 
+	//3D空間にするための行列
 	Matrix Projection;
 
-	//座標を弄る用の変数
-	double x_pos = 0;
-	double y_pos = 0;
-	double x_pos2 = 0;
-	double y_pos2 = 0;
 
-	//マウスの座標を取得します。
-	//ウィンドウ系の座標が入ります。
-	glfwGetCursorPos(p_window, &x_pos, &y_pos);
+	///////////////////////////////////
+	// オブジェクト移動関係の処理
 
-	//ウィンドウ座標が、-10～10にマッチするように変換します。
-	x_pos2 = (20.0 / WINDOW_WIDTH) * x_pos - 10.0;
-	y_pos2 = (20.0 / WINDOW_HEIGHT) * (WINDOW_HEIGHT - y_pos) - 10.0;
+	//平行移動用の変数にマウス情報の座標を加える
+	m_Translate.x = m_Translate.x + MouseButton.Left.DiffPos.x;
+	m_Translate.y = m_Translate.y + MouseButton.Left.DiffPos.y;
+	m_Translate.z = m_Translate.z + MouseButton.Scroll;
+	//回転用の変数にマウス情報の座標を加える
+	//本来であれば360度回転したら変数を初期化した方が良いが、サンプルなので割愛
+	m_Rotate.x = m_Rotate.x + MouseButton.Right.DiffPos.x;
+	m_Rotate.y = m_Rotate.y + MouseButton.Right.DiffPos.y;
 
-	//デバッグ用プリント文
-//	printf("x_pos = %lf x_pos2 = %lf y_pos = %lf y_pos2 = %lf\n", x_pos, x_pos2, y_pos, y_pos2);
-
-	//カメラの映る位置に移動させ、マウスでも移動できるようにする。
-	ModelView.Translate(0.0, 0.0, -30.0);
+	//カメラの映る位置に移動させる
+	ModelView.Translate(0.0, 0.0, -30.0f);
+	//マウスでのオブジェクトの移動
+	ModelView.Translate(m_Translate.x / 6.0f, -m_Translate.y / 6.0f, m_Translate.z);
 	
-	ModelView.Rotate(x_pos2 * 10, 0.0, 1.0, 0.0);
+	//マウスでのオブジェクトの回転
+	ModelView.Rotate(-m_Rotate.x / 2.0f, 0.0f, 1.0f, 0.0f);
+	ModelView.Rotate(-m_Rotate.y / 2.0f, 1.0f, 0.0f, 0.0f);
+	//四角の穴が目の前に現れるように回転
+	ModelView.Rotate(-90, 0.0f, 1.0f, 0.0f);
 
-	ModelView.Rotate(y_pos2 * 10, 1.0, 0.0, 0.0);
-
-	ModelView.Rotate(-90, 0.0, 1.0, 0.0);
-
-	/////////////////////////////
-	// デバッグ用の自動回転
-
-	//回転させる
-//	ModelView.Rotate(1000 * move_y, 0.0, 1.0, 0.0);
-	//移動量を増加させる。
-//	move_x = move_x + 0.001f;
-//	move_y = move_y + 0.001f;
-
-	//値をリセットする（動作確認用の一時的なプログラム）
-//	if (move_x > 10 || move_y > 10 )
-//	{
-//		move_x = move_y = 0;
-//	}
-
+	
 	//透視投影行列を適用する
-	Projection.Perspective(-10.0, 10.0, -10.0, 10.0, 10.0, 50.0);
+	Projection.Perspective(-10.0, 10.0, -10.0, 10.0, 10.0, 100.0);
 
 	//シェーダーの変数を有効化
 	glEnableVertexAttribArray(m_attr_pos);
@@ -148,8 +144,6 @@ void MainDraw::Drawing(GLFWwindow *const p_window)
 		10.0f, 10.0f, -10.0f,
 		// v14
 		10.0f, -10.0f, -10.0f,
-
-
 	};
 
 	// 頂点カラーを設定する
@@ -209,6 +203,6 @@ void MainDraw::Drawing(GLFWwindow *const p_window)
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 14);
 
 	//描画処理
-	glfwSwapBuffers(p_window);
+	glfwSwapBuffers(window);
 }
 
