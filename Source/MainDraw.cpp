@@ -105,9 +105,8 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, KeyManager* p_KeyManager)
 	Projection.Perspective(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
 
 	//シェーダーの変数を有効化
-	glEnableVertexAttribArray(m_attr_pos);
-	glEnableVertexAttribArray(m_attr_color);
-
+	m_MainShader->EnableVertexAttribArray(m_attr_pos);
+	m_MainShader->EnableVertexAttribArray(m_attr_color);
 
 	// 画面中央へ描画する
 	const GLfloat position[] =
@@ -196,10 +195,10 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, KeyManager* p_KeyManager)
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	//変数を転送
-	glVertexAttribPointer(m_attr_pos, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)position);
-	glVertexAttribPointer(m_attr_color, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, color);
-	glUniformMatrix4fv(m_ModelView_matrix, 1, GL_FALSE, ModelView.GetMatrix());
-	glUniformMatrix4fv(m_Proj_matrix, 1, GL_FALSE, Projection.GetMatrix());
+	m_MainShader->VertexAttribPointer(m_attr_pos, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)position);
+	m_MainShader->VertexAttribPointer(m_attr_color, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, color);
+	m_MainShader->glUniformMatrixXfv(m_ModelView_matrix, 4, 1, GL_FALSE, ModelView.GetMatrix());
+	m_MainShader->glUniformMatrixXfv(m_Proj_matrix, 4, 1, GL_FALSE, Projection.GetMatrix());
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 14);
 
 	//描画処理

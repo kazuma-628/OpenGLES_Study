@@ -9,7 +9,7 @@ WindowManager::WindowManager()
 //デストラクタ
 WindowManager::~WindowManager()
 {
-	m_window = NULL;
+
 }
 
 /*-------------------------------------------------------------------------------

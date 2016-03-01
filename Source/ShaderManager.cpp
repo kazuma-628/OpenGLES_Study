@@ -4,8 +4,13 @@
 ShaderManager::ShaderManager()
 {
 	m_ProgramObject = -1;
-	memset(m_vertex_shader_file, 0, sizeof(m_vertex_shader_file));
-	memset(m_fragment_shader_file, 0, sizeof(m_fragment_shader_file));
+	m_UniformInfoIndex = 0;
+	m_AttribInfoIndex = 0;
+	memset(m_vertex_file_name, 0, sizeof(m_vertex_file_name));
+	memset(m_fragment_file_name, 0, sizeof(m_fragment_file_name));
+	memset(m_AttribInfo, 0, sizeof(m_AttribInfo));
+	memset(m_UniformInfo, 0, sizeof(m_UniformInfo));
+
 }
 
 //デストラクタ
@@ -13,10 +18,6 @@ ShaderManager::~ShaderManager()
 {
 	//プログラムオブジェクトを削除する
 	glDeleteProgram(m_ProgramObject);
-
-	m_ProgramObject = -1;
-	memset(m_vertex_shader_file, 0, sizeof(m_vertex_shader_file));
-	memset(m_fragment_shader_file, 0, sizeof(m_fragment_shader_file));
 }
 
 /*-------------------------------------------------------------------------------
@@ -24,26 +25,26 @@ ShaderManager::~ShaderManager()
 *	　バーテックス・フラグメントシェーダーのソースを指定されたファイルから読み込み、
 *	　コンパイル及びリンクして、プログラムオブジェクトを作成する
 *	引数
-*	　p_vertex_shader_file		：[I/ ]　バーテックスシェーダーのファイル名（Shaderフォルダに格納されている必要があります）
-*	　p_fragment_shader_file	：[I/ ]　フラグメントシェーダーのファイル名（Shaderフォルダに格納されている必要があります）
+*	　p_vertex_file_name		：[I/ ]　バーテックスシェーダーのファイル名（Shaderフォルダに格納されている必要があります）
+*	　p_fragment_file_name		：[I/ ]　フラグメントシェーダーのファイル名（Shaderフォルダに格納されている必要があります）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::CreateShaderProgram(const char* p_vertex_shader_file, const char* p_fragment_shader_file)
+void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name)
 {
 	//読み込むシェーダー名を記憶
-	strcat_s(m_vertex_shader_file, sizeof(m_vertex_shader_file), p_vertex_shader_file);
-	strcat_s(m_fragment_shader_file, sizeof(m_fragment_shader_file), p_vertex_shader_file);
+	strcat_s(m_vertex_file_name, sizeof(m_vertex_file_name), p_vertex_file_name);
+	strcat_s(m_fragment_file_name, sizeof(m_fragment_file_name), p_fragment_file_name);
 
 	//ファイルからバーテックスソースを読み込む（「Shader」フォルダに格納されている必要があります）
 	char vertex_shader_source[SHADER_STRING_ALL_MAX] = { 0 };		//頂点シェーダ
-	Shader_FileLoad(p_vertex_shader_file, vertex_shader_source, SHADER_STRING_ALL_MAX);
+	Shader_FileLoad(p_vertex_file_name, vertex_shader_source, SHADER_STRING_ALL_MAX);
 	//ソースをアップロードする
 	const GLuint vertex_shader = Shader_SourceLoad(vertex_shader_source, GL_VERTEX_SHADER);			//頂点シェーダ
 
 	//ファイルからフラグメントソースを読み込む（「Shader」フォルダに格納されている必要があります）
 	char fragment_shader_source[SHADER_STRING_ALL_MAX] = { 0 };		//フラグメントシェーダ
-	Shader_FileLoad(p_fragment_shader_file, fragment_shader_source, SHADER_STRING_ALL_MAX);
+	Shader_FileLoad(p_fragment_file_name, fragment_shader_source, SHADER_STRING_ALL_MAX);
 	//ソースをアップロードする
 	const GLuint fragment_shader = Shader_SourceLoad(fragment_shader_source, GL_FRAGMENT_SHADER);	//フラグメントシェーダ
 
@@ -100,58 +101,310 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_shader_file, const 
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　Attribute変数のロケーションIDを生成（ほぼ glGetAttribLocation と同じです）
-*	　分かりやすいように引数を少なくしたのと、エラー管理を一元化した点が違うのみです。
+*	　Attribute変数のロケーションを生成（ほぼ glGetAttribLocation と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
-*	　p_attribute_name			：[I/ ]　シェーダーで使用するAttribute変数の名前
+*	　p_name			：[I/ ]　シェーダーで使用するAttribute変数の名前
 *	戻り値
-*	　なし
+*	　Attribute変数のロケーションを呼び出すためのインデックス値
 *-------------------------------------------------------------------------------*/
-GLint ShaderManager::GetAttribLocation(const GLchar* p_attribute_name)
+GLint ShaderManager::GetAttribLocation(const GLchar* p_name)
 {
-	printf("シェーダー「%s」用の\n", m_vertex_shader_file);
-	printf("アトリビュート変数「%s」のロケーションIDの生成を開始します... ", p_attribute_name);
+	printf("シェーダー「%s」及び「%s」用の\n", m_vertex_file_name, m_fragment_file_name);
+	printf("アトリビュート変数「%s」のロケーションの生成を開始します... ", p_name);
 
-	GLint AttribLocationID = glGetAttribLocation(m_ProgramObject, p_attribute_name);
+	GLint Location = glGetAttribLocation(m_ProgramObject, p_name);
 
-	if (AttribLocationID < 0)
+	if (Location < 0)
 	{
-		ERROR_MESSAGE("Attribute変数のロケーションIDを生成に失敗しました。");
+		printf("失敗\n\n");
+		printf("■■■ エラー ■■■\n");
+		printf("シェーダーに変数「%s」が定義されていない可能性があります\n\n", p_name);
 	}
-	printf("完了\n");
+	else
+	{ 
+		printf("完了\n");
+	}
 
-	return AttribLocationID;
+	//変数名とロケーションIDを保存
+	memmove(m_AttribInfo[m_AttribInfoIndex].Name, p_name, sizeof(m_AttribInfo[m_AttribInfoIndex].Name));
+	m_AttribInfo[m_AttribInfoIndex].Location = Location;
+
+	//インデックス値を1つ進める
+	m_AttribInfoIndex++;
+
+	//保存したインデックス値を返す
+	return m_AttribInfoIndex - 1;
 }
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　Uniform変数のロケーションIDを生成（ほぼ glGetUniformLocation と同じです）
-*	　分かりやすいように引数を少なくしたのと、エラー管理を一元化した点が違うのみです。
+*	　Uniform変数のロケーションを生成（ほぼ glGetUniformLocation と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
-*	　p_uniform_name			：[I/ ]　シェーダーで使用するUniform変数の名前
+*	　p_name			：[I/ ]　シェーダーで使用するUniform変数の名前
+*	戻り値
+*	　Uniform変数のロケーションを呼び出すためのインデックス値
+*-------------------------------------------------------------------------------*/
+GLint ShaderManager::GetUniformLocation(const GLchar* p_name)
+{
+	printf("シェーダー「%s」及び「%s」用の\n", m_vertex_file_name, m_fragment_file_name);
+	printf("ユニホーム変数「%s」のロケーションの生成を開始します... ", p_name);
+
+	GLint Location = glGetUniformLocation(m_ProgramObject, p_name);
+
+	if (Location < 0)
+	{
+		printf("失敗\n\n");
+		printf("■■■ エラー ■■■\n");
+		printf("シェーダーに変数「%s」が定義されていない可能性があります\n\n", p_name);
+
+	}
+	else
+	{
+		printf("完了\n");
+	}
+
+	//変数名とロケーションIDを保存
+	memmove(m_UniformInfo[m_UniformInfoIndex].Name, p_name, sizeof(m_UniformInfo[m_UniformInfoIndex].Name));
+	m_UniformInfo[m_UniformInfoIndex].Location = Location;
+
+	//インデックス値を1つ進める
+	m_UniformInfoIndex++;
+
+	//保存したインデックス値を返す
+	return m_UniformInfoIndex - 1;
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　Attribute変数を有効にします。（ほぼ glEnableVertexAttribArray と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
+*	引数
+*	　p_index			：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
+*								　（GetAttribLocationで取得した返り値）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-GLint ShaderManager::GetUniformLocation(const GLchar* p_uniform_name)
+void ShaderManager::EnableVertexAttribArray(const GLint p_index)
 {
-	printf("シェーダー「%s」及び「%s」用の\n", m_vertex_shader_file, m_fragment_shader_file);
-	printf("ユニホーム変数「%s」のロケーションIDの生成を開始します... ", p_uniform_name);
-
-	GLint UniformLocationID = glGetUniformLocation(m_ProgramObject, p_uniform_name);
-
-	if (UniformLocationID < 0)
+	if (-1 == m_AttribInfo[p_index].Location)
 	{
-		ERROR_MESSAGE("Uniform変数のロケーションIDを生成に失敗しました。");
+		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
+			"シェーダー「%s」及び「%s」用の\n"\
+			"アトリビュート変数「%s」の有効化に失敗しました\n"\
+			"シェーダーに変数が定義されていない可能性があります\n\n"\
+			, m_vertex_file_name, m_fragment_file_name, m_AttribInfo[p_index].Name);
 	}
-	printf("完了\n");
+	else
+	{
+		glEnableVertexAttribArray(m_AttribInfo[p_index].Location);
+	}
+}
 
-	return UniformLocationID;
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　Attribute変数へデータを送信（関連付け）します。（ほぼ glVertexAttribPointer と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
+*	引数
+*	　p_index			：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
+*								　（GetAttribLocationで取得した返り値）
+*	　p_size			：[I/ ]　頂点データの要素数
+*	　p_type			：[I/ ]　頂点データの型
+*	　p_normalized		：[I/ ]　頂点データを正規化して頂点シェーダーに渡す場合は「GL_TRUE」を指定、
+*								 入力そのままに頂点シェーダーに渡す場合は「GL_FALSE」を指定
+*	　p_stride			：[I/ ]　頂点の先頭位置ごとのオフセット値、0指定可能
+*	　p_pointe			：[I/ ]　関連付ける頂点の先頭ポインタ
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void ShaderManager::VertexAttribPointer(const GLint p_index, const GLint p_size, const GLenum p_type, const GLboolean p_normalized, const GLsizei p_stride, const GLvoid *p_pointe)
+{
+	if (-1 == m_AttribInfo[p_index].Location)
+	{
+		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
+			"シェーダー「%s」及び「%s」用の\n"\
+			"アトリビュート変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+			"シェーダーに変数が定義されていない可能性があります\n\n"\
+			, m_vertex_file_name, m_fragment_file_name, m_AttribInfo[p_index].Name);
+	}
+	else
+	{
+		glVertexAttribPointer(m_AttribInfo[p_index].Location, p_size, p_type, p_normalized, p_stride, p_pointe);
+	}
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1f, glUniform2f, glUniform3f, glUniform4f と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
+*	引数
+*	　p_index			：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+*						　		（GetUniformLocationで取得した返り値）
+*	　p_scalar			：[I/ ]　転送するデータの数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → vec4）
+*						----------------------------------------------------------
+*						下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
+*						（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
+*	　p_param1			：[I/ ]　転送するデータ 1（シェーダー内変数の Xベクトル成分に該当）
+*	　p_param2			：[I/ ]　転送するデータ 2（シェーダー内変数の Yベクトル成分に該当）
+*	　p_param3			：[I/ ]　転送するデータ 3（シェーダー内変数の Zベクトル成分に該当）
+*	　p_param4			：[I/ ]　転送するデータ 4（シェーダー内変数の Wベクトル成分に該当）
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void ShaderManager::glUniformXf(const GLint p_index, const GLint p_scalar, const GLfloat p_param1, const GLfloat p_param2, const GLfloat p_param3, const GLfloat p_param4)
+{
+	if (-1 == m_UniformInfo[p_index].Location)
+	{
+		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
+			"シェーダー「%s」及び「%s」用の\n"\
+			"ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+			"シェーダーに変数が定義されていない可能性があります\n\n"\
+			, m_vertex_file_name, m_fragment_file_name, m_UniformInfo[p_index].Name);
+	}
+	else
+	{
+		if(1 == p_scalar)
+		{
+			glUniform1f(m_UniformInfo[p_index].Location, p_param1);
+		}
+		else if (2 == p_scalar)
+		{
+			glUniform2f(m_UniformInfo[p_index].Location, p_param1, p_param2);
+		}
+		else if (3 == p_scalar)
+		{
+			glUniform3f(m_UniformInfo[p_index].Location, p_param1, p_param2, p_param3);
+		}
+		else if (4 == p_scalar)
+		{
+			glUniform4f(m_UniformInfo[p_index].Location, p_param1, p_param2, p_param3, p_param4);
+		}
+		else
+		{
+			printf("\n■■■ エラー ■■■\n");
+			printf("シェーダー「%s」及び「%s」用の\n", m_vertex_file_name, m_fragment_file_name);
+			printf("ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n", m_UniformInfo[p_index].Name);
+			printf("「glUniformXf」関数「p_scalar」引数のエラーです\n");
+			printf("正しい値が設定されていません → 設定値：%d\n\n", p_scalar);
+			ERROR_MESSAGE("Uniform変数へのデータを送信（関連付け）に失敗しました。");
+		}
+	}
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1i, glUniform2i, glUniform3i, glUniform4i と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
+*	引数
+*	　p_index			：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+*						　		（GetUniformLocationで取得した返り値）
+*	　p_scalar			：[I/ ]　転送するデータの数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → ivec4）
+*						----------------------------------------------------------
+*						下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
+*						（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
+*	　p_param1			：[I/ ]　転送するデータ 1（シェーダー内変数の Xベクトル成分に該当）
+*	　p_param2			：[I/ ]　転送するデータ 2（シェーダー内変数の Yベクトル成分に該当）
+*	　p_param3			：[I/ ]　転送するデータ 3（シェーダー内変数の Zベクトル成分に該当）
+*	　p_param4			：[I/ ]　転送するデータ 4（シェーダー内変数の Wベクトル成分に該当）
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void ShaderManager::glUniformXi(const GLint p_index, const GLint p_scalar, const GLint p_param1, const GLint p_param2, const GLint p_param3, const GLint p_param4)
+{
+	if (-1 == m_UniformInfo[p_index].Location)
+	{
+		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
+			"シェーダー「%s」及び「%s」用の\n"\
+			"ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+			"シェーダーに変数が定義されていない可能性があります\n\n"\
+			, m_vertex_file_name, m_fragment_file_name, m_UniformInfo[p_index].Name);
+	}
+	else
+	{
+		if (1 == p_scalar)
+		{
+			glUniform1i(m_UniformInfo[p_index].Location, p_param1);
+		}
+		else if (2 == p_scalar)
+		{
+			glUniform2i(m_UniformInfo[p_index].Location, p_param1, p_param2);
+		}
+		else if (3 == p_scalar)
+		{
+			glUniform3i(m_UniformInfo[p_index].Location, p_param1, p_param2, p_param3);
+		}
+		else if (4 == p_scalar)
+		{
+			glUniform4i(m_UniformInfo[p_index].Location, p_param1, p_param2, p_param3, p_param4);
+		}
+		else
+		{
+			printf("\n■■■ エラー ■■■\n");
+			printf("シェーダー「%s」及び「%s」用の\n", m_vertex_file_name, m_fragment_file_name);
+			printf("ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n", m_UniformInfo[p_index].Name);
+			printf("「glUniformXi」関数「p_scalar」引数のエラーです\n");
+			printf("正しい値が設定されていません → 設定値：%d\n\n", p_scalar);
+			ERROR_MESSAGE("Uniform変数へのデータを送信（関連付け）に失敗しました。");
+		}
+	}
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniformMatrix2fv, glUniformMatrix3fv, glUniformMatrix4fv と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
+*	引数
+*	　p_index			：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+*						　		（GetUniformLocationで取得した返り値）
+*	　p_scalar			：[I/ ]　転送するデータの数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → mat4）
+*	　p_count			：[I/ ]　転送するデータの配列数（「p_scalar」引数で設定したデータの数を何セット送るか　例)[4] → mat? Example[4]）
+*	　p_transpose		：[I/ ]　頂点データを転置してシェーダーに渡す場合は「GL_TRUE」を指定、
+*								 入力そのままに頂点シェーダーに渡す場合は「GL_FALSE」を指定
+*	　value				：[I/ ]　転送するデータの配列へのポインタ
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void ShaderManager::glUniformMatrixXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLboolean p_transpose, const GLfloat *p_value)
+{
+	if (-1 == m_UniformInfo[p_index].Location)
+	{
+		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
+			"シェーダー「%s」及び「%s」用の\n"\
+			"ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+			"シェーダーに変数が定義されていない可能性があります\n\n"\
+			, m_vertex_file_name, m_fragment_file_name, m_UniformInfo[p_index].Name);
+	}
+	else
+	{
+		if (2 == p_scalar)
+		{
+			glUniformMatrix2fv(m_UniformInfo[p_index].Location, p_count, p_transpose, p_value);
+		}
+		else if (3 == p_scalar)
+		{
+			glUniformMatrix3fv(m_UniformInfo[p_index].Location, p_count, p_transpose, p_value);
+		}
+		else if (4 == p_scalar)
+		{
+			glUniformMatrix4fv(m_UniformInfo[p_index].Location, p_count, p_transpose, p_value);
+		}
+		else
+		{
+			printf("\n■■■ エラー ■■■\n");
+			printf("シェーダー「%s」及び「%s」用の\n", m_vertex_file_name, m_fragment_file_name);
+			printf("ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n", m_UniformInfo[p_index].Name);
+			printf("「glUniformMatrixXfv」関数「p_scalar」引数のエラーです\n");
+			printf("正しい値が設定されていません → 設定値：%d\n\n", p_scalar);
+			ERROR_MESSAGE("Uniform変数へのデータを送信（関連付け）に失敗しました。");
+		}
+	}
 }
 
 /*-------------------------------------------------------------------------------
 *	関数説明
 *	　シェーダープログラムの利用を開始する（ほぼ glUseProgram と同じです）
-*	　分かりやすいように引数を少なくしたのと、エラー管理を一元化した点が違うのみです。
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
 *	　なし
 *	戻り値
@@ -164,7 +417,7 @@ void ShaderManager::UseProgram(void)
 
 	if (GL_NO_ERROR != glGetError())
 	{
-		printf("シェーダー「%s」及び「%s」用の処理でエラーが発生しました。\n", m_vertex_shader_file, m_fragment_shader_file);
+		printf("シェーダー「%s」及び「%s」用の処理でエラーが発生しました。\n", m_vertex_file_name, m_fragment_file_name);
 		ERROR_MESSAGE("シェーダープログラムの利用に失敗しました。");
 	}
 }
@@ -173,13 +426,13 @@ void ShaderManager::UseProgram(void)
 *	関数説明
 *	　シェーダーファイルの読み込みを行う
 *	引数
-*	　p_shader_file_name	：[I/ ]　各シェーダーのファイル名（Shaderフォルダに格納されている必要があります）
+*	　p_file_name			：[I/ ]　各シェーダーのファイル名（Shaderフォルダに格納されている必要があります）
 *	　p_shader_source		：[ /O]　各シェーダーのソース
 *	　source_size			：[I/ ]　シェーダーの全文の最大文字数
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::Shader_FileLoad(const char* p_shader_file_name, char* p_shader_source, const int p_source_size)
+void ShaderManager::Shader_FileLoad(const char* p_file_name, char* p_shader_source, const int p_source_size)
 {
 
 	FILE *fp;		//ファイルポインタ宣言
@@ -187,10 +440,10 @@ void ShaderManager::Shader_FileLoad(const char* p_shader_file_name, char* p_shad
 
 	char shader_dir_file_name[SHADER_FILE_NAME_MAX] = "..\\Shader\\";
 
-	strcat_s(shader_dir_file_name, p_shader_file_name);
+	strcat_s(shader_dir_file_name, p_file_name);
 
 	//ファイルのオープン
-	printf("「%s」シェーダーファイルの読み込みを開始します... ", p_shader_file_name);
+	printf("「%s」シェーダーファイルの読み込みを開始します... ", p_file_name);
 	if (0 != fopen_s(&fp, shader_dir_file_name, "r"))
 	{
 		ERROR_MESSAGE("シェーダーファイルのオープンに失敗しました");

@@ -76,6 +76,12 @@ void main(void)
 
 		//メイン描画開始
 		m_MainDraw->Drawing(m_WindowManager, m_KeyManager);
+
+		//GLエラーチェック
+		if (GL_NO_ERROR != glGetError())
+		{
+			ERROR_MESSAGE("プログラム内のどこかでGL関連のエラーが発生しました。\n原因を追求してください");
+		}
 	}
 
 	//////////////////////////////////////////////////////
