@@ -104,7 +104,7 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 *	　Attribute変数のロケーションを生成（ほぼ glGetAttribLocation と同じです）
 *	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
-*	　p_name			：[I/ ]　シェーダーで使用するAttribute変数の名前
+*	　p_name		：[I/ ]　シェーダーで使用するAttribute変数の名前
 *	戻り値
 *	　Attribute変数のロケーションを呼び出すためのインデックス値
 *-------------------------------------------------------------------------------*/
@@ -142,7 +142,7 @@ GLint ShaderManager::GetAttribLocation(const GLchar* p_name)
 *	　Uniform変数のロケーションを生成（ほぼ glGetUniformLocation と同じです）
 *	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
-*	　p_name			：[I/ ]　シェーダーで使用するUniform変数の名前
+*	　p_name		：[I/ ]　シェーダーで使用するUniform変数の名前
 *	戻り値
 *	　Uniform変数のロケーションを呼び出すためのインデックス値
 *-------------------------------------------------------------------------------*/
@@ -181,8 +181,8 @@ GLint ShaderManager::GetUniformLocation(const GLchar* p_name)
 *	　Attribute変数を有効にします。（ほぼ glEnableVertexAttribArray と同じです）
 *	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
-*	　p_index			：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
-*								　（GetAttribLocationで取得した返り値）
+*	　p_index		：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
+*							　（GetAttribLocationで取得した返り値）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -207,14 +207,14 @@ void ShaderManager::EnableVertexAttribArray(const GLint p_index)
 *	　Attribute変数へデータを送信（関連付け）します。（ほぼ glVertexAttribPointer と同じです）
 *	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
-*	　p_index			：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
-*								　（GetAttribLocationで取得した返り値）
-*	　p_size			：[I/ ]　頂点データの要素数
-*	　p_type			：[I/ ]　頂点データの型
-*	　p_normalized		：[I/ ]　頂点データを正規化して頂点シェーダーに渡す場合は「GL_TRUE」を指定、
-*								 入力そのままに頂点シェーダーに渡す場合は「GL_FALSE」を指定
-*	　p_stride			：[I/ ]　頂点の先頭位置ごとのオフセット値、0指定可能
-*	　p_pointe			：[I/ ]　関連付ける頂点の先頭ポインタ
+*	　p_index		：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
+*							　（GetAttribLocationで取得した返り値）
+*	　p_size		：[I/ ]　頂点データの要素数
+*	　p_type		：[I/ ]　頂点データの型
+*	　p_normalized	：[I/ ]　頂点データを正規化して頂点シェーダーに渡す場合は「GL_TRUE」を指定、
+*							 入力そのままに頂点シェーダーに渡す場合は「GL_FALSE」を指定
+*	　p_stride		：[I/ ]　頂点の先頭位置ごとのオフセット値、0指定可能
+*	　p_pointe		：[I/ ]　関連付ける頂点の先頭ポインタ
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -239,16 +239,16 @@ void ShaderManager::VertexAttribPointer(const GLint p_index, const GLint p_size,
 *	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1f, glUniform2f, glUniform3f, glUniform4f と同じです）
 *	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
-*	　p_index			：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
-*						　		（GetUniformLocationで取得した返り値）
-*	　p_scalar			：[I/ ]　転送するデータの数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → vec4）
-*						----------------------------------------------------------
-*						下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
-*						（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
-*	　p_param1			：[I/ ]　転送するデータ 1（シェーダー内変数の Xベクトル成分に該当）
-*	　p_param2			：[I/ ]　転送するデータ 2（シェーダー内変数の Yベクトル成分に該当）
-*	　p_param3			：[I/ ]　転送するデータ 3（シェーダー内変数の Zベクトル成分に該当）
-*	　p_param4			：[I/ ]　転送するデータ 4（シェーダー内変数の Wベクトル成分に該当）
+*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+*					　		（GetUniformLocationで取得した返り値）
+*	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → vec4）
+*					----------------------------------------------------------
+*					下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
+*					（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
+*	　p_param1		：[I/ ]　転送するデータ 1（シェーダー内変数の Xベクトル成分に該当）
+*	　p_param2		：[I/ ]　転送するデータ 2（シェーダー内変数の Yベクトル成分に該当）
+*	　p_param3		：[I/ ]　転送するデータ 3（シェーダー内変数の Zベクトル成分に該当）
+*	　p_param4		：[I/ ]　転送するデータ 4（シェーダー内変数の Wベクトル成分に該当）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -297,16 +297,16 @@ void ShaderManager::glUniformXf(const GLint p_index, const GLint p_scalar, const
 *	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1i, glUniform2i, glUniform3i, glUniform4i と同じです）
 *	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
-*	　p_index			：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
-*						　		（GetUniformLocationで取得した返り値）
-*	　p_scalar			：[I/ ]　転送するデータの数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → ivec4）
-*						----------------------------------------------------------
-*						下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
-*						（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
-*	　p_param1			：[I/ ]　転送するデータ 1（シェーダー内変数の Xベクトル成分に該当）
-*	　p_param2			：[I/ ]　転送するデータ 2（シェーダー内変数の Yベクトル成分に該当）
-*	　p_param3			：[I/ ]　転送するデータ 3（シェーダー内変数の Zベクトル成分に該当）
-*	　p_param4			：[I/ ]　転送するデータ 4（シェーダー内変数の Wベクトル成分に該当）
+*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+*					　		（GetUniformLocationで取得した返り値）
+*	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → ivec4）
+*					----------------------------------------------------------
+*					下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
+*					（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
+*	　p_param1		：[I/ ]　転送するデータ 1（シェーダー内変数の Xベクトル成分に該当）
+*	　p_param2		：[I/ ]　転送するデータ 2（シェーダー内変数の Yベクトル成分に該当）
+*	　p_param3		：[I/ ]　転送するデータ 3（シェーダー内変数の Zベクトル成分に該当）
+*	　p_param4		：[I/ ]　転送するデータ 4（シェーダー内変数の Wベクトル成分に該当）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -352,16 +352,122 @@ void ShaderManager::glUniformXi(const GLint p_index, const GLint p_scalar, const
 
 /*-------------------------------------------------------------------------------
 *	関数説明
+*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1fv, glUniform2fv, glUniform3fv, glUniform4fv と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
+*	引数
+*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+*					　		（GetUniformLocationで取得した返り値）
+*	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → vec4）
+*	　p_count		：[I/ ]　転送するデータの配列数（「p_scalar」引数で設定したデータの個数を何セット送るか　例)[4] → vec? Example[4]）
+*	　value			：[I/ ]　転送するデータへのポインタ
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void ShaderManager::glUniformXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLfloat *p_value)
+{
+	if (-1 == m_UniformInfo[p_index].Location)
+	{
+		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
+			"シェーダー「%s」及び「%s」用の\n"\
+			"ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+			"シェーダーに変数が定義されていない可能性があります\n\n"\
+			, m_vertex_file_name, m_fragment_file_name, m_UniformInfo[p_index].Name);
+	}
+	else
+	{
+		if (1 == p_scalar)
+		{
+			glUniform1fv(m_UniformInfo[p_index].Location, p_count, p_value);
+		}
+		else if (2 == p_scalar)
+		{
+			glUniform2fv(m_UniformInfo[p_index].Location, p_count, p_value);
+		}
+		else if (3 == p_scalar)
+		{
+			glUniform3fv(m_UniformInfo[p_index].Location, p_count, p_value);
+		}
+		else if (4 == p_scalar)
+		{
+			glUniform4fv(m_UniformInfo[p_index].Location, p_count, p_value);
+		}
+		else
+		{
+			printf("\n■■■ エラー ■■■\n");
+			printf("シェーダー「%s」及び「%s」用の\n", m_vertex_file_name, m_fragment_file_name);
+			printf("ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n", m_UniformInfo[p_index].Name);
+			printf("「glUniformXfv」関数「p_scalar」引数のエラーです\n");
+			printf("正しい値が設定されていません → 設定値：%d\n\n", p_scalar);
+			ERROR_MESSAGE("Uniform変数へのデータを送信（関連付け）に失敗しました。");
+		}
+	}
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1iv, glUniform2iv, glUniform3iv, glUniform4iv と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
+*	引数
+*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+*					　		（GetUniformLocationで取得した返り値）
+*	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → ivec4）
+*	　p_count		：[I/ ]　転送するデータの配列数（「p_scalar」引数で設定したデータの個数を何セット送るか　例)[4] → ivec? Example[4]）
+*	　value			：[I/ ]　転送するデータへのポインタ
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void ShaderManager::glUniformXiv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLint *p_value)
+{
+	if (-1 == m_UniformInfo[p_index].Location)
+	{
+		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
+			"シェーダー「%s」及び「%s」用の\n"\
+			"ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+			"シェーダーに変数が定義されていない可能性があります\n\n"\
+			, m_vertex_file_name, m_fragment_file_name, m_UniformInfo[p_index].Name);
+	}
+	else
+	{
+		if (1 == p_scalar)
+		{
+			glUniform1iv(m_UniformInfo[p_index].Location, p_count, p_value);
+		}
+		else if (2 == p_scalar)
+		{
+			glUniform2iv(m_UniformInfo[p_index].Location, p_count, p_value);
+		}
+		else if (3 == p_scalar)
+		{
+			glUniform3iv(m_UniformInfo[p_index].Location, p_count, p_value);
+		}
+		else if (4 == p_scalar)
+		{
+			glUniform4iv(m_UniformInfo[p_index].Location, p_count, p_value);
+		}
+		else
+		{
+			printf("\n■■■ エラー ■■■\n");
+			printf("シェーダー「%s」及び「%s」用の\n", m_vertex_file_name, m_fragment_file_name);
+			printf("ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n", m_UniformInfo[p_index].Name);
+			printf("「glUniformXiv」関数「p_scalar」引数のエラーです\n");
+			printf("正しい値が設定されていません → 設定値：%d\n\n", p_scalar);
+			ERROR_MESSAGE("Uniform変数へのデータを送信（関連付け）に失敗しました。");
+		}
+	}
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
 *	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniformMatrix2fv, glUniformMatrix3fv, glUniformMatrix4fv と同じです）
 *	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
-*	　p_index			：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
-*						　		（GetUniformLocationで取得した返り値）
-*	　p_scalar			：[I/ ]　転送するデータの数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → mat4）
-*	　p_count			：[I/ ]　転送するデータの配列数（「p_scalar」引数で設定したデータの数を何セット送るか　例)[4] → mat? Example[4]）
-*	　p_transpose		：[I/ ]　頂点データを転置してシェーダーに渡す場合は「GL_TRUE」を指定、
+*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+*					　		（GetUniformLocationで取得した返り値）
+*	　p_scalar		：[I/ ]　転送する行列のサイズ（？×？ の [？]の部分）（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → mat4）
+*	　p_count		：[I/ ]　転送するの行列の配列数（「p_scalar」引数で設定した行列のサイズを何セット送るか　例)[4] → mat? Example[4]）
+*	　p_transpose	：[I/ ]　頂点データを転置してシェーダーに渡す場合は「GL_TRUE」を指定、
 *								 入力そのままに頂点シェーダーに渡す場合は「GL_FALSE」を指定
-*	　value				：[I/ ]　転送するデータの配列へのポインタ
+*	　value			：[I/ ]　転送するデータへのポインタ
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -426,9 +532,9 @@ void ShaderManager::UseProgram(void)
 *	関数説明
 *	　シェーダーファイルの読み込みを行う
 *	引数
-*	　p_file_name			：[I/ ]　各シェーダーのファイル名（Shaderフォルダに格納されている必要があります）
-*	　p_shader_source		：[ /O]　各シェーダーのソース
-*	　source_size			：[I/ ]　シェーダーの全文の最大文字数
+*	　p_file_name		：[I/ ]　各シェーダーのファイル名（Shaderフォルダに格納されている必要があります）
+*	　p_shader_source	：[ /O]　各シェーダーのソース
+*	　source_size		：[I/ ]　シェーダーの全文の最大文字数
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
