@@ -86,6 +86,24 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, KeyManager* p_KeyManager)
 	m_Translate.x = m_Translate.x + MouseButton.Left.DiffPos.x;
 	m_Translate.y = m_Translate.y + MouseButton.Left.DiffPos.y;
 	m_Translate.z = m_Translate.z + MouseButton.Scroll;
+	//更にキーボードの情報を加える
+	if (GLFW_PRESS == KeyBoard.Change.Key_W)
+	{
+		m_Translate.z = m_Translate.z + 0.5f;
+	}
+	if (GLFW_PRESS == KeyBoard.Change.Key_S)
+	{
+		m_Translate.z = m_Translate.z - 0.5f;
+	}
+	if (GLFW_PRESS == KeyBoard.Change.Key_A)
+	{
+		m_Translate.x = m_Translate.x - 1.0f;
+	}
+	if (GLFW_PRESS == KeyBoard.Change.Key_D)
+	{
+		m_Translate.x = m_Translate.x + 1.0f;
+	}
+
 	//回転用の変数にマウス情報の座標を加える
 	//本来であれば360度回転したら変数を初期化した方が良いが、サンプルなので割愛
 	m_Rotate.x = m_Rotate.x + MouseButton.Right.DiffPos.x;
