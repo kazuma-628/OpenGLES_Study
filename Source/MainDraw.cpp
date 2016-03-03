@@ -66,7 +66,9 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, KeyManager* p_KeyManager)
 	GLFWwindow* const window = p_WindowManager->GetWindow();
 	//マウスの情報を取得
 	MouseInfo MouseButton = p_KeyManager->GetMouseInfo();
-
+	//キー（キーボード）の情報を取得
+	KeyInfo KeyBoard = p_KeyManager->GetKeyInfo();
+	
 	// シェーダープログラムの利用を開始する
 	m_MainShader->UseProgram();
 
