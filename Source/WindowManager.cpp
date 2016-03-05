@@ -4,6 +4,7 @@
 WindowManager::WindowManager()
 {
 	m_window = NULL;
+	memset(&m_WindowSize, 0, sizeof(m_WindowSize));
 }
 
 //デストラクタ
@@ -92,6 +93,19 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	m_window = window;
 
 	//生成した時のウィンドウの幅高さを保存
-	m_Width = p_Width;
-	m_Height = p_Height;
+	m_WindowSize.Width = p_Width;
+	m_WindowSize.Height = p_Height;
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　ウィンドウに描画する（フロントバッファ / バックバッファ 共通）
+*	引数
+*	　なし
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void WindowManager::DrawingOnWindow(void)
+{
+	glfwSwapBuffers(m_window);
 }

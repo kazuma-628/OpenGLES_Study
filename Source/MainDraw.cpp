@@ -62,8 +62,8 @@ void MainDraw::Prepare()
 *-------------------------------------------------------------------------------*/
 void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager)
 {
-	//作成したウィンドウハンドルを取得
-	GLFWwindow* const window = p_WindowManager->GetWindow();
+	//ウィンドウサイズの取得
+	WindowSize const WindowSize = p_WindowManager->GetWindowSize();
 	//マウスの情報を取得
 	MouseInfo MouseButton = p_DeviceManager->GetMouseInfo();
 	//キー（キーボード）の情報を取得
@@ -124,7 +124,7 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	//透視投影行列を適用する
 	Projection.Perspective(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
 	//もう一つの方法
-//	Projection.Perspective(1.0, 100.0, 60.0, WINDOW_WIDTH / WINDOW_HEIGHT);
+//	Projection.Perspective(1.0, 100.0, 60.0, WindowSize.Width / WindowSize.Height);
 
 	//シェーダーの変数を有効化
 	m_MainShader->EnableVertexAttribArray(m_attr_pos);
@@ -214,7 +214,7 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//ビューポートを設定する
-	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glViewport(0, 0, WindowSize.Width, WindowSize.Height);
 
 	//変数を転送
 	m_MainShader->VertexAttribPointer(m_attr_pos, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)position);
@@ -224,6 +224,6 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 14);
 
 	//描画処理
-	glfwSwapBuffers(window);
+	p_WindowManager->DrawingOnWindow();
 }
 
