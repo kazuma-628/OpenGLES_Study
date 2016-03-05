@@ -123,6 +123,8 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	
 	//透視投影行列を適用する
 	Projection.Perspective(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
+	//もう一つの方法
+//	Projection.Perspective(1.0, 100.0, 60.0, WINDOW_WIDTH / WINDOW_HEIGHT);
 
 	//シェーダーの変数を有効化
 	m_MainShader->EnableVertexAttribArray(m_attr_pos);

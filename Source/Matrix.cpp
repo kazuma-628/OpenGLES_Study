@@ -150,20 +150,20 @@ void Matrix::Rotate(const GLfloat rotate, const GLfloat p_x, const GLfloat p_y, 
 	Matrix t_matrix;
 
 	//回転行列を適用
-	GLfloat c = cosf(DEGREE_TO_RADIAN(rotate));
-	GLfloat s = sinf(DEGREE_TO_RADIAN(rotate));
+	GLfloat t_c = cosf(DEGREE_TO_RADIAN(rotate));
+	GLfloat t_s = sinf(DEGREE_TO_RADIAN(rotate));
 
-	t_matrix.m_val[0] = (p_x * p_x) * (1.0f - c) + c;
-	t_matrix.m_val[1] = (p_x * p_y) * (1.0f - c) - p_z * s;
-	t_matrix.m_val[2] = (p_x * p_z) * (1.0f - c) + p_y * s;
+	t_matrix.m_val[0] = (p_x * p_x) * (1.0f - t_c) + t_c;
+	t_matrix.m_val[1] = (p_x * p_y) * (1.0f - t_c) - p_z * t_s;
+	t_matrix.m_val[2] = (p_x * p_z) * (1.0f - t_c) + p_y * t_s;
 
-	t_matrix.m_val[4] = (p_y * p_x) * (1.0f - c) + p_z * s;
-	t_matrix.m_val[5] = (p_y * p_y) * (1.0f - c) + c;
-	t_matrix.m_val[6] = (p_y * p_z) * (1.0f - c) - p_x * s;
+	t_matrix.m_val[4] = (p_y * p_x) * (1.0f - t_c) + p_z * t_s;
+	t_matrix.m_val[5] = (p_y * p_y) * (1.0f - t_c) + t_c;
+	t_matrix.m_val[6] = (p_y * p_z) * (1.0f - t_c) - p_x * t_s;
 
-	t_matrix.m_val[8] = (p_z * p_x) * (1.0f - c) - p_y * s;
-	t_matrix.m_val[9] = (p_z * p_y) * (1.0f - c) + p_x * s;
-	t_matrix.m_val[10] = (p_z * p_z) * (1.0f - c) + c;
+	t_matrix.m_val[8] = (p_z * p_x) * (1.0f - t_c) - p_y * t_s;
+	t_matrix.m_val[9] = (p_z * p_y) * (1.0f - t_c) + p_x * t_s;
+	t_matrix.m_val[10] = (p_z * p_z) * (1.0f - t_c) + t_c;
 
 	*this = *this * t_matrix;
 }
@@ -220,6 +220,52 @@ void Matrix::Perspective(float p_left, float p_right,
 	t_matrix.m_val[15] = 0.0f;
 
 	*this = *this * t_matrix;
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　透視投影変換行列を適応する
+*	　一つ上にある「Perspective」関数でも行列を作成することが可能です（オーバーロードしてあります）
+*	　引数が違うので、使いやすい方や用途に合わせて使用すること（結果的には同じことができます）
+*	引数
+*	　p_near		：[I/ ]　近くの面までの距離
+*	　p_far			：[I/ ]　遠くの面までの距離
+*	　p_fovY_deg	：[I/ ]　カメラの Y方向の画角
+*	　p_aspect		：[I/ ]　描画先の画面のアスペクト比（幅 ÷ 高さ）
+*
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void Matrix::Perspective(float p_near, float p_far,
+						float p_fovY_degree, float p_aspect)
+{
+	Matrix t_matrix;
+
+	GLfloat t_f = 1.0 / (tan(DEGREE_TO_RADIAN(p_fovY_degree)) / 2.0);
+
+	t_matrix.m_val[0] = t_f / p_aspect;
+	t_matrix.m_val[5] = t_f;
+	t_matrix.m_val[10] = (p_far + p_near) / (p_near - p_far);
+	t_matrix.m_val[11] = -1;
+	t_matrix.m_val[14] = (2.0f * p_far * p_near) / (p_near - p_far);
+
+	*this = *this * t_matrix;
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　逆行列を求める
+*	引数
+*	　なし
+*	戻り値
+*	　逆行列
+*-------------------------------------------------------------------------------*/
+Matrix Matrix::Inverse() const
+{
+	Matrix t_matrix;
+
+
+	return t_matrix;
 }
 
 /*-------------------------------------------------------------------------------
