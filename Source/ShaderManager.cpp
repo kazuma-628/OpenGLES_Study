@@ -252,7 +252,7 @@ void ShaderManager::VertexAttribPointer(const GLint p_index, const GLint p_size,
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::glUniformXf(const GLint p_index, const GLint p_scalar, const GLfloat p_param1, const GLfloat p_param2, const GLfloat p_param3, const GLfloat p_param4)
+void ShaderManager::UniformXf(const GLint p_index, const GLint p_scalar, const GLfloat p_param1, const GLfloat p_param2, const GLfloat p_param3, const GLfloat p_param4)
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{
@@ -310,7 +310,7 @@ void ShaderManager::glUniformXf(const GLint p_index, const GLint p_scalar, const
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::glUniformXi(const GLint p_index, const GLint p_scalar, const GLint p_param1, const GLint p_param2, const GLint p_param3, const GLint p_param4)
+void ShaderManager::UniformXi(const GLint p_index, const GLint p_scalar, const GLint p_param1, const GLint p_param2, const GLint p_param3, const GLint p_param4)
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{
@@ -363,7 +363,7 @@ void ShaderManager::glUniformXi(const GLint p_index, const GLint p_scalar, const
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::glUniformXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLfloat *p_value)
+void ShaderManager::UniformXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLfloat *p_value)
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{
@@ -416,7 +416,7 @@ void ShaderManager::glUniformXfv(const GLint p_index, const GLint p_scalar, cons
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::glUniformXiv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLint *p_value)
+void ShaderManager::UniformXiv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLint *p_value)
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{
@@ -471,7 +471,7 @@ void ShaderManager::glUniformXiv(const GLint p_index, const GLint p_scalar, cons
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::glUniformMatrixXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLboolean p_transpose, const GLfloat *p_value)
+void ShaderManager::UniformMatrixXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLboolean p_transpose, const GLfloat *p_value)
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{

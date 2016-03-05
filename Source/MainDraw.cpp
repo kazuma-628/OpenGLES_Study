@@ -219,8 +219,8 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	//•Ï”‚ğ“]‘—
 	m_MainShader->VertexAttribPointer(m_attr_pos, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)position);
 	m_MainShader->VertexAttribPointer(m_attr_color, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, color);
-	m_MainShader->glUniformMatrixXfv(m_ModelView_matrix, 4, 1, GL_FALSE, ModelView.GetMatrix());
-	m_MainShader->glUniformMatrixXfv(m_Proj_matrix, 4, 1, GL_FALSE, Projection.GetMatrix());
+	m_MainShader->UniformMatrixXfv(m_ModelView_matrix, 4, 1, GL_FALSE, ModelView.GetMatrix());
+	m_MainShader->UniformMatrixXfv(m_Proj_matrix, 4, 1, GL_FALSE, Projection.GetMatrix());
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 14);
 
 	//•`‰æˆ—
