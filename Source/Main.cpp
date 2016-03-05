@@ -53,6 +53,7 @@ void main(void)
 	//	各オブジェクト初期化 及び 準備
 	
 	//ウインドウを作成
+	//※ ウィンドウを複数生成することにはまだ対応していないので注意 ※
 	m_WindowManager->CreateNewWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGLES_Study");
 	//作成したウィンドウハンドルを取得
 	GLFWwindow* const window = m_WindowManager->GetWindow();
