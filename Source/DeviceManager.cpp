@@ -1,14 +1,14 @@
-#include "KeyManager.h"
+#include "DeviceManager.h"
 
 /////////////////////////////////////////////
 //static変数の実体を定義
 
-MouseInfo KeyManager::m_MouseInfo;			//マウスボタンの情報
-CursorPos KeyManager::m_OldCursorPos;		//直前（1イベント前）のカーソル座標		
-KeyInfo KeyManager::m_KeyInfo;				//キー（キーボード）の情報
+MouseInfo DeviceManager::m_MouseInfo;			//マウスボタンの情報
+CursorPos DeviceManager::m_OldCursorPos;		//直前（1イベント前）のカーソル座標		
+KeyInfo DeviceManager::m_KeyInfo;				//キー（キーボード）の情報
 
 //コンストラクタ
-KeyManager::KeyManager()
+DeviceManager::DeviceManager()
 {
 	m_window = NULL;
 
@@ -22,7 +22,7 @@ KeyManager::KeyManager()
 }
 
 //デストラクタ
-KeyManager::~KeyManager()
+DeviceManager::~DeviceManager()
 {
 
 }
@@ -35,19 +35,19 @@ KeyManager::~KeyManager()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void KeyManager::Initialize(GLFWwindow* const p_window)
+void DeviceManager::Initialize(GLFWwindow* const p_window)
 {
 	//ウィンドウ情報を保存
 	m_window = p_window;
 
 	//マウスボタンが変化した時用のコールバックを登録
-	glfwSetMouseButtonCallback(m_window, KeyManager::MouseButtonCallback);
+	glfwSetMouseButtonCallback(m_window, DeviceManager::MouseButtonCallback);
 
 	//マウスホイールが変化した時用のコールバックを登録
-	glfwSetScrollCallback(m_window, KeyManager::ScrollCallback);
+	glfwSetScrollCallback(m_window, DeviceManager::ScrollCallback);
 
 	//キー（キーボード）が変化した時用のコールバック
-	glfwSetKeyCallback(m_window, KeyManager::KeyCallback);
+	glfwSetKeyCallback(m_window, DeviceManager::KeyCallback);
 }
 
 /*-------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ void KeyManager::Initialize(GLFWwindow* const p_window)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void KeyManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int p_action, int p_mods)
+void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int p_action, int p_mods)
 {
 	//座標を取得用の一時変数
 	double PosX = 0.0;
@@ -95,7 +95,7 @@ void KeyManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int p_a
 			if (GLFW_PRESS != m_MouseInfo.Left.State)
 			{
 				//マウスが動いた時にコールバックされるようにする
-				glfwSetCursorPosCallback(p_window, KeyManager::CursorPosCallback);
+				glfwSetCursorPosCallback(p_window, DeviceManager::CursorPosCallback);
 			}
 
 			//押されたことを記憶
@@ -140,7 +140,7 @@ void KeyManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int p_a
 			if (GLFW_PRESS != m_MouseInfo.Right.State)
 			{
 				//マウスが動いた時にコールバックされるようにする
-				glfwSetCursorPosCallback(p_window, KeyManager::CursorPosCallback);
+				glfwSetCursorPosCallback(p_window, DeviceManager::CursorPosCallback);
 			}
 
 			//押されたことを記憶
@@ -193,7 +193,7 @@ void KeyManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int p_a
 *	関数説明
 *	　マウスカーソルが動いた時にコールバックされる関数
 *	　（ただし特定のマウスボタンが押されている最中のみ有効にしてある
-*　　　　ので、タイミングは右記関数参照　KeyManager::MouseButtonCallback）
+*　　　　ので、タイミングは右記関数参照　DeviceManager::MouseButtonCallback）
 *	引数
 *	　p_window	：[I/ ]　ウィンドウハンドル
 *	　p_xpos	：[I/ ]　X 座標
@@ -203,7 +203,7 @@ void KeyManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int p_a
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void KeyManager::CursorPosCallback(GLFWwindow* p_window, double p_xpos, double p_ypos)
+void DeviceManager::CursorPosCallback(GLFWwindow* p_window, double p_xpos, double p_ypos)
 {
 
 	//座標用の変数宣言
@@ -271,7 +271,7 @@ void KeyManager::CursorPosCallback(GLFWwindow* p_window, double p_xpos, double p
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void KeyManager::ScrollCallback(GLFWwindow* p_window, double p_xoffset, double p_yoffset)
+void DeviceManager::ScrollCallback(GLFWwindow* p_window, double p_xoffset, double p_yoffset)
 {
 
 	//ひとまずスクロール上下しか使わない予定なので「p_yoffset」のみ取得
@@ -297,7 +297,7 @@ void KeyManager::ScrollCallback(GLFWwindow* p_window, double p_xoffset, double p
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void KeyManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode, int p_action, int p_mods)
+void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode, int p_action, int p_mods)
 {
 
 	//キーの情報と格納する変数をまとめて管理する

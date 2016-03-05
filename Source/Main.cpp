@@ -43,7 +43,7 @@ void main(void)
 	MainDraw *m_MainDraw = new MainDraw;
 
 	//Key管理用のオブジェクト生成
-	KeyManager *m_KeyManager = new KeyManager;
+	DeviceManager *m_DeviceManager = new DeviceManager;
 
 	//ウィンドウ管理用のオブジェクト生成
 	WindowManager *m_WindowManager = new WindowManager;
@@ -60,7 +60,7 @@ void main(void)
 	//キー管理用のオブジェクト初期化（マウスやキーボード制御のコールバックなどを登録）
 	//この関数コールの前にウィンドウが生成されている必要がある
 	//※ ウィンドウを複数生成して、それぞれKey管理することはまだ対応していないので注意 ※
-	m_KeyManager->Initialize(window);
+	m_DeviceManager->Initialize(window);
 
 	//メイン描画準備
 	m_MainDraw->Prepare();
@@ -75,7 +75,7 @@ void main(void)
 		glfwPollEvents();
 
 		//メイン描画開始
-		m_MainDraw->Drawing(m_WindowManager, m_KeyManager);
+		m_MainDraw->Drawing(m_WindowManager, m_DeviceManager);
 
 		//GLエラーチェック
 		if (GL_NO_ERROR != glGetError())
@@ -89,6 +89,6 @@ void main(void)
 
 	//終了処理
 	delete m_MainDraw;
-	delete m_KeyManager;
+	delete m_DeviceManager;
 	delete m_WindowManager;
 }

@@ -56,18 +56,18 @@ void MainDraw::Prepare()
 *	　メイン描画を開始する
 *	引数
 *	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
-*	　p_KeyManager			：[I/ ]　Key管理オブジェクト
+*	　p_DeviceManager			：[I/ ]　Key管理オブジェクト
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void MainDraw::Drawing(WindowManager* p_WindowManager, KeyManager* p_KeyManager)
+void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager)
 {
 	//作成したウィンドウハンドルを取得
 	GLFWwindow* const window = p_WindowManager->GetWindow();
 	//マウスの情報を取得
-	MouseInfo MouseButton = p_KeyManager->GetMouseInfo();
+	MouseInfo MouseButton = p_DeviceManager->GetMouseInfo();
 	//キー（キーボード）の情報を取得
-	KeyInfo KeyBoard = p_KeyManager->GetKeyInfo();
+	KeyInfo KeyBoard = p_DeviceManager->GetKeyInfo();
 	
 	// シェーダープログラムの利用を開始する
 	m_MainShader->UseProgram();
@@ -97,11 +97,11 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, KeyManager* p_KeyManager)
 	}
 	if (GLFW_PRESS == KeyBoard.Change.Key_A)
 	{
-		m_Translate.x = m_Translate.x - 1.0f;
+		m_Translate.x = m_Translate.x + 1.0f;
 	}
 	if (GLFW_PRESS == KeyBoard.Change.Key_D)
 	{
-		m_Translate.x = m_Translate.x + 1.0f;
+		m_Translate.x = m_Translate.x - 1.0f;
 	}
 
 	//回転用の変数にマウス情報の座標を加える

@@ -5,7 +5,7 @@
 #include "Common.h"
 #include "ShaderManager.h"
 #include "Matrix.h"
-#include "KeyManager.h"
+#include "DeviceManager.h"
 #include "WindowManager.h"
 
 //グラフィック空間の座標系
@@ -42,11 +42,11 @@ public:
 	*	　メイン描画を開始する
 	*	引数
 	*	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
-	*	　p_KeyManager			：[I/ ]　Key管理オブジェクト
+	*	　p_DeviceManager			：[I/ ]　Key管理オブジェクト
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Drawing(WindowManager* p_WindowManager, KeyManager* p_KeyManager);
+	void Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager);
 
 private:
 

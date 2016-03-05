@@ -3,7 +3,7 @@
 
 #include "Common.h"
 #include "MainDraw.h"
-#include "KeyManager.h"
+#include "DeviceManager.h"
 #include "WindowManager.h"
 
 #endif

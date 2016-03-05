@@ -1,5 +1,5 @@
-#ifndef KEYMANAGER_H
-#define KEYMANAGER_H
+#ifndef DEVICEMANAGER_H
+#define DEVICEMANAGER_H
 
 //include定義
 #include "Common.h"
@@ -67,15 +67,15 @@ typedef struct
 /////////////////////////////////////////////
 //	クラス定義
 
-class KeyManager
+class DeviceManager
 {
 
 public:
 	//コンストラクタ
-	KeyManager();
+	DeviceManager();
 
 	//デストラクタ
-	~KeyManager();
+	~DeviceManager();
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -106,7 +106,7 @@ public:
 	*	関数説明
 	*	　マウスカーソルが動いた時にコールバックされる関数
 	*	　（ただし特定のマウスボタンが押されている最中のみ有効にしてある
-	*　　　　ので、タイミングは右記関数参照　KeyManager::MouseButtonCallback）
+	*　　　　ので、タイミングは右記関数参照　DeviceManager::MouseButtonCallback）
 	*	引数
 	*	　p_window	：[I/ ]　ウィンドウハンドル
 	*	　p_xpos	：[I/ ]　X 座標
