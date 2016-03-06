@@ -242,6 +242,7 @@ void ShaderManager::VertexAttribPointer(const GLint p_index, const GLint p_size,
 *	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
 *					　		（GetUniformLocationで取得した返り値）
 *	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → vec4）
+※ 要約すると [1]を指定すれば → glUniform1f、[4]を指定すれば → glUniform4f がコールされる ※
 *					----------------------------------------------------------
 *					下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
 *					（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
@@ -300,6 +301,7 @@ void ShaderManager::UniformXf(const GLint p_index, const GLint p_scalar, const G
 *	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
 *					　		（GetUniformLocationで取得した返り値）
 *	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → ivec4）
+*							 ※ 要約すると [1]を指定すれば → glUniform1i、[4]を指定すれば → glUniform4i がコールされる ※
 *					----------------------------------------------------------
 *					下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
 *					（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
@@ -358,6 +360,8 @@ void ShaderManager::UniformXi(const GLint p_index, const GLint p_scalar, const G
 *	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
 *					　		（GetUniformLocationで取得した返り値）
 *	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → vec4）
+*							 ※ 要約すると [1]を指定すれば → glUniform1fv、[4]を指定すれば → glUniform4fv がコールされる ※
+*					----------------------------------------------------------
 *	　p_count		：[I/ ]　転送するデータの配列数（「p_scalar」引数で設定したデータの個数を何セット送るか　例)[4] → vec? Example[4]）
 *	　value			：[I/ ]　転送するデータへのポインタ
 *	戻り値
@@ -411,6 +415,8 @@ void ShaderManager::UniformXfv(const GLint p_index, const GLint p_scalar, const 
 *	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
 *					　		（GetUniformLocationで取得した返り値）
 *	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → ivec4）
+*							 ※ 要約すると [1]を指定すれば → glUniform1iv、[4]を指定すれば → glUniform4iv がコールされる ※
+*					----------------------------------------------------------
 *	　p_count		：[I/ ]　転送するデータの配列数（「p_scalar」引数で設定したデータの個数を何セット送るか　例)[4] → ivec? Example[4]）
 *	　value			：[I/ ]　転送するデータへのポインタ
 *	戻り値
@@ -464,6 +470,8 @@ void ShaderManager::UniformXiv(const GLint p_index, const GLint p_scalar, const 
 *	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
 *					　		（GetUniformLocationで取得した返り値）
 *	　p_scalar		：[I/ ]　転送する行列のサイズ（？×？ の [？]の部分）（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → mat4）
+*							 ※ 要約すると [2]を指定すれば → glUniformMatrix2fv、[4]を指定すれば → glUniformMatrix4fv がコールされる ※
+*					----------------------------------------------------------
 *	　p_count		：[I/ ]　転送するの行列の配列数（「p_scalar」引数で設定した行列のサイズを何セット送るか　例)[4] → mat? Example[4]）
 *	　p_transpose	：[I/ ]　頂点データを転置してシェーダーに渡す場合は「GL_TRUE」を指定、
 *								 入力そのままに頂点シェーダーに渡す場合は「GL_FALSE」を指定
