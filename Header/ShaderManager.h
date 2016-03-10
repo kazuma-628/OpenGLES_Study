@@ -278,15 +278,15 @@ private:
 	//アトリビュート変数管理用の構造体
 	typedef struct
 	{
-		char Name[ATTRIB_INFO_NAME_MAX];			//変数名
-		GLint Location;								//ロケーション
+		char Name[ATTRIB_INFO_NAME_MAX];		//変数名
+		GLint Location;							//ロケーション
 	}AttribInfo;
 
 	//ユニフォーム変数管理用の構造体
 	typedef struct
 	{
-		char Name[UNIFORM_INFO_NAME_MAX];				//変数名
-		GLint Location;									//ロケーション
+		char Name[UNIFORM_INFO_NAME_MAX];		//変数名
+		GLint Location;							//ロケーション
 	}UniformInfo;
 
 
@@ -296,8 +296,8 @@ private:
 	char m_fragment_file_name[SHADER_FILE_NAME_MAX];	//フラグメントシェーダーファイル名
 	
 	AttribInfo m_AttribInfo[ATTRIB_INFO_MAX];			//アトリビュート変数管理用の変数
-	int m_AttribInfoIndex;							//アトリビュート変数管理用のインデックス値
+	int m_AttribInfoIndex;								//アトリビュート変数管理用のインデックス値
 	UniformInfo m_UniformInfo[UNIFORM_INFO_MAX];		//ユニフォーム変数管理用の変数
-	int m_UniformInfoIndex;							//ユニフォーム変数管理用のインデックス値
+	int m_UniformInfoIndex;								//ユニフォーム変数管理用のインデックス値
 };
 #endif
