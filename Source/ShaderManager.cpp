@@ -57,7 +57,7 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 	}
 
 	glAttachShader(ProgramObject, vertex_shader);		// バーテックスシェーダーとプログラムを関連付ける
-	glAttachShader(ProgramObject, fragment_shader);	// フラグメントシェーダーとプログラムを関連付ける
+	glAttachShader(ProgramObject, fragment_shader);		// フラグメントシェーダーとプログラムを関連付ける
 	if (GL_NO_ERROR != glGetError())
 	{
 		ERROR_MESSAGE("シェーダーとシェーダープログラムの関連付けに失敗しました。");
