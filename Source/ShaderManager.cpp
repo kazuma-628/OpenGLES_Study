@@ -120,6 +120,7 @@ GLint ShaderManager::GetAttribLocation(const GLchar* p_name)
 		printf("失敗\n\n");
 		printf("■■■ エラー ■■■\n");
 		printf("シェーダーに変数「%s」が定義されていない可能性があります\n\n", p_name);
+		ERROR_MESSAGE_SUB("",0,0,0);
 	}
 	else
 	{ 
@@ -158,6 +159,7 @@ GLint ShaderManager::GetUniformLocation(const GLchar* p_name)
 		printf("失敗\n\n");
 		printf("■■■ エラー ■■■\n");
 		printf("シェーダーに変数「%s」が定義されていない可能性があります\n\n", p_name);
+		ERROR_MESSAGE_SUB("", 0, 0, 0);
 
 	}
 	else
@@ -560,7 +562,10 @@ void ShaderManager::Shader_FileLoad(const char* p_file_name, char* p_shader_sour
 	printf("「%s」シェーダーファイルの読み込みを開始します... ", p_file_name);
 	if (0 != fopen_s(&fp, shader_dir_file_name, "r"))
 	{
-		ERROR_MESSAGE("シェーダーファイルのオープンに失敗しました");
+		printf("失敗\n");
+		ERROR_MESSAGE("シェーダーファイルのオープンに失敗しました。\n"\
+			"「Shader」フォルダに格納されていますか？\n"\
+			"ファイル名が間違っていませんか？");
 	}
 
 	//ファイルの読み込み
@@ -569,6 +574,7 @@ void ShaderManager::Shader_FileLoad(const char* p_file_name, char* p_shader_sour
 		//1行つづ読み込むので文字列を結合
 		if (0 != strcat_s(p_shader_source, p_source_size, String_Line))
 		{
+			printf("失敗\n");
 			ERROR_MESSAGE("ファイルの読み込みに失敗しました。");
 		}
 	}

@@ -49,6 +49,8 @@ TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const int 
 	}
 	else
 	{
+		printf("テクスチャ「%s」の新規読み込みを開始します...", p_FileName);
+
 		//GDI+の初期化
 		ULONG_PTR token;
 		Gdiplus::GdiplusStartupInput input;
@@ -63,10 +65,16 @@ TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const int 
 		size_t length;
 		mbstowcs_s(&length, wchar_FileName, Dir_FileName, TEXTURE_FILE_NAME_MAX);
 		Gdiplus::Bitmap* Texture = new Gdiplus::Bitmap(wchar_FileName);
-	
+
 		//テクスチャデータ読み込み
 		Gdiplus::BitmapData BitmapData;
-		Texture->LockBits(0, Gdiplus::ImageLockModeRead, p_PixelFotmat, &BitmapData);
+		if (0 != Texture->LockBits(0, Gdiplus::ImageLockModeRead, p_PixelFotmat, &BitmapData))
+		{
+			printf("失敗\n");
+			ERROR_MESSAGE("テクスチャファイルの読み込みに失敗しました。\n"\
+				"「Resource」フォルダに格納されていますか？\n"\
+				"ファイル名が間違っていませんか？");
+		}
 
 		/////////////////////////////////////////////////
 		// 返却する情報の設定
@@ -76,7 +84,6 @@ TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const int 
 		m_TextureData[m_AttribInfoIndex].Height = BitmapData.Height;
 		m_TextureData[m_AttribInfoIndex].PixelFormat = BitmapData.PixelFormat;
 		m_TextureData[m_AttribInfoIndex].PixelData = calloc(BitmapData.Height * BitmapData.Stride, sizeof(byte));
-
 
 		//ロードしたテクスチャは「BGR」で格納されているので「RGB」に変換しつつコピーする
 		TextureDataBRGtoRGB(&BitmapData, m_TextureData, p_PixelFotmat);
@@ -90,6 +97,8 @@ TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const int 
 
 		//GDI+の終了
 		Gdiplus::GdiplusShutdown(token);
+
+		printf("完了\n");
 	}
 
 	//今回設定したデータを返却

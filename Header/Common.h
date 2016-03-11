@@ -97,7 +97,8 @@ inline void error_message_sub_func(const char* PrintMessage, const char* param1,
 	printf(PrintMessage, param1, param2, param3);
 
 	//メッセージボックスへのエラーメッセージの作成
-	char *Message = "Attribute/Uniform変数へのデータの送信（関連付け）に失敗しました。";
+	char *Message = "Attribute/Uniform変数のロケーション生成、\n"\
+		"もしくはデータの送信（関連付け）に失敗しました。";
 
 	//デバッグ情報と共にメッセージボックスを表示する
 	error_message_func(Message, File, Line);
