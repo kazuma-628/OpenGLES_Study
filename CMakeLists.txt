@@ -26,6 +26,7 @@ add_executable(
 	Source/Matrix.cpp
 	Source/DeviceManager.cpp
 	Source/WindowManager.cpp
+	Source/ResourceManager.cpp
 
 #「Header File」を指定する
 	Header/Common.h
@@ -35,6 +36,7 @@ add_executable(
 	Header/Matrix.h
 	Header/DeviceManager.h
 	Header/WindowManager.h
+	Header/ResourceManager.h
 
 #「Shader File」を指定する
 	Shader/Main.frag
@@ -89,6 +91,7 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 10")
 
 	#「ライブラリ」を指定する
 		opengl32.lib
+		gdiplus.lib
 		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2010/glfw3.lib
 	)
@@ -102,6 +105,7 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 11")
 
 	#「ライブラリ」を指定する
 		opengl32.lib
+		gdiplus.lib
 		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2012/glfw3.lib
 	)
@@ -115,6 +119,7 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 12")
 
 	#「ライブラリ」を指定する
 		opengl32.lib
+		gdiplus.lib
 		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2013/glfw3.lib
 	)
@@ -128,6 +133,7 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
 
 	#「ライブラリ」を指定する
 		opengl32.lib
+		gdiplus.lib
 		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2015/glfw3.lib
 	)

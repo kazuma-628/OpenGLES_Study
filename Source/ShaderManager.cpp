@@ -127,7 +127,7 @@ GLint ShaderManager::GetAttribLocation(const GLchar* p_name)
 	}
 
 	//変数名とロケーションIDを保存
-	memmove(m_AttribInfo[m_AttribInfoIndex].Name, p_name, sizeof(m_AttribInfo[m_AttribInfoIndex].Name));
+	memmove(m_AttribInfo[m_AttribInfoIndex].Name, p_name, strlen(p_name));
 	m_AttribInfo[m_AttribInfoIndex].Location = Location;
 
 	//インデックス値を1つ進める
@@ -166,7 +166,7 @@ GLint ShaderManager::GetUniformLocation(const GLchar* p_name)
 	}
 
 	//変数名とロケーションIDを保存
-	memmove(m_UniformInfo[m_UniformInfoIndex].Name, p_name, sizeof(m_UniformInfo[m_UniformInfoIndex].Name));
+	memmove(m_UniformInfo[m_UniformInfoIndex].Name, p_name, strlen(p_name));
 	m_UniformInfo[m_UniformInfoIndex].Location = Location;
 
 	//インデックス値を1つ進める

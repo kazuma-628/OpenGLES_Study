@@ -241,7 +241,7 @@ void Matrix::Perspective(float p_near, float p_far,
 {
 	Matrix t_matrix;
 
-	GLfloat t_f = 1.0 / (tan(DEGREE_TO_RADIAN(p_fovY_degree)) / 2.0);
+	GLfloat t_f = 1.0f / (tanf(DEGREE_TO_RADIAN(p_fovY_degree)) / 2.0f);
 
 	t_matrix.m_val[0] = t_f / p_aspect;
 	t_matrix.m_val[5] = t_f;
