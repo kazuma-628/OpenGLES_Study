@@ -1,5 +1,10 @@
 #include "WindowManager.h"
 
+/////////////////////////////////////////////
+//static変数の実体を定義
+
+WindowSize WindowManager::m_WindowSize;			//マウスボタンの情報
+
 //コンストラクタ
 WindowManager::WindowManager()
 {
@@ -16,6 +21,7 @@ WindowManager::~WindowManager()
 /*-------------------------------------------------------------------------------
 *	関数説明
 *	　ウィンドウを作成する
+*	　※ ウィンドウを複数生成することにはまだ対応していないので注意 ※
 *	引数
 *	　p_Width	：[I/ ]　ウィンドウの幅
 *	　p_Height	：[I/ ]　ウィンドウの高さ
@@ -75,6 +81,11 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	glfwSwapInterval(1);
 
 	//////////////////////////////////////////////////////
+	//	ウィンドウサイズが変化した時用のコールバックを登録
+
+	glfwSetWindowSizeCallback(window, WindowManager::WindowSizeCallback);
+
+	//////////////////////////////////////////////////////
 	//	GLEW初期化
 
 	// GLEWを初期化する
@@ -108,4 +119,23 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 void WindowManager::DrawingOnWindow(void)
 {
 	glfwSwapBuffers(m_window);
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　ウィンドウサイズが変化した時にコールバックされる関数
+*	引数
+*	　p_window	：[I/ ]　ウィンドウハンドル
+*	　p_Width	：[I/ ]　ウィンドウの幅
+*	　p_Height	：[I/ ]　ウィンドウの高さ
+*	　詳細は下記URL参照のこと
+*	　http://www.glfw.org/docs/latest/group__window.html#gaaca1c2715759d03da9834eac19323d4a
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void WindowManager::WindowSizeCallback(GLFWwindow* p_window, int p_Width, int p_Height)
+{
+	//生成した時のウィンドウの幅高さを保存
+	m_WindowSize.Width = p_Width;
+	m_WindowSize.Height = p_Height;
 }
