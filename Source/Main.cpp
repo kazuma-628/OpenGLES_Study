@@ -70,7 +70,7 @@ void main(void)
 	//	メインループ
 
 	//ウィンドウが開いている間はループ
-	while (glfwWindowShouldClose(window) == GL_FALSE)
+	while (GL_FALSE == m_WindowManager->GetWindowShouldClose())
 	{
 		//イベント取り出し（マウス状態などのイベントを取得）
 		glfwPollEvents();

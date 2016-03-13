@@ -15,7 +15,7 @@ WindowManager::WindowManager()
 //デストラクタ
 WindowManager::~WindowManager()
 {
-
+	glfwDestroyWindow(m_window);
 }
 
 /*-------------------------------------------------------------------------------
