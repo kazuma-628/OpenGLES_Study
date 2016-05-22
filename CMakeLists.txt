@@ -41,6 +41,7 @@ add_executable(
 #uShader Filev‚ğw’è‚·‚é
 	Shader/Main.frag
 	Shader/Main.vert
+	Shader/Main.geom
 )
 
 #############################################

@@ -79,7 +79,7 @@ void main(void)
 		m_MainDraw->Drawing(m_WindowManager, m_DeviceManager);
 
 		//GLエラーチェック
-		if (GL_NO_ERROR != glGetError())
+		if (GL_NO_ERROR != GL_GET_ERROR())
 		{
 			ERROR_MESSAGE("プログラム内のどこかでGL関連のエラーが発生しました。\n原因を追求してください");
 		}

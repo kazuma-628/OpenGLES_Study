@@ -1,12 +1,12 @@
-#version 300 es
+#version 320 es
 
-//頂点シェーダからのデータ
-in lowp vec4 vary_color;
+//ジオメトリシェーダからのデータ
+in lowp vec4 f_vary_color;
 
 out mediump vec4 FragColor;
 
 void main()
 {
 	//色の設定
-	FragColor = vary_color;
+	FragColor = f_vary_color;
 }

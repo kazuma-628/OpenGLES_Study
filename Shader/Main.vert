@@ -1,4 +1,4 @@
-#version 300 es
+#version 320 es
 
 //頂点データ
 in mediump vec4 attr_pos;
@@ -12,7 +12,7 @@ uniform mediump mat4 ModelView_matrix;
 //プロジェクションマトリクス（3D空間にするためのマトリクス）
 uniform mediump mat4 Proj_matrix;
 
-//フラグメントシェーダへの変数
+//ジオメトリシェーダへの変数
 out lowp vec4 vary_color;
 
 void main()

@@ -31,10 +31,12 @@ public:
 	*	引数
 	*	　p_vertex_file_name		：[I/ ]　バーテックスシェーダーのファイル名（Shaderフォルダに格納されている必要があります）
 	*	　p_fragment_file_name		：[I/ ]　フラグメントシェーダーのファイル名（Shaderフォルダに格納されている必要があります）
+	*	　p_geometry_file_name		：[I/ ]　ジオメトリシェーダーのファイル名（Shaderフォルダに格納されている必要があります）
+	*										 ※使用しない場合は「NULL」を指定
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name);
+	void CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
