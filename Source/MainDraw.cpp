@@ -82,6 +82,13 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	///////////////////////////////////
 	// オブジェクト移動関係の処理
 
+	//スペースで初期位置に戻す
+	if (true == KeyBoard.Change.Key_SPACE)
+	{
+		memset(&m_Translate, 0, sizeof(m_Translate));
+		memset(&m_Rotate, 0, sizeof(m_Rotate));
+	}
+
 	//平行移動用の変数にマウス情報の座標を加える
 	m_Translate.x = m_Translate.x + MouseButton.Left.DiffPos.x;
 	m_Translate.y = m_Translate.y + MouseButton.Left.DiffPos.y;
@@ -204,6 +211,40 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 		250, 0, 0,
 	};
 
+	// インデックス（インデックスバッファを使用する場合に必要）
+	const GLubyte Indices[] =
+	{
+		// v1
+		0, 1, 2,
+		// v2
+		1, 2, 3,
+
+		// v3
+		2, 3, 4,
+		// v4
+		3, 4, 5,
+
+		// v5
+		4, 5, 6,
+		// v6
+		5, 6, 7,
+
+		// v7
+		6, 7, 0,
+		// v8
+		7, 0, 1,
+
+		// v9
+		0, 1, 1,
+		// v10
+		1, 1, 3,
+
+		// v11
+		1, 3, 7,
+		// v12
+		3, 7, 5,
+	};
+
 	//震度テストを有効
 	glEnable(GL_DEPTH_TEST);
 
@@ -221,7 +262,8 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	m_MainShader->VertexAttribPointer(m_attr_color, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, color);
 	m_MainShader->UniformMatrixXfv(m_ModelView_matrix, 4, 1, GL_FALSE, ModelView.GetMatrix());
 	m_MainShader->UniformMatrixXfv(m_Proj_matrix, 4, 1, GL_FALSE, Projection.GetMatrix());
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 14);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 14);								//一番オーソドックス（初歩的）な描画方法
+//	glDrawElements(GL_TRIANGLE_STRIP, 36, GL_UNSIGNED_BYTE, Indices);	//インデックスバッファを使用する場合
 
 	//描画処理
 	p_WindowManager->DrawingOnWindow();
