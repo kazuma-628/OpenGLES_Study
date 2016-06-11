@@ -6,14 +6,18 @@
 #include <gdiplus.h>
 
 //#define定義
-
-#define PIXELFORMAT_24BIT_RGB	(PixelFormat24bppRGB)	//透過情報が含まれていないPNG形式やBMP形式JPG形式など
-														//「glTexImage2D」などでは「GL_RGB」を指定すること
-#define PIXELFORMAT_32BIT_RGBA	(PixelFormat32bppARGB)	//透過情報が含まれているPNG形式など
-														//「glTexImage2D」などでは「GL_RGBA」を指定すること
 #define TEXTURE_DATA_MAX			128					//テクスチャ管理用の最大数
 #define TEXTURE_FILE_NAME_MAX		64					//テクスチャファイル名の最大文字数（ディレクトリ含む）
 #define SHADER_FILE_DIR				"..\\Resource\\"	//リソースファイルの保存ディレクトリ
+
+
+typedef enum
+{
+	PIXELFORMAT_24BIT_RGB = PixelFormat24bppRGB,	//透過情報が含まれていないPNG形式やBMP形式JPG形式など
+													//「glTexImage2D」などでは「GL_RGB」を指定すること
+	PIXELFORMAT_32BIT_RGBA = PixelFormat32bppARGB	//透過情報が含まれているPNG形式など
+													//「glTexImage2D」などでは「GL_RGBA」を指定すること
+}PIXELFORMAT;
 
 //テクスチャデータの情報
 typedef struct
@@ -47,7 +51,7 @@ public:
 	*	戻り値
 	*	　テクスチャデータ（幅,高さ,ピクセルデータなど → 詳細は[TextureData]構造体参照）
 	*-------------------------------------------------------------------------------*/
-	TextureData* TextureDataLoad(const char* p_FileName, const int p_PixelFotmat);
+	TextureData* TextureDataLoad(const char* p_FileName, const PIXELFORMAT p_PixelFotmat);
 
 private:
 
