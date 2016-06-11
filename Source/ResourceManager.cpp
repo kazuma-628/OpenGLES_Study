@@ -56,9 +56,9 @@ TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const int 
 		Gdiplus::GdiplusStartupInput input;
 		Gdiplus::GdiplusStartup(&token, &input, NULL);
 
-		char Dir_FileName[TEXTURE_FILE_NAME_MAX] = "..\\Resource\\";
+		char Dir_FileName[TEXTURE_FILE_NAME_MAX] = SHADER_FILE_DIR;
 
-		strcat_s(Dir_FileName, p_FileName);
+		strcat(Dir_FileName, p_FileName);
 
 		//テクスチャ情報読み込み（マルチバイト文字列 → ワイド文字列に変換含む）
 		wchar_t wchar_FileName[TEXTURE_FILE_NAME_MAX] = { 0 };

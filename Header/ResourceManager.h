@@ -11,9 +11,9 @@
 														//「glTexImage2D」などでは「GL_RGB」を指定すること
 #define PIXELFORMAT_32BIT_RGBA	(PixelFormat32bppARGB)	//透過情報が含まれているPNG形式など
 														//「glTexImage2D」などでは「GL_RGBA」を指定すること
-#define TEXTURE_DATA_MAX			128			//テクスチャ管理用の最大数
-#define TEXTURE_FILE_NAME_MAX		64			//テクスチャファイル名の最大文字数（ディレクトリ含む）
-
+#define TEXTURE_DATA_MAX			128					//テクスチャ管理用の最大数
+#define TEXTURE_FILE_NAME_MAX		64					//テクスチャファイル名の最大文字数（ディレクトリ含む）
+#define SHADER_FILE_DIR				"..\\Resource\\"	//リソースファイルの保存ディレクトリ
 
 //テクスチャデータの情報
 typedef struct

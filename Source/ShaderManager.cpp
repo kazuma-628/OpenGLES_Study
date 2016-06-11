@@ -582,7 +582,7 @@ void ShaderManager::UseProgram(void)
 *-------------------------------------------------------------------------------*/
 char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 {
-	FILE *fp;		//ファイルポインタ宣言
+	FILE *fp = NULL;		//ファイルポインタ宣言
 
 	char shader_dir_file_name[SHADER_FILE_NAME_MAX] = SHADER_FILE_DIR;
 
@@ -590,7 +590,9 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 
 	//ファイルのオープン
 	printf("「%s」シェーダーファイルの読み込みを開始します... ", p_file_name);
-	if (0 != fopen_s(&fp, shader_dir_file_name, "r"))
+	
+	fp = fopen(shader_dir_file_name, "r");
+	if (NULL == fp)
 	{
 		printf("失敗\n");
 		ERROR_MESSAGE("シェーダーファイルのオープンに失敗しました。\n"\
