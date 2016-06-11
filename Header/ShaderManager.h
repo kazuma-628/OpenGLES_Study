@@ -5,13 +5,12 @@
 #include "Common.h"
 
 //Define定義
-#define SHADER_STRING_LINE_MAX		256			//シェーダーの1行の最大文字数
-#define SHADER_STRING_ALL_MAX		10240		//シェーダーの全文の最大文字数
-#define SHADER_FILE_NAME_MAX		64			//シェーダーのファイル名最大文字数（ディレクトリ名含む）
-#define ATTRIB_INFO_MAX				128			//アトリビュート変数管理用の最大数
-#define ATTRIB_INFO_NAME_MAX		64			//アトリビュート変数名の最大文字数
-#define UNIFORM_INFO_MAX			128			//ユニフォーム変数管理用の最大数
-#define UNIFORM_INFO_NAME_MAX		64			//ユニフォーム変数名の最大文字数
+#define SHADER_FILE_NAME_MAX		64				//シェーダーのファイル名最大文字数（ディレクトリ名含む）
+#define SHADER_FILE_DIR				"..\\Shader\\"	//シェーダーファイルの保存ディレクトリ
+#define ATTRIB_INFO_MAX				128				//アトリビュート変数管理用の最大数
+#define ATTRIB_INFO_NAME_MAX		64				//アトリビュート変数名の最大文字数
+#define UNIFORM_INFO_MAX			128				//ユニフォーム変数管理用の最大数
+#define UNIFORM_INFO_NAME_MAX		64				//ユニフォーム変数名の最大文字数
 
 class ShaderManager
 {
@@ -255,26 +254,25 @@ private:
 	*	関数説明
 	*	　シェーダーファイルの読み込みを行う
 	*	引数
-	*	　p_file_name		：[I/ ]　各シェーダーのファイル名（Shaderフォルダに格納されている必要があります）
-	*	　p_shader_source	：[ /O]　各シェーダーのソース
-	*	　source_size		：[I/ ]　シェーダーの全文の最大文字数
+	*	　p_file_name		：[I/ ]　シェーダーのファイル名（Shaderフォルダに格納されている必要があります）
 	*	戻り値
-	*	　なし
+	*	　シェーダーソースへの先頭ポインタ
 	*-------------------------------------------------------------------------------*/
-	void Shader_FileLoad(const char* p_file_name, char* p_shader_source, const int p_source_size);
+	char* ShaderManager::ShaderFileLoad(const char* p_file_name);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
-	*	　シェーダーソースの読み込みを行う
+	*	　シェーダーオブジェクトの作成を行う
 	*	引数
-	*	　shader_source		：[I/ ]　各シェーダーのソースデータ
-	*	　gl_xxxx_shader	：[I/ ]　作成するシェーダーオブジェクト（バーテックス or フラグメント）
+	*	　p_shader_source	：[I/ ]　各シェーダーのソースデータ
+	*	　gl_xxxx_shader	：[I/ ]　作成するシェーダーオブジェクトの種類
+	*						（GL_GEOMETRY_SHADER or GL_FRAGMENT_SHADER or GL_VERTEX_SHADER）
 	*	戻り値
-	*	　なし
+	*	　シェーダーオブジェクト
 	*-------------------------------------------------------------------------------*/
-	GLint Shader_SourceLoad(const char* p_shader_source, const GLuint p_gl_xxxx_shader);
+	GLuint ShaderManager::CreateShader(const GLchar* p_shader_source, const GLuint p_gl_xxxx_shader);
 
-	
+	///////////////////////////////
 	//構造体定義
 
 	//アトリビュート変数管理用の構造体
@@ -296,6 +294,7 @@ private:
 	GLint m_ProgramObject;		//プログラムオブジェクト
 	char m_vertex_file_name[SHADER_FILE_NAME_MAX];		//バーテックスシェーダーファイル名
 	char m_fragment_file_name[SHADER_FILE_NAME_MAX];	//フラグメントシェーダーファイル名
+	char m_geometry_file_name[SHADER_FILE_NAME_MAX];	//フラグメントシェーダーファイル名
 	
 	AttribInfo m_AttribInfo[ATTRIB_INFO_MAX];			//アトリビュート変数管理用の変数
 	int m_AttribInfoIndex;								//アトリビュート変数管理用のインデックス値

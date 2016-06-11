@@ -1,6 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+//Visual Studioで「fopen,strcat,strcpy」などの関数を使用することによるエラーを出さないようにする
+#define _CRT_SECURE_NOWARNINGS
+
 //include定義（ほとんどのファイルで必要になるはずなので一括定義）
 #include <stdio.h>
 #include <stdlib.h>

@@ -34,25 +34,32 @@ ShaderManager::~ShaderManager()
 *-------------------------------------------------------------------------------*/
 void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name)
 {
+	char *vertex_shader_source = NULL;		//バーテックスシェーダーのソース
+	char *fragment_shader_source = NULL;	//フラグメントシェーダーのソース
+	char *geometry_shader_source = NULL;	//ジオメトリシェーダーのソース
+
+	GLuint vertex_shader = 0;				//バーテックスシェーダーのオブジェクト
+	GLuint fragment_shader = 0;				//フラグメントシェーダーのオブジェクト
+	GLuint geometry_shader = 0;				//ジオメトリシェーダーのオブジェクト
+
 	//読み込むシェーダー名を記憶
-	strcat_s(m_vertex_file_name, sizeof(m_vertex_file_name), p_vertex_file_name);
-	strcat_s(m_fragment_file_name, sizeof(m_fragment_file_name), p_fragment_file_name);
+	strcpy(m_vertex_file_name, p_vertex_file_name);
+	strcpy(m_fragment_file_name, p_fragment_file_name);
+	strcpy(m_geometry_file_name, p_geometry_file_name);
 
-	//ファイルからバーテックスソースを読み込む（「Shader」フォルダに格納されている必要があります）
-	char vertex_shader_source[SHADER_STRING_ALL_MAX] = { 0 };		//頂点シェーダ
-	Shader_FileLoad(p_vertex_file_name, vertex_shader_source, SHADER_STRING_ALL_MAX);
-	//ソースをアップロードする
-	const GLuint vertex_shader = Shader_SourceLoad(vertex_shader_source, GL_VERTEX_SHADER);			//頂点シェーダ
+	//ファイルからバーテックスソースを読み込み（「Shader」フォルダに格納されている必要があります）
+	vertex_shader_source = ShaderFileLoad(p_vertex_file_name);
+	//バーテックスのシェーダーオブジェクト作成
+	vertex_shader = CreateShader(vertex_shader_source, GL_VERTEX_SHADER);
 
-	//ファイルからフラグメントソースを読み込む（「Shader」フォルダに格納されている必要があります）
-	char fragment_shader_source[SHADER_STRING_ALL_MAX] = { 0 };		//フラグメントシェーダ
-	Shader_FileLoad(p_fragment_file_name, fragment_shader_source, SHADER_STRING_ALL_MAX);
-	//ソースをアップロードする
-	const GLuint fragment_shader = Shader_SourceLoad(fragment_shader_source, GL_FRAGMENT_SHADER);	//フラグメントシェーダ
+	//ファイルからフラグメントソースを読み込み（「Shader」フォルダに格納されている必要があります）
+	fragment_shader_source = ShaderFileLoad(p_fragment_file_name);
+	//フラグメントのシェーダーオブジェクト作成
+	fragment_shader = CreateShader(fragment_shader_source, GL_FRAGMENT_SHADER);
 
 	//プログラムオブジェクトの生成
 	const GLuint ProgramObject = glCreateProgram();
-	if (GL_NO_ERROR != GL_GET_ERROR() || 0 == ProgramObject)
+	if (0 == ProgramObject)
 	{
 		ERROR_MESSAGE("プログラムオブジェクトの作成に失敗しました。");
 	}
@@ -60,14 +67,13 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 	glAttachShader(ProgramObject, vertex_shader);		// バーテックスシェーダーとプログラムを関連付ける
 	glAttachShader(ProgramObject, fragment_shader);		// フラグメントシェーダーとプログラムを関連付ける
 
-	//ジオメトリシェーダーの読み込み
+	//ジオメトリシェーダーの読み込み（指定されている場合）
 	if (NULL != p_geometry_file_name)
 	{
-		//ファイルからジオメトリソースを読み込む（「Shader」フォルダに格納されている必要があります）
-		char geometry_shader_source[SHADER_STRING_ALL_MAX] = { 0 };		//ジオメトリシェーダ
-		Shader_FileLoad(p_geometry_file_name, geometry_shader_source, SHADER_STRING_ALL_MAX);
-		//ソースをアップロードする
-		const GLuint geometry_shader = Shader_SourceLoad(geometry_shader_source, GL_GEOMETRY_SHADER);	//ジオメトリシェーダ
+		//ファイルからジオメトリソースを読み込み（「Shader」フォルダに格納されている必要があります）
+		geometry_shader_source = ShaderFileLoad(p_geometry_file_name);
+		//ジオメトリのシェーダーオブジェクト作成
+		geometry_shader = CreateShader(geometry_shader_source, GL_GEOMETRY_SHADER);
 
 		glAttachShader(ProgramObject, geometry_shader);		// フラグメントシェーダーとプログラムを関連付ける
 	}
@@ -109,6 +115,19 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 	// リンク済みのため、個々のシェーダーオブジェクトの解放フラグを立てる
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
+
+	//シェーダー用のメモリ解放
+	free((void*)vertex_shader_source);
+	free((void*)fragment_shader_source);
+
+	//ジオメトリシェーダーの読み込み
+	if (NULL != p_geometry_file_name)
+	{
+		//オブジェクト削除
+		glDeleteShader(geometry_shader);
+		//シェーダーソース用のメモリ解放
+		free((void*)geometry_shader_source);
+	}
 
 	//リンク済みのプログラムを記憶する
 	m_ProgramObject = ProgramObject;
@@ -557,21 +576,17 @@ void ShaderManager::UseProgram(void)
 *	関数説明
 *	　シェーダーファイルの読み込みを行う
 *	引数
-*	　p_file_name		：[I/ ]　各シェーダーのファイル名（Shaderフォルダに格納されている必要があります）
-*	　p_shader_source	：[ /O]　各シェーダーのソース
-*	　source_size		：[I/ ]　シェーダーの全文の最大文字数
+*	　p_file_name		：[I/ ]　シェーダーのファイル名（Shaderフォルダに格納されている必要があります）
 *	戻り値
-*	　なし
+*	　シェーダーソースへの先頭ポインタ
 *-------------------------------------------------------------------------------*/
-void ShaderManager::Shader_FileLoad(const char* p_file_name, char* p_shader_source, const int p_source_size)
+char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 {
-
 	FILE *fp;		//ファイルポインタ宣言
-	char String_Line[SHADER_STRING_LINE_MAX] = { 0 };		//1行の読み込み最大数
 
-	char shader_dir_file_name[SHADER_FILE_NAME_MAX] = "..\\Shader\\";
+	char shader_dir_file_name[SHADER_FILE_NAME_MAX] = SHADER_FILE_DIR;
 
-	strcat_s(shader_dir_file_name, p_file_name);
+	strcat(shader_dir_file_name, p_file_name);
 
 	//ファイルのオープン
 	printf("「%s」シェーダーファイルの読み込みを開始します... ", p_file_name);
@@ -583,39 +598,46 @@ void ShaderManager::Shader_FileLoad(const char* p_file_name, char* p_shader_sour
 			"ファイル名が間違っていませんか？");
 	}
 
-	//ファイルの読み込み
-	while (fgets(String_Line, sizeof(String_Line), fp) != NULL)
+	//ファイルのサイズを取得する
+	fseek(fp, 0, SEEK_END);
+	int FileSize = ftell(fp);
+	//空ファイルの場合
+	if (0 == FileSize)
 	{
-		//1行つづ読み込むので文字列を結合
-		if (0 != strcat_s(p_shader_source, p_source_size, String_Line))
-		{
-			printf("失敗\n");
-			ERROR_MESSAGE("ファイルの読み込みに失敗しました。");
-		}
+		printf("失敗\n");
+		ERROR_MESSAGE("空ファイルです。");
 	}
+
+	//ファイルサイズ取得が完了したので先頭に戻す
+	fseek(fp, 0, SEEK_SET);
+
+	//ファイルの読み込み
+	GLchar *shader_source = (GLchar*)calloc(FileSize, sizeof(char));
+	fread((void*)shader_source, sizeof(char), FileSize, fp);
 
 	//ファイルクローズ
 	fclose(fp);
 
 	printf("完了\n");
-}
 
+	return shader_source;
+}
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　シェーダーソースの読み込みを行う
+*	　シェーダーオブジェクトの作成を行う
 *	引数
-*	　shader_source		：[I/ ]　各シェーダーのソースデータ
-*	　gl_xxxx_shader	：[I/ ]　作成するシェーダーオブジェクト（バーテックス or フラグメント）
+*	　p_shader_source	：[I/ ]　各シェーダーのソースデータ
+*	　gl_xxxx_shader	：[I/ ]　作成するシェーダーオブジェクトの種類
+*								（GL_GEOMETRY_SHADER or GL_FRAGMENT_SHADER or GL_VERTEX_SHADER）
 *	戻り値
-*	　なし
+*	　シェーダーオブジェクト
 *-------------------------------------------------------------------------------*/
-GLint ShaderManager::Shader_SourceLoad(const char* p_shader_source, const GLuint p_gl_xxxx_shader)
+GLuint ShaderManager::CreateShader(const GLchar * p_shader_source, const GLuint p_gl_xxxx_shader)
 {
-
 	//シェーダーオブジェクトの生成
-	const GLint shader = glCreateShader(p_gl_xxxx_shader);
-	if (GL_NO_ERROR != GL_GET_ERROR())
+	const GLuint shader = glCreateShader(p_gl_xxxx_shader);
+	if (0 == shader)
 	{
 		ERROR_MESSAGE("シェーダーオブジェクトの作成に失敗しました");
 	}
