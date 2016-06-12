@@ -250,11 +250,11 @@ void ShaderManager::EnableVertexAttribArray(const GLint p_index)
 *	　p_normalized	：[I/ ]　頂点データを正規化して頂点シェーダーに渡す場合は「GL_TRUE」を指定、
 *							 入力そのままに頂点シェーダーに渡す場合は「GL_FALSE」を指定
 *	　p_stride		：[I/ ]　頂点の先頭位置ごとのオフセット値、0指定可能
-*	　p_pointe		：[I/ ]　関連付ける頂点の先頭ポインタ
+*	　p_pointer		：[I/ ]　関連付ける頂点の先頭ポインタ
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::VertexAttribPointer(const GLint p_index, const GLint p_size, const GLenum p_type, const GLboolean p_normalized, const GLsizei p_stride, const GLvoid *p_pointe)
+void ShaderManager::VertexAttribPointer(const GLint p_index, const GLint p_size, const GLenum p_type, const GLboolean p_normalized, const GLsizei p_stride, const GLvoid *p_pointer)
 {
 	if (-1 == m_AttribInfo[p_index].Location)
 	{
@@ -266,7 +266,7 @@ void ShaderManager::VertexAttribPointer(const GLint p_index, const GLint p_size,
 	}
 	else
 	{
-		glVertexAttribPointer(m_AttribInfo[p_index].Location, p_size, p_type, p_normalized, p_stride, p_pointe);
+		glVertexAttribPointer(m_AttribInfo[p_index].Location, p_size, p_type, p_normalized, p_stride, p_pointer);
 	}
 }
 
