@@ -47,6 +47,9 @@ void main(void)
 	//ウィンドウ管理用のオブジェクト生成
 	WindowManager *m_WindowManager = new WindowManager;
 
+	//モデルデータ管理用のオブジェクト生成
+	ModelData *m_ModelData = new ModelData;
+
 
 	//////////////////////////////////////////////////////
 	//	各オブジェクト初期化 及び 準備
@@ -75,7 +78,7 @@ void main(void)
 		glfwPollEvents();
 
 		//メイン描画開始
-		m_MainDraw->Drawing(m_WindowManager, m_DeviceManager);
+		m_MainDraw->Drawing(m_WindowManager, m_DeviceManager, m_ModelData);
 
 		//GLエラーチェック
 		if (GL_NO_ERROR != GL_GET_ERROR())
@@ -91,4 +94,5 @@ void main(void)
 	delete m_MainDraw;
 	delete m_DeviceManager;
 	delete m_WindowManager;
+	delete m_ModelData;
 }

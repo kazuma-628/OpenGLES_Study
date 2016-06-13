@@ -29,6 +29,96 @@
 #define WINDOW_HEIGHT				600			//ウィンドウサイズ（高さ）
 #define GL_GET_ERROR()				GL_NO_ERROR	//glGetError()	//gl関連のエラーを取得したい場合はコメントの文と入れ替える
 
+////////////////////////////////////
+// 頂点ベクトル構造体
+
+typedef struct
+{
+	GLfloat x;
+	GLfloat y;
+}Vec2;
+
+typedef struct
+{
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+}Vec3;
+
+typedef struct
+{
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+	GLfloat w;
+}Vec4;
+
+typedef struct
+{
+	GLint x;
+	GLint y;
+}iVec2;
+
+typedef struct
+{
+	GLint x;
+	GLint y;
+	GLint z;
+}iVec3;
+
+typedef struct
+{
+	GLint x;
+	GLint y;
+	GLint z;
+	GLint w;
+}iVec4r;
+
+////////////////////////////////////
+// カラーベクトル構造体
+
+typedef struct
+{
+	GLfloat r;
+	GLfloat g;
+}Color2;
+
+typedef struct
+{
+	GLfloat r;
+	GLfloat g;
+	GLfloat b;
+}Color3;
+
+typedef struct
+{
+	GLfloat r;
+	GLfloat g;
+	GLfloat b;
+	GLfloat a;
+}Color4;
+
+typedef struct
+{
+	GLubyte r;
+	GLubyte g;
+}bColor2;
+
+typedef struct
+{
+	GLubyte r;
+	GLubyte g;
+	GLubyte b;
+}bColor3;
+
+typedef struct
+{
+	GLubyte r;
+	GLubyte g;
+	GLubyte b;
+	GLubyte a;
+}bColor4;
+
 /*-------------------------------------------------------------------------------
 *	関数説明
 *	　本関数は外部からユーザーが使うことはありません。

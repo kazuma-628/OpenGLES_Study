@@ -7,6 +7,7 @@
 #include "Matrix.h"
 #include "DeviceManager.h"
 #include "WindowManager.h"
+#include "ModelData.h"
 
 //グラフィック空間の座標系
 typedef struct
@@ -42,11 +43,12 @@ public:
 	*	　メイン描画を開始する
 	*	引数
 	*	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
-	*	　p_DeviceManager			：[I/ ]　Key管理オブジェクト
+	*	　p_DeviceManager		：[I/ ]　Key管理オブジェクト
+	*	  p_ModelData			：[I/ ]	 モデルデータ管理オブジェクト
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager);
+	void Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager, ModelData *p_ModelData);
 
 private:
 

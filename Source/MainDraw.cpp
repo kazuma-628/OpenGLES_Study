@@ -56,11 +56,12 @@ void MainDraw::Prepare()
 *	　メイン描画を開始する
 *	引数
 *	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
-*	　p_DeviceManager			：[I/ ]　Key管理オブジェクト
+*	　p_DeviceManager		：[I/ ]　Key管理オブジェクト
+*	  p_ModelData			：[I/ ]	 モデルデータ管理オブジェクト
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager)
+void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager, ModelData *p_ModelData)
 {
 	//ウィンドウサイズの取得
 	WindowSize const WindowSize = p_WindowManager->GetWindowSize();
@@ -124,9 +125,6 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	//マウスでのオブジェクトの回転
 	ModelView.Rotate(-m_Rotate.x / 2.0f, 0.0f, 1.0f, 0.0f);
 	ModelView.Rotate(-m_Rotate.y / 2.0f, 1.0f, 0.0f, 0.0f);
-	//四角の穴が目の前に現れるように回転
-	ModelView.Rotate(-90, 0.0f, 1.0f, 0.0f);
-
 	
 	//透視投影行列を適用する
 	Projection.Perspective(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
@@ -137,113 +135,13 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	m_MainShader->EnableVertexAttribArray(m_attr_pos);
 	m_MainShader->EnableVertexAttribArray(m_attr_color);
 
-	// 画面中央へ描画する
-	const GLfloat position[] =
-	{
-		// v1
-		-10.0f, 10.0f, 10.0f,
-		// v2
-		10.0f, 10.0f, 10.0f,
-		// v3
-		-10.0f, -10.0f, 10.0f,
-		// v4
-		10.0f, -10.0f, 10.0f,
+	//キューブ形状のモデルデータを取得する
+	ModelDataInfo PiercedCube;
+	p_ModelData->GetPiercedCube(&PiercedCube, false);
 
-		// v5
-		-10.0f, -10.0f, -10.0f,
-		// v6
-		10.0f, -10.0f, -10.0f,
-
-		// v7
-		-10.0f, 10.0f, -10.0f,
-		// v8
-		10.0f, 10.0f, -10.0f,
-
-		// v9
-		-10.0f, 10.0f, 10.0f,
-		// v10
-		10.0f, 10.0f, 10.0f,
-
-		// v11
-		10.0f, 10.0f, 10.0f,
-		// v12
-		10.0f, -10.0f, 10.0f,
-		// v13
-		10.0f, 10.0f, -10.0f,
-		// v14
-		10.0f, -10.0f, -10.0f,
-	};
-
-	// 頂点カラーを設定する
-	const GLubyte color[] =
-	{
-		// v1 rgb
-		50, 50, 50,
-		// v2 rgb
-		90, 0, 0,
-		// v3 rgb
-		0, 90, 0,
-		// v4 rgb
-		0, 0, 90,
-
-		// v5 rgb
-		130, 0, 0,
-		// v6 rgb
-		0, 130, 0,
-
-		// v7 rgb
-		0, 0, 130,
-		// v8 rgb
-		170, 0, 0,
-
-		// v9 rgb
-		0, 170, 0,
-		// v10 rgb
-		0, 0, 170,
-
-		// v11 rgb
-		210, 0, 0,
-		// v12 rgb
-		0, 210, 0,
-		// v13 rgb
-		0, 0, 210,
-		// v14 rgb
-		250, 0, 0,
-	};
-
-	// インデックス（インデックスバッファを使用する場合に必要）
-	const GLubyte Indices[] =
-	{
-		// v1
-		0, 1, 2,
-		// v2
-		1, 2, 3,
-
-		// v3
-		2, 3, 4,
-		// v4
-		3, 4, 5,
-
-		// v5
-		4, 5, 6,
-		// v6
-		5, 6, 7,
-
-		// v7
-		6, 7, 0,
-		// v8
-		7, 0, 1,
-
-		// v9
-		0, 1, 1,
-		// v10
-		1, 1, 3,
-
-		// v11
-		1, 3, 7,
-		// v12
-		3, 7, 5,
-	};
+	//キューブ形状のモデルデータを取得する（インデックス版）
+	ModelDataInfo_index PiercedCube_index;
+	p_ModelData->GetPiercedCube_index(&PiercedCube_index, false);
 
 	//震度テストを有効
 	glEnable(GL_DEPTH_TEST);
@@ -258,12 +156,18 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	glViewport(0, 0, WindowSize.Width, WindowSize.Height);
 
 	//変数を転送
-	m_MainShader->VertexAttribPointer(m_attr_pos, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)position);
-	m_MainShader->VertexAttribPointer(m_attr_color, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, color);
 	m_MainShader->UniformMatrixXfv(m_ModelView_matrix, 4, 1, GL_FALSE, ModelView.GetMatrix());
 	m_MainShader->UniformMatrixXfv(m_Proj_matrix, 4, 1, GL_FALSE, Projection.GetMatrix());
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 14);								//一番オーソドックス（初歩的）な描画方法
-//	glDrawElements(GL_TRIANGLE_STRIP, 36, GL_UNSIGNED_BYTE, Indices);	//インデックスバッファを使用する場合
+
+	// [glDrawArrays]を使用した描画（一番オーソドックス（初歩的）な描画方法）
+	m_MainShader->VertexAttribPointer(m_attr_pos, PiercedCube.Vertex.size, PiercedCube.Vertex.type, PiercedCube.Vertex.normalized, PiercedCube.Vertex.stride, PiercedCube.Vertex.pointer);
+	m_MainShader->VertexAttribPointer(m_attr_color, PiercedCube.Color.size, PiercedCube.Color.type, PiercedCube.Color.normalized, PiercedCube.Color.stride, PiercedCube.Color.pointer);
+	glDrawArrays(PiercedCube.DrawArrays.mode, PiercedCube.DrawArrays.first, PiercedCube.DrawArrays.count);
+
+	// [glDrawElements]を使用した描画（インデックスバッファを使用する場合）
+//	m_MainShader->VertexAttribPointer(m_attr_pos, PiercedCube_index.Vertex.size, PiercedCube_index.Vertex.type, PiercedCube_index.Vertex.normalized, PiercedCube_index.Vertex.stride, PiercedCube_index.Vertex.pointer);
+//	m_MainShader->VertexAttribPointer(m_attr_color, PiercedCube_index.Color.size, PiercedCube_index.Color.type, PiercedCube_index.Color.normalized, PiercedCube_index.Color.stride, PiercedCube_index.Color.pointer);
+//	glDrawElements(PiercedCube_index.DrawElement.mode, PiercedCube_index.DrawElement.count, PiercedCube_index.DrawElement.type, PiercedCube_index.DrawElement.indices);
 
 	//描画処理
 	p_WindowManager->DrawingOnWindow();
