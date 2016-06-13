@@ -32,7 +32,7 @@ ResourceManager::~ResourceManager()
 *	戻り値
 *	　テクスチャデータ（幅,高さ,ピクセルデータなど → 詳細は[TextureData]構造体参照）
 *-------------------------------------------------------------------------------*/
-TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const PIXELFORMAT p_PixelFotmat)
+TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat)
 {
 
 	//一時的に使用するテクスチャデータ変数

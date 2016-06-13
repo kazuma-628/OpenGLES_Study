@@ -17,7 +17,7 @@ typedef enum
 													//「glTexImage2D」などでは「GL_RGB」を指定すること
 	PIXELFORMAT_32BIT_RGBA = PixelFormat32bppARGB	//透過情報が含まれているPNG形式など
 													//「glTexImage2D」などでは「GL_RGBA」を指定すること
-}PIXELFORMAT;
+}PixelFotmat;
 
 //テクスチャデータの情報
 typedef struct
@@ -51,7 +51,7 @@ public:
 	*	戻り値
 	*	　テクスチャデータ（幅,高さ,ピクセルデータなど → 詳細は[TextureData]構造体参照）
 	*-------------------------------------------------------------------------------*/
-	TextureData* TextureDataLoad(const char* p_FileName, const PIXELFORMAT p_PixelFotmat);
+	TextureData* TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat);
 
 private:
 
