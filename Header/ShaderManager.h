@@ -1,5 +1,5 @@
-#ifndef SHADERCREATEPROGRAM_H
-#define SHAdERCREATEPROGRAM_H
+#ifndef SHADER_MANAGER_H
+#define SHADER_MANAGER_H
 
 //include’è‹`
 #include "Common.h"

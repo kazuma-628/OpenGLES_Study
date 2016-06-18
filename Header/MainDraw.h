@@ -1,5 +1,5 @@
-#ifndef MAINDRAW_H
-#define MAINDRAW_H
+#ifndef MAIN_DRAW_H
+#define MAIN_DRAW_H
 
 //include定義
 #include "Common.h"
@@ -7,7 +7,8 @@
 #include "Matrix.h"
 #include "DeviceManager.h"
 #include "WindowManager.h"
-#include "ModelData.h"
+#include "ModelManager.h"
+#include "ResourceManager.h"
 
 //グラフィック空間の座標系
 typedef struct
@@ -44,11 +45,12 @@ public:
 	*	引数
 	*	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
 	*	　p_DeviceManager		：[I/ ]　Key管理オブジェクト
-	*	  p_ModelData			：[I/ ]	 モデルデータ管理オブジェクト
+	*	　p_ResourceManager		：[I/ ]　リソース管理オブジェクト
+	*	  p_ModelManager		：[I/ ]	 モデルデータ管理オブジェクト
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager, ModelData *p_ModelData);
+	void Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager, ResourceManager *p_ResourceManager, ModelManager *p_ModelManager);
 
 private:
 

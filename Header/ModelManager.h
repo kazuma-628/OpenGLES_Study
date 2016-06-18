@@ -1,5 +1,5 @@
-#ifndef MODELDATA_H
-#define MODELDATA_H
+#ifndef MODEL_MANAGER_H
+#define MODEL_MANAGER_H
 
 //include定義
 #include "Common.h"
@@ -50,15 +50,15 @@ typedef struct
 	DrawElementsInfo DrawElement;
 }ModelDataInfo_index;
 
-class ModelData
+class ModelManager
 {
 
 public:
 	//コンストラクタ
-	ModelData();
+	ModelManager();
 
 	//デストラクタ
-	~ModelData();
+	~ModelManager();
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明

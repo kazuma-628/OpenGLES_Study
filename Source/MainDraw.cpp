@@ -57,11 +57,12 @@ void MainDraw::Prepare()
 *	引数
 *	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
 *	　p_DeviceManager		：[I/ ]　Key管理オブジェクト
-*	  p_ModelData			：[I/ ]	 モデルデータ管理オブジェクト
+*	　p_ResourceManager		：[I/ ]　リソース管理オブジェクト
+*	  p_ModelManager		：[I/ ]	 モデルデータ管理オブジェクト
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager, ModelData *p_ModelData)
+void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager, ResourceManager *p_ResourceManager, ModelManager *p_ModelManager)
 {
 	//ウィンドウサイズの取得
 	WindowSize const WindowSize = p_WindowManager->GetWindowSize();
@@ -137,11 +138,11 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 
 	//キューブ形状のモデルデータを取得する
 	ModelDataInfo PiercedCube;
-	p_ModelData->GetPiercedCube(&PiercedCube, false);
+	p_ModelManager->GetPiercedCube(&PiercedCube, false);
 
 	//キューブ形状のモデルデータを取得する（インデックス版）
 	ModelDataInfo_index PiercedCube_index;
-	p_ModelData->GetPiercedCube_index(&PiercedCube_index, false);
+	p_ModelManager->GetPiercedCube_index(&PiercedCube_index, false);
 
 	//震度テストを有効
 	glEnable(GL_DEPTH_TEST);

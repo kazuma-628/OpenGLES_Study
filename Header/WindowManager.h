@@ -1,5 +1,5 @@
-#ifndef WINDOWMANAGER_H
-#define WINDOWMANAGER_H
+#ifndef WINDOW_MANAGER_H
+#define WINDOW_MANAGER_H
 
 //include’è‹`
 #include "Common.h"

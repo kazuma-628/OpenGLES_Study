@@ -1,7 +1,7 @@
-#include "ModelData.h"
+#include "ModelManager.h"
 
 //コンストラクタ
-ModelData::ModelData()
+ModelManager::ModelManager()
 {
 	//初期化
 	memset(&m_PiercedCube, 0, sizeof(m_PiercedCube));
@@ -9,7 +9,7 @@ ModelData::ModelData()
 }
 
 //デストラクタ
-ModelData::~ModelData()
+ModelManager::~ModelManager()
 {
 	//メモリ解放
 	if (NULL != m_PiercedCube.vertex)
@@ -36,7 +36,7 @@ ModelData::~ModelData()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ModelData::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
+void ModelManager::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
 {
 	// 頂点データ
 	Vec3_bColor3 vertex[] =
@@ -122,7 +122,7 @@ void ModelData::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ModelData::GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p_vbo)
+void ModelManager::GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p_vbo)
 {
 	// 頂点データ
 	Vec3_bColor3 vertex[] =

@@ -38,18 +38,24 @@ void main(void)
 	//////////////////////////////////////////////////////
 	//	各オブジェクト生成
 
-	//メイン描画用のオブジェクト生成
-	MainDraw *m_MainDraw = new MainDraw;
-
-	//Key管理用のオブジェクト生成
-	DeviceManager *m_DeviceManager = new DeviceManager;
-
 	//ウィンドウ管理用のオブジェクト生成
 	WindowManager *m_WindowManager = new WindowManager;
 
-	//モデルデータ管理用のオブジェクト生成
-	ModelData *m_ModelData = new ModelData;
+	//デバイス管理用のオブジェクト生成
+	DeviceManager *m_DeviceManager = new DeviceManager;
 
+	//リソース管理用のオブジェクト生成
+	ResourceManager *m_ResourceManager = new ResourceManager;
+
+	//モデルデータ管理用のオブジェクト生成
+	ModelManager *m_ModelManager = new ModelManager;
+
+
+	//////////////////////////////////////////////////////
+	//	各シェーダーオブジェクト生成
+
+	//メイン描画用のオブジェクト生成
+	MainDraw *m_MainDraw = new MainDraw;
 
 	//////////////////////////////////////////////////////
 	//	各オブジェクト初期化 及び 準備
@@ -78,7 +84,7 @@ void main(void)
 		glfwPollEvents();
 
 		//メイン描画開始
-		m_MainDraw->Drawing(m_WindowManager, m_DeviceManager, m_ModelData);
+		m_MainDraw->Drawing(m_WindowManager, m_DeviceManager, m_ResourceManager, m_ModelManager);
 
 		//GLエラーチェック
 		if (GL_NO_ERROR != GL_GET_ERROR())
@@ -92,7 +98,8 @@ void main(void)
 
 	//終了処理
 	delete m_MainDraw;
-	delete m_DeviceManager;
 	delete m_WindowManager;
-	delete m_ModelData;
+	delete m_DeviceManager;
+	delete m_ResourceManager;
+	delete m_ModelManager;
 }
