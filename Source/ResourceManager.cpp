@@ -31,6 +31,7 @@ ResourceManager::~ResourceManager()
 *							 PIXELFORMAT_24BIT_RGB or PIXELFORMAT_32BIT_RGBA で指定（詳細は定義部分のコメント参照）
 *	戻り値
 *	　テクスチャデータ（幅,高さ,ピクセルデータなど → 詳細は[TextureData]構造体参照）
+*	　[TextureData]構造体の[PixelData]は不要になった時点で必ず[free]でメモリ解放してください。
 *-------------------------------------------------------------------------------*/
 TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat)
 {
@@ -80,10 +81,19 @@ TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const Pixe
 		// 返却する情報の設定
 
 		memmove(m_TextureData[m_AttribInfoIndex].Name, p_FileName, strlen(p_FileName));
-		m_TextureData[m_AttribInfoIndex].Width = BitmapData.Width;
-		m_TextureData[m_AttribInfoIndex].Height = BitmapData.Height;
-		m_TextureData[m_AttribInfoIndex].PixelFormat = BitmapData.PixelFormat;
-		m_TextureData[m_AttribInfoIndex].PixelData = calloc(BitmapData.Height * BitmapData.Stride, sizeof(byte));
+		m_TextureData[m_AttribInfoIndex].Width = (GLsizei)BitmapData.Width;
+		m_TextureData[m_AttribInfoIndex].Height = (GLsizei)BitmapData.Height;
+		m_TextureData[m_AttribInfoIndex].PixelData = (GLvoid*)calloc(BitmapData.Height * BitmapData.Stride, sizeof(byte));
+
+
+		switch (p_PixelFotmat)
+		{
+			case PIXELFORMAT_24BIT_RGB:
+				m_TextureData[m_AttribInfoIndex].InternalFormat = GL_RGB;
+
+			case PIXELFORMAT_32BIT_RGBA:
+				m_TextureData[m_AttribInfoIndex].InternalFormat = GL_RGBA;
+		}
 
 		//ロードしたテクスチャは「BGR」で格納されているので「RGB」に変換しつつコピーする
 		TextureDataBRGtoRGB(&BitmapData, m_TextureData, p_PixelFotmat);

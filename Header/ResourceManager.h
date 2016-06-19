@@ -13,20 +13,18 @@
 
 typedef enum
 {
-	PIXELFORMAT_24BIT_RGB = PixelFormat24bppRGB,	//透過情報が含まれていないPNG形式やBMP形式JPG形式など
-													//「glTexImage2D」などでは「GL_RGB」を指定すること
-	PIXELFORMAT_32BIT_RGBA = PixelFormat32bppARGB	//透過情報が含まれているPNG形式など
-													//「glTexImage2D」などでは「GL_RGBA」を指定すること
+	PIXELFORMAT_24BIT_RGB = PixelFormat24bppRGB,	//透過情報が含まれていないPNG形式やBMP形式JPG形式など（GL_RGBに相当）
+	PIXELFORMAT_32BIT_RGBA = PixelFormat32bppARGB	//透過情報が含まれているPNG形式など（GL_RGBAに相当）
 }PixelFotmat;
 
 //テクスチャデータの情報
 typedef struct
 {
 	char Name[TEXTURE_FILE_NAME_MAX];
-	unsigned int Width;		//幅
-	unsigned int Height;	//高さ
-	int PixelFormat;		//ピクセルフォーマット
-	void* PixelData;		//ピクセルデータ
+	GLsizei Width;				//幅
+	GLsizei Height;				//高さ
+	GLint InternalFormat;		//ピクセルフォーマット（OpenGLに登録する内部フォーマット）
+	GLvoid* PixelData;			//ピクセルデータ（OpenGLに登録するピクセルデータ）
 }TextureData;
 
 
@@ -50,6 +48,7 @@ public:
 	*							 PIXELFORMAT_24BIT_RGB or PIXELFORMAT_32BIT_RGBA で指定（詳細は定義部分のコメント参照）
 	*	戻り値
 	*	　テクスチャデータ（幅,高さ,ピクセルデータなど → 詳細は[TextureData]構造体参照）
+	*	　[TextureData]構造体の[PixelData]は不要になった時点で必ず[free]でメモリ解放してください。
 	*-------------------------------------------------------------------------------*/
 	TextureData* TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat);
 
