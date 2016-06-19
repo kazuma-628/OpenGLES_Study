@@ -57,7 +57,7 @@ TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const Pixe
 		Gdiplus::GdiplusStartupInput input;
 		Gdiplus::GdiplusStartup(&token, &input, NULL);
 
-		char Dir_FileName[TEXTURE_FILE_NAME_MAX] = SHADER_FILE_DIR;
+		char Dir_FileName[TEXTURE_FILE_NAME_MAX] = TEXTURE_FILE_DIR;
 
 		strcat(Dir_FileName, p_FileName);
 

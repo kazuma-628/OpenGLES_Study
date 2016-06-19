@@ -8,7 +8,7 @@
 //#define定義
 #define TEXTURE_DATA_MAX			128					//テクスチャ管理用の最大数
 #define TEXTURE_FILE_NAME_MAX		64					//テクスチャファイル名の最大文字数（ディレクトリ含む）
-#define SHADER_FILE_DIR				"..\\Resource\\"	//リソースファイルの保存ディレクトリ
+#define TEXTURE_FILE_DIR				"..\\Resource\\"	//リソースファイルの保存ディレクトリ
 
 
 typedef enum
