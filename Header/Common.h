@@ -4,7 +4,9 @@
 //Visual Studioで「fopen,strcat,strcpy」などの関数を使用することによるエラーを出さないようにする
 #define _CRT_SECURE_NOWARNINGS
 
-//include定義（ほとんどのファイルで必要になるはずなので一括定義）
+////////////////////////////////////
+// 定義済みのヘッダーファイル読み込み
+//（ほとんどのファイルで必要になるはずなので一括定義）
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,6 +14,10 @@
 #include <glew.h>
 #include <glfw3.h>
 #include <math.h>
+
+
+////////////////////////////////////////
+// Defineベクトル構造体
 
 //続行不可能なエラーが発生した場合のメッセージ出力用定義
 #define ERROR_MESSAGE(Message) (error_message_func(Message, __FILE__ ,__LINE__))
@@ -23,8 +29,6 @@
 
 #define ERROR_MESSAGE_SUB(PrintMessage, param1, param2, param3) // (error_message_sub_func(PrintMessage, param1, param2, param3, __FILE__ ,__LINE__))
 
-
-//Define定義
 #define WINDOW_WIDTH				800			//ウィンドウサイズ（幅）
 #define WINDOW_HEIGHT				600			//ウィンドウサイズ（高さ）
 #define GL_GET_ERROR()				GL_NO_ERROR	//glGetError()	//gl関連のエラーを取得したい場合はコメントの文と入れ替える
