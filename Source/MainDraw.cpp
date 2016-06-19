@@ -35,7 +35,7 @@ void MainDraw::Prepare()
 {
 	//シェーダーの読み込みを行う
 	//「Shader」フォルダに格納されている必要があります。
-	m_MainShader->CreateShaderProgram("Main.vert", "Main.frag", "Main.geom");
+	m_MainShader->CreateShaderProgram("Main\\Main.vert", "Main\\Main.frag", "Main\\Main.geom");
 
 	//シェーダー内で使用する変数を取得します（頂点データ）
 	m_attr_pos = m_MainShader->GetAttribLocation("attr_pos");
