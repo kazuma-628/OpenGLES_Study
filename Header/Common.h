@@ -150,7 +150,7 @@ inline void error_message_func(const char* Message, const char* File, const int 
 						"情報はコマンドプロンプトを確認してください。\n\n";
 
 	//エラーが発生したファイルと行数を文字列として生成
-	sprintf_s(tmp_char, sizeof(tmp_char), "%s%s\n%s%d", "ファイル：", File, "行数：", Line);
+	sprintf(tmp_char, "%s%s\n%s%d", "ファイル：", File, "行数：", Line);
 	
 	//デバック情報の各文字列を結合
 	strcat_s(All_Message, sizeof(All_Message), Message);
