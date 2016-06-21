@@ -20,14 +20,12 @@
 // Defineベクトル構造体
 
 //続行不可能なエラーが発生した場合のメッセージ出力用定義
-#define ERROR_MESSAGE(Message) (error_message_func(Message, __FILE__ ,__LINE__))
-
+#define ERROR_MESSAGE(Message)		error_message_func(Message, __FILE__ ,__LINE__);
 
 //続行不可能なエラーの可能性があるが、デバッグ中は一時的にエラーになる可能性がある場合のメッセージ出力定義
 //デバック中はメッセージを有効にすると大量のメッセージが出力される可能性がありますので、
 //最終的に動作が上手くいかないなどのエラー確認の時のみコメントを外して見てください
-
-#define ERROR_MESSAGE_SUB(PrintMessage, param1, param2, param3) // (error_message_sub_func(PrintMessage, param1, param2, param3, __FILE__ ,__LINE__))
+#define ERROR_MESSAGE_SUB(...)		printf(__VA_ARGS__); error_message_sub_func(__FILE__ ,__LINE__);
 
 #define WINDOW_WIDTH				800			//ウィンドウサイズ（幅）
 #define WINDOW_HEIGHT				600			//ウィンドウサイズ（高さ）
@@ -180,20 +178,13 @@ inline void error_message_func(const char* Message, const char* File, const int 
 *	　メッセージボックスを表示して、自滅リセットする関数です。
 *	　
 *	引数
-*	　PrintMessage	：[I/ ]　コマンドプロンプトに表示したいエラーメッセージ
-*	　param1		：[I/ ]　エラーメッセージに組み込みたい任意の文字列 1
-*	　param2		：[I/ ]　エラーメッセージに組み込みたい任意の文字列 2
-*	　param3		：[I/ ]　エラーメッセージに組み込みたい任意の文字列 3
 *	　File			：[I/ ]　エラーが発生したファイル名
 *	　Line			：[I/ ]　エラーが発生した行数
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-inline void error_message_sub_func(const char* PrintMessage, const char* param1, const char* param2, const char* param3, const char* File, const int Line)
+inline void error_message_sub_func(const char* File, const int Line)
 {
-	//コマンドプロンプトへのエラーメッセージの表示
-	printf(PrintMessage, param1, param2, param3);
-
 	//メッセージボックスへのエラーメッセージの作成
 	char *Message = "Attribute/Uniform変数のロケーション生成、\n"\
 		"もしくはデータの送信（関連付け）に失敗しました。";

@@ -144,7 +144,7 @@ GLint ShaderManager::GetAttribLocation(const GLchar* p_name)
 		printf("失敗\n\n");
 		printf("■■■ エラー ■■■\n");
 		printf("シェーダーに変数「%s」が定義されていない可能性があります\n\n", p_name);
-		ERROR_MESSAGE_SUB("",0,0,0);
+		ERROR_MESSAGE_SUB("");
 	}
 	else
 	{ 
@@ -183,7 +183,7 @@ GLint ShaderManager::GetUniformLocation(const GLchar* p_name)
 		printf("失敗\n\n");
 		printf("■■■ エラー ■■■\n");
 		printf("シェーダーに変数「%s」が定義されていない可能性があります\n\n", p_name);
-		ERROR_MESSAGE_SUB("", 0, 0, 0);
+		ERROR_MESSAGE_SUB("");
 
 	}
 	else
