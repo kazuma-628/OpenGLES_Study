@@ -70,7 +70,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo);
+	static void GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -82,7 +82,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p_vbo);
+	static void GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p_vbo);
 
 private:
 
@@ -133,8 +133,8 @@ private:
 	///////////////////////////////
 	// 変数
 
-	Vertex		 m_PiercedCube;				//穴あきキューブ用の頂点データ
-	Vertex_index m_PiercedCube_index;		//穴あきキューブ用の頂点データ（インデックス版）
+	static Vertex		m_PiercedCube;				//穴あきキューブ用の頂点データ
+	static Vertex_index	m_PiercedCube_index;		//穴あきキューブ用の頂点データ（インデックス版）
 };
 
 #endif

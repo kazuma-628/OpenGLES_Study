@@ -46,11 +46,10 @@ public:
 	*	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
 	*	　p_DeviceManager		：[I/ ]　Key管理オブジェクト
 	*	　p_ResourceManager		：[I/ ]　リソース管理オブジェクト
-	*	  p_ModelManager		：[I/ ]	 モデルデータ管理オブジェクト
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager, ResourceManager *p_ResourceManager, ModelManager *p_ModelManager);
+	void Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager, ResourceManager *p_ResourceManager);
 
 private:
 

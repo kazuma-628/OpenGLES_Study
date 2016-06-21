@@ -48,6 +48,8 @@ void main(void)
 	ResourceManager *m_ResourceManager = new ResourceManager;
 
 	//モデルデータ管理用のオブジェクト生成
+	//※このオブジェクトを直接操作することはないが、
+	//　コンストラクタとデストラクタを明示的にコールさせるために制せする
 	ModelManager *m_ModelManager = new ModelManager;
 
 
@@ -84,7 +86,7 @@ void main(void)
 		glfwPollEvents();
 
 		//メイン描画開始
-		m_MainDraw->Drawing(m_WindowManager, m_DeviceManager, m_ResourceManager, m_ModelManager);
+		m_MainDraw->Drawing(m_WindowManager, m_DeviceManager, m_ResourceManager);
 
 		//GLエラーチェック
 		if (GL_NO_ERROR != GL_GET_ERROR())

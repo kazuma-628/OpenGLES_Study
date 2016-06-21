@@ -1,5 +1,11 @@
 #include "ModelManager.h"
 
+/////////////////////////////////////////////
+//static変数の実体を定義
+
+ModelManager::Vertex ModelManager::m_PiercedCube;					//穴あきキューブ用の頂点データ
+ModelManager::Vertex_index ModelManager::m_PiercedCube_index;		//穴あきキューブ用の頂点データ（インデックス版）
+
 //コンストラクタ
 ModelManager::ModelManager()
 {
