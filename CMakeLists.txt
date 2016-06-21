@@ -41,9 +41,9 @@ add_executable(
 	Header/ModelManager.h
 
 #uShader Filev‚ğw’è‚·‚é
-	Shader/Main.frag
-	Shader/Main.vert
-	Shader/Main.geom
+	Shader/Main/Main.frag
+	Shader/Main/Main.vert
+	Shader/Main/Main.geom
 )
 
 #############################################
