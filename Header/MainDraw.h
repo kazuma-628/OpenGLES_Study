@@ -45,11 +45,10 @@ public:
 	*	引数
 	*	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
 	*	　p_DeviceManager		：[I/ ]　Key管理オブジェクト
-	*	　p_ResourceManager		：[I/ ]　リソース管理オブジェクト
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager, ResourceManager *p_ResourceManager);
+	void Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager);
 
 private:
 

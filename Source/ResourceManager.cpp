@@ -1,5 +1,11 @@
 #include "ResourceManager.h"
 
+/////////////////////////////////////////////
+//static変数の実体を定義
+
+TextureData ResourceManager::m_TextureData[TEXTURE_DATA_MAX];	//テクスチャ管理用の変数
+int ResourceManager::m_AttribInfoIndex;							//テクスチャ変数管理用のインデックス値
+
 //コンストラクタ
 ResourceManager::ResourceManager()
 {

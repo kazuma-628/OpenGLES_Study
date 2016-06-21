@@ -45,11 +45,13 @@ void main(void)
 	DeviceManager *m_DeviceManager = new DeviceManager;
 
 	//リソース管理用のオブジェクト生成
+	//※このオブジェクトを直接操作することはないが、
+	//　コンストラクタとデストラクタを明示的にコールさせるために生成する
 	ResourceManager *m_ResourceManager = new ResourceManager;
 
 	//モデルデータ管理用のオブジェクト生成
 	//※このオブジェクトを直接操作することはないが、
-	//　コンストラクタとデストラクタを明示的にコールさせるために制せする
+	//　コンストラクタとデストラクタを明示的にコールさせるために生成する
 	ModelManager *m_ModelManager = new ModelManager;
 
 
@@ -86,7 +88,7 @@ void main(void)
 		glfwPollEvents();
 
 		//メイン描画開始
-		m_MainDraw->Drawing(m_WindowManager, m_DeviceManager, m_ResourceManager);
+		m_MainDraw->Drawing(m_WindowManager, m_DeviceManager);
 
 		//GLエラーチェック
 		if (GL_NO_ERROR != GL_GET_ERROR())

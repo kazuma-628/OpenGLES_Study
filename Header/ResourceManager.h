@@ -50,7 +50,7 @@ public:
 	*	　テクスチャデータ（幅,高さ,ピクセルデータなど → 詳細は[TextureData]構造体参照）
 	*	　[TextureData]構造体の[PixelData]は不要になった時点で必ず[free]でメモリ解放してください。
 	*-------------------------------------------------------------------------------*/
-	TextureData* TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat);
+	static TextureData* TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat);
 
 private:
 
@@ -65,11 +65,7 @@ private:
 	*	　テクスチャデータがまだ読み込まれていない場合
 	*		→NULL
 	*-------------------------------------------------------------------------------*/
-	TextureData* TextureDataSearch(const char* p_FileName);
-
-	TextureData m_TextureData[TEXTURE_DATA_MAX];	//テクスチャ管理用の変数
-	int m_AttribInfoIndex;							//テクスチャ変数管理用のインデックス値
-
+	static TextureData* TextureDataSearch(const char* p_FileName);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -82,7 +78,9 @@ private:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void TextureDataBRGtoRGB(const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData, const int p_PixelFotmat);
+	static void TextureDataBRGtoRGB(const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData, const int p_PixelFotmat);
 
+	static TextureData m_TextureData[TEXTURE_DATA_MAX];	//テクスチャ管理用の変数
+	static int m_AttribInfoIndex;						//テクスチャ変数管理用のインデックス値
 };
 #endif
