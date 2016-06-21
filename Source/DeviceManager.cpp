@@ -302,7 +302,7 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 {
 
 	//キーの情報と格納する変数をまとめて管理する
-	KeyInfoSummary KeySummary[KEY_SUMMARY_MAX] =
+	KeyInfoSummary KeySummary[] =
 	{
 		//アルファベット（26個）
 		{ "A", GLFW_KEY_A , &m_KeyInfo.Change.Key_A, &m_KeyInfo.Keep.Key_A },
@@ -376,7 +376,7 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 	if (GLFW_PRESS == p_action || GLFW_RELEASE == p_action)
 	{
 		//各キー（キーボード）の情報分ループする
-		for (int index = 0; KEY_SUMMARY_MAX > index; index++)
+		for (int index = 0; (sizeof(KeySummary) / sizeof(KeySummary[0])) > index; index++)
 		{
 			//該当するキーがあれば
 			if (KeySummary[index].KeyDef == p_key)
