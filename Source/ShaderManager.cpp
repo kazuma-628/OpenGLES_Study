@@ -674,8 +674,8 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 	//ファイルサイズ取得が完了したので先頭に戻す
 	fseek(fp, 0, SEEK_SET);
 
-	//ファイルの読み込み
-	GLchar *shader_source = (GLchar*)calloc(FileSize, sizeof(char));
+	//ファイルの読み込み（終端を明確にするため +1 する。[\0]となる）
+	GLchar *shader_source = (GLchar*)calloc(FileSize + 1, sizeof(char));
 	fread((void*)shader_source, sizeof(char), FileSize, fp);
 
 	//ファイルクローズ
