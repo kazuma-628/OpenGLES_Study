@@ -131,15 +131,15 @@ void Matrix::Scale(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 *	関数説明
 *	　回転行列を適用する
 *	引数
-*	　rotate：[I/ ]　回転角度（360度系）
+*	　p_rotate	：[I/ ]　回転角度（360度系）
 *	　下記、回転軸となる正規化された方向ベクトルを設定する
-*	　p_x	：[I/ ]　X 成分（X 成分に効かせる場合は 1.0 を指定）
-*	　p_y	：[I/ ]　Y 成分（Y 成分に効かせる場合は 1.0 を指定）
-*	　p_z	：[I/ ]　Z 成分（Z 成分に効かせる場合は 1.0 を指定）
+*	　p_x		：[I/ ]　X 成分（X 成分に効かせる場合は 1.0 を指定）
+*	　p_y		：[I/ ]　Y 成分（Y 成分に効かせる場合は 1.0 を指定）
+*	　p_z		：[I/ ]　Z 成分（Z 成分に効かせる場合は 1.0 を指定）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Matrix::Rotate(const GLfloat rotate, const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
+void Matrix::Rotate(const GLfloat p_rotate, const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 {
 	//参考用のメモ
 	//[●][●][●][ 3]
@@ -150,8 +150,8 @@ void Matrix::Rotate(const GLfloat rotate, const GLfloat p_x, const GLfloat p_y, 
 	Matrix t_matrix;
 
 	//回転行列を適用
-	GLfloat t_c = cosf(DEGREE_TO_RADIAN(rotate));
-	GLfloat t_s = sinf(DEGREE_TO_RADIAN(rotate));
+	GLfloat t_c = cosf(DEGREE_TO_RADIAN(p_rotate));
+	GLfloat t_s = sinf(DEGREE_TO_RADIAN(p_rotate));
 
 	t_matrix.m_val[0] = (p_x * p_x) * (1.0f - t_c) + t_c;
 	t_matrix.m_val[1] = (p_x * p_y) * (1.0f - t_c) - p_z * t_s;
