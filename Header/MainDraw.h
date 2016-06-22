@@ -55,8 +55,7 @@ private:
 	ShaderManager *m_MainShader;		//メインシェーダーオブジェクト
 	GLint m_attr_pos;					//頂点データ
 	GLint m_attr_color;					//カラーデータ
-	GLint m_ModelView_matrix;			//モデルビューマトリックス（オブジェクト移動用のマトリックス）
-	GLint m_Proj_matrix;				//モデルビューマトリックス（3D空間にするためのマトリクス）
+	GLint m_ProjModel_matrix;			//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
 
 	Vector m_Rotate;				//回転量を管理する変数
 	Vector m_Translate;				//移動量を管理する変数

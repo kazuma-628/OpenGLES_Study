@@ -9,17 +9,14 @@ in lowp vec4 vary_color[];
 //フラグメントシェーダへの変数
 out lowp vec4 f_vary_color;
 
-//モデルビューマトリクス（オブジェクト移動用のマトリックス）
-uniform mediump mat4 ModelView_matrix;
-
-//プロジェクションマトリクス（3D空間にするためのマトリクス）
-uniform mediump mat4 Proj_matrix;
+//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
+uniform mediump mat4 ProjModel_matrix;
 
 void main()
 {
 	for (int index = 0; index < gl_in.length(); index++)
 	{
-		gl_Position = Proj_matrix * ModelView_matrix * gl_in[index].gl_Position;
+		gl_Position = ProjModel_matrix * gl_in[index].gl_Position;
 		f_vary_color = vary_color[index];
 		EmitVertex();
 	}

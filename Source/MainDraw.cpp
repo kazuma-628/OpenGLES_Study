@@ -11,8 +11,7 @@ MainDraw::MainDraw()
 	memset(&m_Translate, 0, sizeof(m_Translate));
 	m_attr_pos = -1;
 	m_attr_color = -1;
-	m_ModelView_matrix = 0;
-	m_Proj_matrix = 0;
+	m_ProjModel_matrix = 0;
 
 }
 
@@ -43,11 +42,8 @@ void MainDraw::Prepare()
 	//シェーダー内で使用する変数を取得します（カラーデータ）
 	m_attr_color = m_MainShader->GetAttribLocation("attr_color");
 
-	//シェーダー内で使用する変数を取得します（オブジェクト移動用のマトリックス）
-	m_ModelView_matrix = m_MainShader->GetUniformLocation("ModelView_matrix");
-
-	//シェーダー内で使用する変数を取得します（3D空間にするためのマトリクス）
-	m_Proj_matrix = m_MainShader->GetUniformLocation("Proj_matrix");
+	//シェーダー内で使用する変数を取得します（座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス））
+	m_ProjModel_matrix = m_MainShader->GetUniformLocation("ProjModel_matrix");
 
 }
 
@@ -130,6 +126,9 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	//もう一つの方法
 //	Projection.Perspective(1.0, 100.0, 60.0, WindowSize.Width / WindowSize.Height);
 
+	//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
+	Matrix ProjModel = Projection * ModelView;
+
 	//シェーダーの変数を有効化
 	m_MainShader->EnableVertexAttribArray(m_attr_pos);
 	m_MainShader->EnableVertexAttribArray(m_attr_color);
@@ -155,8 +154,7 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	glViewport(0, 0, WindowSize.Width, WindowSize.Height);
 
 	//変数を転送
-	m_MainShader->UniformMatrixXfv(m_ModelView_matrix, 4, 1, GL_FALSE, ModelView.GetMatrix());
-	m_MainShader->UniformMatrixXfv(m_Proj_matrix, 4, 1, GL_FALSE, Projection.GetMatrix());
+	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, ProjModel.GetMatrix());
 
 	// [glDrawArrays]を使用した描画（一番オーソドックス（初歩的）な描画方法）
 	m_MainShader->VertexAttribPointer(m_attr_pos, PiercedCube.Vertex.size, PiercedCube.Vertex.type, PiercedCube.Vertex.normalized, PiercedCube.Vertex.stride, PiercedCube.Vertex.pointer);
