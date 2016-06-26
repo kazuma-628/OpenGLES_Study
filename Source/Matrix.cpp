@@ -19,7 +19,7 @@ Matrix::~Matrix()
 *-------------------------------------------------------------------------------*/
 
 //マトリクス同士の乗算
-Matrix operator*(Matrix& p_left, Matrix& p_right)
+Matrix operator*(Matrix &p_left, Matrix &p_right)
 {
 	//参考用のメモ
 	//[ 0][ 1][ 2][ 3]
@@ -41,6 +41,30 @@ Matrix operator*(Matrix& p_left, Matrix& p_right)
 		t_matrix.m_val[i + 12]	= p_left.m_val[i] * p_right.m_val[12] + p_left.m_val[i + 4] * p_right.m_val[13]
 									+ p_left.m_val[i + 8] * p_right.m_val[14] + p_left.m_val[i + 12] * p_right.m_val[15];
 	}
+	return t_matrix;
+}
+
+//マトリクス同士の乗算
+Matrix operator*(Matrix &p_left, GLfloat *p_right)
+{
+	Matrix t_matrix;
+
+	t_matrix.SetMatrix(p_right);
+
+	t_matrix = p_left * t_matrix;
+
+	return t_matrix;
+}
+
+//マトリクス同士の乗算
+Matrix operator*(GLfloat *p_left, Matrix &p_right)
+{
+	Matrix t_matrix;
+
+	t_matrix.SetMatrix(p_left);
+
+	t_matrix = t_matrix * p_right;
+
 	return t_matrix;
 }
 

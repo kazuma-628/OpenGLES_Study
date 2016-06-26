@@ -22,7 +22,9 @@ public:
 	*	関数説明
 	*	　演算子のオーバーロード定義
 	*-------------------------------------------------------------------------------*/
-	friend Matrix operator*(Matrix& p_left, Matrix& p_right);
+	friend Matrix operator*(Matrix &p_left, Matrix &p_right);
+	friend Matrix operator*(Matrix &p_left, GLfloat *p_right);
+	friend Matrix operator*(GLfloat *p_left, Matrix &p_right);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明

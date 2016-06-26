@@ -32,7 +32,7 @@
 #define GL_GET_ERROR()				GL_NO_ERROR	//glGetError()	//gl関連のエラーを取得したい場合はコメントの文と入れ替える
 
 ////////////////////////////////////
-// 頂点ベクトル構造体
+// ベクトル構造体
 
 typedef struct
 {
@@ -120,6 +120,26 @@ typedef struct
 	GLubyte b;
 	GLubyte a;
 }bColor4;
+
+////////////////////////////////////
+// ザイズ構造体
+typedef struct
+{
+	GLsizei  Width;
+	GLsizei  Height;
+}Size;
+
+////////////////////////////////////
+
+// 構造体
+typedef struct
+{
+	GLfloat ModelViewMatrix[16];		//メインとなるモデルビューマトリクス（大元のマトリクスデータ）
+	GLfloat ProjectionMatrix[16];		//メインとなるプロジェクションマトリクス（大元のマトリクスデータ）
+	Size WindowSize;					//ウィンドウの全体サイズ
+	Vec3 Translate;						//初期位置（X,Y,Z）からの移動量
+	Vec3 Rotate;						//初期位置（X,Y,Z）からの回転量
+}GlobalData;
 
 /*-------------------------------------------------------------------------------
 *	関数説明

@@ -3,7 +3,7 @@
 /////////////////////////////////////////////
 //static変数の実体を定義
 
-WindowSize WindowManager::m_WindowSize;			//マウスボタンの情報
+Size WindowManager::m_WindowSize;			//マウスボタンの情報
 
 //コンストラクタ
 WindowManager::WindowManager()

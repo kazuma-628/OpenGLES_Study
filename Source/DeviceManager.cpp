@@ -3,20 +3,24 @@
 /////////////////////////////////////////////
 //static変数の実体を定義
 
-MouseInfo DeviceManager::m_MouseInfo;			//マウスボタンの情報
-CursorPos DeviceManager::m_OldCursorPos;		//直前（1イベント前）のカーソル座標		
-KeyInfo DeviceManager::m_KeyInfo;				//キー（キーボード）の情報
-
+MouseInfo DeviceManager::m_MouseInfo;		//マウスボタンの情報	
+KeyInfo DeviceManager::m_KeyInfo;			//キー（キーボード）の情報
+Vec2 DeviceManager::m_RightClickPos;		//マウスが右クリックされた時のカーソル座標
+Vec2 DeviceManager::m_LeftClickPos;		//マウスが左クリックされた時のカーソル座標
+Vec2 DeviceManager::m_MiddleClickPos;		//マウスが中央クリックされた時のカーソル座標
 //コンストラクタ
 DeviceManager::DeviceManager()
 {
 	m_window = NULL;
+	memset(&m_RightClickPos, 0, sizeof(m_RightClickPos));
+	memset(&m_LeftClickPos, 0, sizeof(m_LeftClickPos));
+	memset(&m_MiddleClickPos, 0, sizeof(m_MiddleClickPos));
 
 	memset(&m_MouseInfo, 0, sizeof(m_MouseInfo));
 	m_MouseInfo.Right.State = GLFW_RELEASE;
 	m_MouseInfo.Left.State = GLFW_RELEASE;
+//	m_MouseInfo.Middle.State = GLFW_RELEASE;
 
-	memset(&m_OldCursorPos, 0, sizeof(m_OldCursorPos));
 	memset(&m_KeyInfo.Change, GLFW_RELEASE, sizeof(m_KeyInfo.Change));
 	memset(&m_KeyInfo.Keep, false, sizeof(m_KeyInfo.Keep));
 }
@@ -44,6 +48,9 @@ void DeviceManager::Initialize(GLFWwindow* const p_window)
 	//マウスボタンが変化した時用のコールバックを登録
 	glfwSetMouseButtonCallback(m_window, DeviceManager::MouseButtonCallback);
 
+	//マウス座標が変化した時用のコールバックを登録
+	glfwSetCursorPosCallback(p_window, DeviceManager::CursorPosCallback);
+
 	//マウスホイールが変化した時用のコールバックを登録
 	glfwSetScrollCallback(m_window, DeviceManager::ScrollCallback);
 
@@ -59,8 +66,8 @@ void DeviceManager::Initialize(GLFWwindow* const p_window)
 *	　p_button	：[I/ ]　どのボタンが変化したか
 *	　p_action	：[I/ ]　押された（GLFW_PRESS） or 離された（GLFW_RELEASE）
 *	　p_mods	：[I/ ]　よくわからない
-*	　詳細は下記URL参照のこと
-*	　http://www.glfw.org/docs/latest/group__input.html#ga1e008c7a8751cea648c8f42cc91104cf
+*	　詳細は下記参照のこと
+*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWmousebuttonfun]関数
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -76,13 +83,9 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 	//座標管理用の変数宣言
 	//　座標取得APIの引数が[double]の為、無駄だが仕方なくこのような橋渡しをしている
 	//　（このようにしないと、コンパイラでワーニングが出るので）
-	CursorPos Pos;
-	Pos.x = (float)PosX;
-	Pos.y = (float)PosY;
-
-	//カーソルの座標を保存
-	m_OldCursorPos.x = Pos.x;
-	m_OldCursorPos.y = Pos.y;
+	Vec2 Pos;
+	Pos.x = (GLfloat)PosX;
+	Pos.y = (GLfloat)PosY;
 
 	//右クリックに関する処理
 	if (GLFW_MOUSE_BUTTON_RIGHT == p_button)
@@ -92,40 +95,22 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 		{
 			printf("右クリックが押されました\n");
 
-			//他のボタンがクリックされていない時に処理する
-			if (GLFW_PRESS != m_MouseInfo.Left.State)
-			{
-				//マウスが動いた時にコールバックされるようにする
-				glfwSetCursorPosCallback(p_window, DeviceManager::CursorPosCallback);
-			}
-
 			//押されたことを記憶
 			m_MouseInfo.Right.State = GLFW_PRESS;
 
 			//押された時の座標を記憶
-			m_MouseInfo.Right.Pos.x = Pos.x;
-			m_MouseInfo.Right.Pos.y = Pos.y;
-			m_MouseInfo.Right.ClickPos.x = Pos.x;
-			m_MouseInfo.Right.ClickPos.y = Pos.y;
+			m_RightClickPos.x = Pos.x;
+			m_RightClickPos.y = Pos.y;
 		}
 		//離された場合
 		else if (GLFW_RELEASE == p_action)
 		{
-			//他のボタンがクリックされていない時に処理する
-			if (GLFW_PRESS != m_MouseInfo.Left.State)
-			{
-				//マウスが動いた時にコールバックされないようにする
-				glfwSetCursorPosCallback(p_window, NULL);
-			}
-
 			//離されたことを記憶
 			m_MouseInfo.Right.State = GLFW_RELEASE;
 
 			//保持していた座標を初期化
-			m_MouseInfo.Right.DiffPos.x = 0;
-			m_MouseInfo.Right.DiffPos.y = 0;
-			m_MouseInfo.Right.ClickDiffPos.x = 0;
-			m_MouseInfo.Right.ClickDiffPos.y = 0;
+			memset(&m_MouseInfo.Right.ClickDiffPos, 0, sizeof(m_MouseInfo.Right.ClickDiffPos));
+			memset(&m_RightClickPos, 0, sizeof(m_RightClickPos));
 		}
 	}
 
@@ -137,40 +122,22 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 		{
 			printf("左クリックが押されました\n");
 
-			//他のボタンがクリックされていない時に処理する
-			if (GLFW_PRESS != m_MouseInfo.Right.State)
-			{
-				//マウスが動いた時にコールバックされるようにする
-				glfwSetCursorPosCallback(p_window, DeviceManager::CursorPosCallback);
-			}
-
 			//押されたことを記憶
 			m_MouseInfo.Left.State = GLFW_PRESS;
 
-			//押された時の座標を記憶NULL
-			m_MouseInfo.Left.Pos.x = Pos.x;
-			m_MouseInfo.Left.Pos.y = Pos.y;
-			m_MouseInfo.Left.ClickPos.x = Pos.x;
-			m_MouseInfo.Left.ClickPos.y = Pos.y;
+			//押された時の座標を記憶
+			m_LeftClickPos.x = Pos.x;
+			m_LeftClickPos.y = Pos.y;
 		}
 		//離された場合
 		else if (GLFW_RELEASE == p_action)
 		{
-			//他のボタンがクリックされていない時に処理する
-			if (GLFW_PRESS != m_MouseInfo.Right.State)
-			{
-				//マウスが動いた時にコールバックされないようにする
-				glfwSetCursorPosCallback(p_window, NULL);
-			}
-
 			//離されたことを記憶
 			m_MouseInfo.Left.State = GLFW_RELEASE;
 
 			//保持していた座標を初期化
-			m_MouseInfo.Left.DiffPos.x = 0;
-			m_MouseInfo.Left.DiffPos.y = 0;
-			m_MouseInfo.Left.ClickDiffPos.x = 0;
-			m_MouseInfo.Left.ClickDiffPos.y = 0;
+			memset(&m_MouseInfo.Left.ClickDiffPos, 0, sizeof(m_MouseInfo.Left.ClickDiffPos));
+			memset(&m_LeftClickPos, 0, sizeof(m_LeftClickPos));
 		}
 	}
 
@@ -200,64 +167,43 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 *	　p_xpos	：[I/ ]　X 座標
 *	　p_xpos	：[I/ ]　Y 座標
 *	　詳細は下記URL参照のこと
-*	　http://www.glfw.org/docs/latest/group__input.html#ga592fbfef76d88f027cb1bc4c36ebd437
+*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWcursorposfun]関数
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
 void DeviceManager::CursorPosCallback(GLFWwindow* p_window, double p_xpos, double p_ypos)
 {
-
 	//座標用の変数宣言
 	//　コールバック用APIの引数が[double]の為、無駄だが仕方なくこのような橋渡しをしている
 	//　（このようにしないと、コンパイラでワーニングが出るので）
-	CursorPos Pos;
-	Pos.x = (float)p_xpos;
-	Pos.y = (float)p_ypos;
+	Vec2 Pos;
+	Pos.x = (GLfloat)p_xpos;
+	Pos.y = (GLfloat)p_ypos;
+
+	//座標をコピーして保存
+	m_MouseInfo.Position = Pos;
 
 	//右クリックが押されている場合
 	if (GLFW_PRESS == m_MouseInfo.Right.State)
 	{
-		//現在の座標を更新
-		m_MouseInfo.Right.Pos.x = Pos.x;
-		m_MouseInfo.Right.Pos.y = Pos.y;
-
-		//直前のカーソル位置からの差分を更新
-		m_MouseInfo.Right.DiffPos.x = Pos.x - m_OldCursorPos.x;
-		m_MouseInfo.Right.DiffPos.y = Pos.y - m_OldCursorPos.y;
-
 		//クリックされた時からの差分を更新
-		m_MouseInfo.Right.ClickDiffPos.x = Pos.x - m_MouseInfo.Right.ClickPos.x;
-		m_MouseInfo.Right.ClickDiffPos.y = Pos.y - m_MouseInfo.Right.ClickPos.y;
+		m_MouseInfo.Right.ClickDiffPos.x = Pos.x - m_RightClickPos.x;
+		m_MouseInfo.Right.ClickDiffPos.y = Pos.y - m_RightClickPos.y;
 	}
 
 	//左クリックが押されている場合
 	if (GLFW_PRESS == m_MouseInfo.Left.State)
 	{
-		//現在の座標を更新
-		m_MouseInfo.Left.Pos.x = Pos.x;
-		m_MouseInfo.Left.Pos.y = Pos.y;
-
-		//直前のカーソル位置からの差分を更新
-		m_MouseInfo.Left.DiffPos.x = Pos.x - m_OldCursorPos.x;
-		m_MouseInfo.Left.DiffPos.y = Pos.y - m_OldCursorPos.y;
-
 		//クリックされた時からの差分を更新
-		m_MouseInfo.Left.ClickDiffPos.x = Pos.x - m_MouseInfo.Left.ClickPos.x;
-		m_MouseInfo.Left.ClickDiffPos.y = Pos.y - m_MouseInfo.Left.ClickPos.y;
+		m_MouseInfo.Left.ClickDiffPos.x = Pos.x - m_LeftClickPos.x;
+		m_MouseInfo.Left.ClickDiffPos.y = Pos.y - m_LeftClickPos.y;
 	}
-
-	//カーソルの座標を保存
-	m_OldCursorPos.x = Pos.x;
-	m_OldCursorPos.y = Pos.y;
 
 	/////////////////////////////////////////////
 	//	デバッグ用
 
 	//	printf("Right.ClickDiffPos.x = %f, Right.ClickDiffPos.y = %f\n", m_MouseInfo.Right.ClickDiffPos.x, m_MouseInfo.Right.ClickDiffPos.y);
 	//	printf("Left.ClickDiffPos.x = %f, Left.ClickDiffPos.y = %f\n", m_MouseInfo.Left.ClickDiffPos.x, m_MouseInfo.Left.ClickDiffPos.y);
-
-	//	printf("Right.DiffPos.x = %f, Right.DiffPos.y = %f\n", m_MouseInfo.Right.DiffPos.x, m_MouseInfo.Right.DiffPos.y);
-	//	printf("Left.DiffPos.x = %f, Left.DiffPos.y = %f\n", m_MouseInfo.Left.DiffPos.x, m_MouseInfo.Left.DiffPos.y);
 }
 
 /*-------------------------------------------------------------------------------
@@ -268,7 +214,7 @@ void DeviceManager::CursorPosCallback(GLFWwindow* p_window, double p_xpos, doubl
 *	　p_xoffset	：[I/ ]　スクロールのX軸オフセット
 *	　p_yoffset	：[I/ ]　スクロールのY軸オフセット
 *	　詳細は下記URL参照のこと
-*	　http://www.glfw.org/docs/latest/group__input.html#ga6228cdf94d28fbd3a9a1fbb0e5922a8a
+*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWscrollfun]関数
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -276,12 +222,12 @@ void DeviceManager::ScrollCallback(GLFWwindow* p_window, double p_xoffset, doubl
 {
 
 	//ひとまずスクロール上下しか使わない予定なので「p_yoffset」のみ取得
-	m_MouseInfo.Scroll = (float)p_yoffset;
+	m_MouseInfo.ScrollAmount.y += (GLfloat)p_yoffset;
 
 	/////////////////////////////////////////////
 	//	デバッグ用
 
-//	printf("p_xoffset = %f, p_yoffset = %f\n", p_xoffset, p_yoffset);
+//	printf("p_yoffset = %f\n", m_MouseInfo.ScrollAmount.y);
 }
 
 /*-------------------------------------------------------------------------------
@@ -294,7 +240,7 @@ void DeviceManager::ScrollCallback(GLFWwindow* p_window, double p_xoffset, doubl
 *	　p_action		：[I/ ]　押された（GLFW_PRESS） or 離された（GLFW_RELEASE）
 *	　p_mods		：[I/ ]　ShiftやCtrlなどが押されているかの判断（定義名はURL参照）
 *	　詳細は下記URL参照のこと
-*	　http://www.glfw.org/docs/latest/group__input.html#ga6228cdf94d28fbd3a9a1fbb0e5922a8a
+*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWkeyfun]関数
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/

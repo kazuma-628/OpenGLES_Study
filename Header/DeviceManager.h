@@ -10,31 +10,24 @@
 /////////////////////////////////////////////
 //	マウス関連の構造体定義
 
-//カーソルの座標系
-typedef struct
-{
-	float x;		//X座標
-	float y;		//Y座標
-}CursorPos;
-
 //マウスの詳細情報
 typedef struct
 {
 	int State;				//マウスのクリック状態（押されている（GLFW_PRESS） or 離されている（GLFW_RELEASE））
-	CursorPos Pos;			//マウスのカーソル座標（マウスがクリックされている時だけ更新され、
-							//　クリックされていない時は最後の情報が保持される）
-	CursorPos DiffPos;		//直前（1イベント前）のカーソル位置からの差分座標（マウスがクリックされている時だけ更新される、それ以外は [0]）
-							//　直前のカーソル位置からどれだけ移動したかで、マウスを動かさなければ [0] が入る
-	CursorPos ClickPos;		//マウスがクリックされた時のカーソル座標（クリックされていない時は最後の情報が保持される）
-	CursorPos ClickDiffPos;	//マウスがクリックされた時からの差分座標（クリックされていない時は [0] ）
-}MouseDetailInfo;
+	Vec2 ClickDiffPos;		//マウスがクリックされた座標からの差分座標（クリックされていない時は [0] ）
+							//　例：[x:50][y:50]でクリックして、ドラッグ状態で[x:40][y:60]に移動させた場合、
+							//　　　格納される値は[x:-10][y:10]となる
+}MouseDetail;
 
 //マウスの情報
 typedef struct
 {
-	MouseDetailInfo Right;		//マウスの右クリックの情報
-	MouseDetailInfo Left;		//マウスの左クリックの情報
-	float Scroll;
+	MouseDetail Right;			//マウスの右クリックの情報
+	MouseDetail Left;			//マウスの左クリックの情報
+//	MouseDetail Middle;			//マウスの中央クリックの情報
+	Vec2 Position;				//マウスのカーソル座標
+	Vec2 ScrollAmount;			//スクロールの合計量、初期状態は[x:0（横[左右]スクロール）][y:0（縦[上下]スクロール）]で、
+								//　スクロールした分だけ値が蓄積（加算/減算）されていく
 }MouseInfo;
 
 /////////////////////////////////////////////
@@ -95,8 +88,8 @@ public:
 	*	　p_button	：[I/ ]　どのボタンが変化したか
 	*	　p_action	：[I/ ]　押された（GLFW_PRESS） or 離された（GLFW_RELEASE）
 	*	　p_mods	：[I/ ]　よくわからない
-	*	　詳細は下記URL参照のこと
-	*	　http://www.glfw.org/docs/latest/group__input.html#ga1e008c7a8751cea648c8f42cc91104cf
+	*	　詳細は下記参照のこと
+	*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWmousebuttonfun]関数
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
@@ -112,7 +105,7 @@ public:
 	*	　p_xpos	：[I/ ]　X 座標
 	*	　p_xpos	：[I/ ]　Y 座標
 	*	　詳細は下記URL参照のこと
-	*	　http://www.glfw.org/docs/latest/group__input.html#ga592fbfef76d88f027cb1bc4c36ebd437
+	*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWcursorposfun]関数
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
@@ -126,7 +119,7 @@ public:
 	*	　p_xoffset	：[I/ ]　スクロールのX軸オフセット
 	*	　p_yoffset	：[I/ ]　スクロールのY軸オフセット
 	*	　詳細は下記URL参照のこと
-	*	　http://www.glfw.org/docs/latest/group__input.html#ga6228cdf94d28fbd3a9a1fbb0e5922a8a
+	*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWscrollfun]関数
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
@@ -142,7 +135,7 @@ public:
 	*	　p_action		：[I/ ]　押された（GLFW_PRESS） or 離された（GLFW_RELEASE）
 	*	　p_mods		：[I/ ]　ShiftやCtrlなどが押されているかの判断（定義名はURL参照）
 	*	　詳細は下記URL参照のこと
-	*	　http://www.glfw.org/docs/latest/group__input.html#ga592dd1919f8a1dc7576b13cdd8b7b695
+	*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWkeyfun]関数
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
@@ -154,27 +147,11 @@ public:
 	*	引数
 	*	　なし
 	*	戻り値
-	*	　右クリックの情報
+	*	　マウスの情報
 	*-------------------------------------------------------------------------------*/
 	inline MouseInfo GetMouseInfo(void)
 	{
-		//返却するために情報をコピーする
-		//リターンした値の一部を初期化したいので
-		MouseInfo tmp_MouseButton = m_MouseInfo;
-
-		//情報を返却したので「直前のカーソル位置からの差分」を初期化
-		m_MouseInfo.Left.DiffPos.x = 0.0;
-		m_MouseInfo.Left.DiffPos.y = 0.0;
-		m_MouseInfo.Right.DiffPos.x = 0.0;
-		m_MouseInfo.Right.DiffPos.y = 0.0;
-		m_MouseInfo.Scroll = 0.0;
-
-		/////////////////////////////////////////////
-		//	デバッグ用
-//		printf("tmp_Right.DiffPos.x = %f, tmp_Right.DiffPos.y = %f\n", tmp_MouseButton.Right.DiffPos.x, tmp_MouseButton.Right.DiffPos.y);
-//		printf("tmp_Left.DiffPos.x = %f, tmp_Left.DiffPos.y = %f\n", tmp_MouseButton.Left.DiffPos.x, tmp_MouseButton.Left.DiffPos.y);
-
-		return tmp_MouseButton;
+		return m_MouseInfo;
 	}
 
 	/*-------------------------------------------------------------------------------
@@ -183,7 +160,7 @@ public:
 	*	引数
 	*	　なし
 	*	戻り値
-	*	　右クリックの情報
+	*	　キー（キーボード）の情報
 	*-------------------------------------------------------------------------------*/
 	inline KeyInfo GetKeyInfo(void)
 	{
@@ -201,11 +178,13 @@ private:
 		int *Keep;			//「KeyInfo」の「Keep」メンバと同等（詳細は左記メンバ参照のこと）
 	}KeyInfoSummary;
 
+	GLFWwindow* m_window;			//ウィンドウハンドル
+	static MouseInfo m_MouseInfo;	//マウスの情報
+	static KeyInfo m_KeyInfo;		//キー（キーボード）の情報
+	static Vec2 m_RightClickPos;	//マウスが右クリックされた時のカーソル座標
+	static Vec2 m_LeftClickPos;	//マウスが左クリックされた時のカーソル座標
+	static Vec2 m_MiddleClickPos;	//マウスが中央クリックされた時のカーソル座標
 
-	static MouseInfo m_MouseInfo;		//マウスの情報
-	static CursorPos m_OldCursorPos;	//直前（1イベント前）のカーソル座標
-	static KeyInfo m_KeyInfo;			//キー（キーボード）の情報
-	GLFWwindow* m_window;		//ウィンドウハンドル
 
 };
 

@@ -4,12 +4,6 @@
 //include定義
 #include "Common.h"
 
-typedef struct
-{
-	int Width;		//生成したウィンドウの幅
-	int Height;		//生成したウィンドウの高さ
-}WindowSize;
-
 class WindowManager
 {
 
@@ -78,7 +72,7 @@ public:
 	*	戻り値
 	*	　ウィンドウハンドル
 	*-------------------------------------------------------------------------------*/
-	inline WindowSize GetWindowSize()
+	inline Size GetWindowSize()
 	{
 		return m_WindowSize;
 	}
@@ -100,6 +94,6 @@ public:
 private:
 
 	GLFWwindow* m_window;		//生成したウィンドウハンドル
-	static WindowSize m_WindowSize;	//生成したウィンドウのサイズ（幅,高さ）
+	static Size m_WindowSize;	//生成したウィンドウのサイズ（幅,高さ）
 };
 #endif

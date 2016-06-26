@@ -7,8 +7,6 @@ MainDraw::MainDraw()
 	m_MainShader = new ShaderManager;
 
 	//変数初期化
-	memset(&m_Rotate, 0, sizeof(m_Rotate));
-	memset(&m_Translate, 0, sizeof(m_Translate));
 	m_attr_pos = -1;
 	m_attr_color = -1;
 	m_ProjModel_matrix = 0;
@@ -51,83 +49,19 @@ void MainDraw::Prepare()
 *	関数説明
 *	　メイン描画を開始する
 *	引数
-*	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
-*	　p_DeviceManager		：[I/ ]　Key管理オブジェクト
+*	　p_Global				：[I/O]　グローバルデータ
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceManager)
+void MainDraw::Drawing(GlobalData *p_Global)
 {
-	//ウィンドウサイズの取得
-	WindowSize const WindowSize = p_WindowManager->GetWindowSize();
-	//マウスの情報を取得
-	MouseInfo MouseButton = p_DeviceManager->GetMouseInfo();
-	//キー（キーボード）の情報を取得
-	KeyInfo KeyBoard = p_DeviceManager->GetKeyInfo();
-	
 	// シェーダープログラムの利用を開始する
 	m_MainShader->UseProgram();
 
-	//オブジェクトを移動させるための行列
-	Matrix ModelView;
-
-	//3D空間にするための行列
-	Matrix Projection;
-
-
-	///////////////////////////////////
-	// オブジェクト移動関係の処理
-
-	//スペースで初期位置に戻す
-	if (true == KeyBoard.Change.Key_SPACE)
-	{
-		memset(&m_Translate, 0, sizeof(m_Translate));
-		memset(&m_Rotate, 0, sizeof(m_Rotate));
-	}
-
-	//平行移動用の変数にマウス情報の座標を加える
-	m_Translate.x = m_Translate.x + MouseButton.Left.DiffPos.x;
-	m_Translate.y = m_Translate.y + MouseButton.Left.DiffPos.y;
-	m_Translate.z = m_Translate.z + MouseButton.Scroll;
-	//更にキーボードの情報を加える
-	if (GLFW_PRESS == KeyBoard.Change.Key_W)
-	{
-		m_Translate.z = m_Translate.z + 0.5f;
-	}
-	if (GLFW_PRESS == KeyBoard.Change.Key_S)
-	{
-		m_Translate.z = m_Translate.z - 0.5f;
-	}
-	if (GLFW_PRESS == KeyBoard.Change.Key_A)
-	{
-		m_Translate.x = m_Translate.x + 1.0f;
-	}
-	if (GLFW_PRESS == KeyBoard.Change.Key_D)
-	{
-		m_Translate.x = m_Translate.x - 1.0f;
-	}
-
-	//回転用の変数にマウス情報の座標を加える
-	//本来であれば360度回転したら変数を初期化した方が良いが、サンプルなので割愛
-	m_Rotate.x = m_Rotate.x + MouseButton.Right.DiffPos.x;
-	m_Rotate.y = m_Rotate.y + MouseButton.Right.DiffPos.y;
-
-	//カメラの映る位置に移動させる
-	ModelView.Translate(0.0, 0.0, -35.0f);
-	//マウスでのオブジェクトの移動
-	ModelView.Translate(m_Translate.x / 6.0f, -m_Translate.y / 6.0f, m_Translate.z);
-	
-	//マウスでのオブジェクトの回転
-	ModelView.Rotate(-m_Rotate.x / 2.0f, 0.0f, 1.0f, 0.0f);
-	ModelView.Rotate(-m_Rotate.y / 2.0f, 1.0f, 0.0f, 0.0f);
-	
-	//透視投影行列を適用する
-	Projection.Perspective(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
-	//もう一つの方法
-//	Projection.Perspective(1.0, 100.0, 60.0, WindowSize.Width / WindowSize.Height);
-
 	//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
-	Matrix ProjModel = Projection * ModelView;
+	Matrix ProjModel;
+	ProjModel.SetMatrix(p_Global->ProjectionMatrix);
+	ProjModel = ProjModel * p_Global->ModelViewMatrix;
 
 	//シェーダーの変数を有効化
 	m_MainShader->EnableVertexAttribArray(m_attr_pos);
@@ -151,7 +85,7 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//ビューポートを設定する
-	glViewport(0, 0, WindowSize.Width, WindowSize.Height);
+	glViewport(0, 0, p_Global->WindowSize.Width, p_Global->WindowSize.Height);
 
 	//変数を転送
 	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, ProjModel.GetMatrix());
@@ -166,7 +100,5 @@ void MainDraw::Drawing(WindowManager* p_WindowManager, DeviceManager* p_DeviceMa
 //	m_MainShader->VertexAttribPointer(m_attr_color, PiercedCube_index.Color.size, PiercedCube_index.Color.type, PiercedCube_index.Color.normalized, PiercedCube_index.Color.stride, PiercedCube_index.Color.pointer);
 //	glDrawElements(PiercedCube_index.DrawElement.mode, PiercedCube_index.DrawElement.count, PiercedCube_index.DrawElement.type, PiercedCube_index.DrawElement.indices);
 
-	//描画反映処理
-	p_WindowManager->DrawingOnWindow();
 }
 
