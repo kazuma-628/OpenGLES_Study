@@ -48,15 +48,41 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 
 	//バーテックスのシェーダーオブジェクト作成
 	vertex_shader = CreateShader(p_vertex_file_name, GL_VERTEX_SHADER);
+	//エラーチェック
+	if (0 == vertex_shader)
+	{
+		//エラーなのでプログラムオブジェクトには0にする
+		m_ProgramObject = 0;
+		return;
+	}
 
 	//フラグメントのシェーダーオブジェクト作成
 	fragment_shader = CreateShader(p_fragment_file_name, GL_FRAGMENT_SHADER);
+	//エラーチェック
+	if (0 == fragment_shader)
+	{
+		//メモリ解放
+		glDeleteShader(vertex_shader);
+
+		//エラーなのでプログラムオブジェクトには0にする
+		m_ProgramObject = 0;
+		return;
+	}
 
 	//プログラムオブジェクトの生成
 	GLuint ProgramObject = glCreateProgram();
+	//エラーチェック
 	if (0 == ProgramObject)
 	{
+		//メモリ解放
+		glDeleteShader(vertex_shader);
+		glDeleteShader(fragment_shader);
+		//エラーなのでプログラムオブジェクトには0にする
+		m_ProgramObject = 0;
+		
 		ERROR_MESSAGE("プログラムオブジェクトの作成に失敗しました。");
+
+		return;
 	}
 
 	glAttachShader(ProgramObject, vertex_shader);		// バーテックスシェーダーとプログラムを関連付ける
@@ -67,14 +93,20 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 	{
 		//ジオメトリのシェーダーオブジェクト作成
 		geometry_shader = CreateShader(p_geometry_file_name, GL_GEOMETRY_SHADER);
+		//エラーチェック
+		if (0 == geometry_shader)
+		{
+			//メモリ解放
+			glDeleteShader(vertex_shader);
+			glDeleteShader(fragment_shader);
+			glDeleteProgram(ProgramObject);
+
+			//エラーなのでプログラムオブジェクトには0にする
+			m_ProgramObject = 0;
+			return;
+		}
 
 		glAttachShader(ProgramObject, geometry_shader);		// フラグメントシェーダーとプログラムを関連付ける
-	}
-
-
-	if (GL_NO_ERROR != GL_GET_ERROR())
-	{
-		ERROR_MESSAGE("シェーダーとシェーダープログラムの関連付けに失敗しました。");
 	}
 
 	// シェーダープログラムのリンクを行う
@@ -98,15 +130,17 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 			printf("%s", message);
 			free((void*)message);
 
+			//メモリ解放
 			glDeleteProgram(ProgramObject);
 			ProgramObject = 0;
+
+			ERROR_MESSAGE("シェーダープログラムのリンクに失敗しました。");
 		}
 	}
-	if (GL_TRUE != linkSuccess)
+	else
 	{
-		ERROR_MESSAGE("シェーダープログラムのリンクに失敗しました。");
+		printf("完了\n");
 	}
-	printf("完了\n");
 
 	// リンク済みのため、個々のシェーダーオブジェクトの解放フラグを立てる
 	glDeleteShader(vertex_shader);
@@ -582,10 +616,15 @@ GLuint ShaderManager::CreateShader(const char* p_file_name, const GLuint p_gl_xx
 	GLchar *shader_source = ShaderFileLoad(p_file_name);
 
 	//シェーダーオブジェクトの生成
-	const GLuint shader = glCreateShader(p_gl_xxxx_shader);
+	GLuint shader = glCreateShader(p_gl_xxxx_shader);
 	if (0 == shader)
 	{
 		ERROR_MESSAGE("シェーダーオブジェクトの作成に失敗しました");
+
+		//メモリ解放
+		free(shader_source);
+
+		return 0;
 	}
 
 	//ソースプログラムを読み込む
@@ -611,20 +650,23 @@ GLuint ShaderManager::CreateShader(const char* p_file_name, const GLuint p_gl_xx
 			//エラーメッセージ表示
 			printf("\n\nコンパイルエラーの情報は以下です。\n");
 			printf("%s", message);
+			
+			//メモリ解放
 			free((void*)message);
+			glDeleteShader(shader);
+			shader = 0;
+
+			ERROR_MESSAGE("シェーダーのコンパイルに失敗しました。");
+
 		}
 	}
-
-	// コンパイル失敗していたらここでプログラムを停止する
-	if (GL_TRUE != compileSuccess)
+	else
 	{
-		ERROR_MESSAGE("シェーダーのコンパイルに失敗しました。");
+		printf("完了\n");
 	}
 
 	//シェーダーソース用のメモリ解放
 	free((void*)shader_source);
-
-	printf("完了\n");
 
 	return shader;
 }
@@ -659,6 +701,8 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 		ERROR_MESSAGE("シェーダーファイルのオープンに失敗しました。\n"\
 			"「Shader」フォルダに格納されていますか？\n"\
 			"ファイル名が間違っていませんか？");
+
+		return NULL;
 	}
 
 	//ファイルのサイズを取得する
@@ -669,6 +713,11 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 	{
 		printf("失敗\n");
 		ERROR_MESSAGE("空ファイルです。");
+
+		//ファイルクローズ
+		fclose(fp);
+
+		return NULL;
 	}
 
 	//ファイルサイズ取得が完了したので先頭に戻す
