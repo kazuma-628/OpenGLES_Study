@@ -7,7 +7,7 @@
 ////////////////////////////////////
 // モデルデータ情報構造体
 
-//頂点パラメータ情報
+//頂点パラメータ情報（[VertexAttribPointer]用）
 typedef struct
 {
 	GLint size;
@@ -34,20 +34,29 @@ typedef struct
 	const void *indices;
 }DrawElementsInfo;
 
+//バッファーデータ用（glBufferData等）パラメータ情報
+typedef struct
+{
+	GLsizei size;		//全頂点のサイズ（byte）
+	GLvoid *data;		//全頂点が格納された先頭アドレス
+}BufferDataInfo;
+
 //モデルデータ情報
 typedef struct
 {
-	VertexAttribPointerInfo Vertex;
-	VertexAttribPointerInfo Color;
-	DrawArraysInfo DrawArrays;
+	VertexAttribPointerInfo Vertex;		//頂点情報
+	VertexAttribPointerInfo Color;		//カラー情報
+	DrawArraysInfo DrawArrays;			//描画情報
+	BufferDataInfo BufferData;			//バッファー情報
 }ModelDataInfo;
 
 //モデルデータ（インデックス使用版）情報
 typedef struct
 {
-	VertexAttribPointerInfo Vertex;
-	VertexAttribPointerInfo Color;
-	DrawElementsInfo DrawElement;
+	VertexAttribPointerInfo Vertex;		//頂点情報
+	VertexAttribPointerInfo Color;		//カラー情報
+	DrawElementsInfo DrawElement;		//描画情報
+	BufferDataInfo BufferData;			//バッファー情報
 }ModelDataInfo_index;
 
 class ModelManager
@@ -67,6 +76,8 @@ public:
 	*	引数
 	*	　p_ModelData		：[ /O]　モデルデータ情報
 	*	　p_vbo				：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
+	*						　		 VBOとして使用する場合、「glBufferData」でデータを登録するしてから「glDrawArrays」する。
+	*								 登録するデータは[size]に「BufferData.size」を、[data]に「BufferData.data」を指定すれば良い
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
@@ -79,6 +90,8 @@ public:
 	*	引数
 	*	　p_ModelData		：[ /O]　モデルデータ情報
 	*	　p_vbo				：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
+	*						　		 VBOとして使用する場合、「glBufferData」でデータを登録するしてから「glDrawElements」する。
+	*								 登録するデータは[size]に「BufferData.size」を、[data]に「BufferData.data」を指定すれば良い
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/

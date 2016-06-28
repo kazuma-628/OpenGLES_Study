@@ -39,6 +39,8 @@ ModelManager::~ModelManager()
 *	引数
 *	　p_ModelData		：[ /O]　モデルデータ情報
 *	　p_vbo				：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
+*						　		 VBOとして使用する場合、「glBufferData」でデータを登録するしてから「glDrawArrays」する。
+*								 登録するデータは[size]に「BufferData.size」を、[data]に「BufferData.data」を指定すれば良い				 
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -113,6 +115,11 @@ void ModelManager::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
 		p_ModelData->Color.pointer = (GLvoid*)((byte*)m_PiercedCube.vertex + sizeof(vertex[0].Vector));
 	}
 
+	//バッファーデータ設定
+	p_ModelData->BufferData.size = sizeof(vertex);
+	p_ModelData->BufferData.data = m_PiercedCube.vertex;
+
+	//描画情報設定
 	p_ModelData->DrawArrays.mode = GL_TRIANGLE_STRIP;
 	p_ModelData->DrawArrays.first = 0;
 	p_ModelData->DrawArrays.count = sizeof(vertex) / sizeof(vertex[0]);
@@ -125,6 +132,8 @@ void ModelManager::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
 *	引数
 *	　p_ModelData		：[ /O]　モデルデータ情報
 *	　p_vbo				：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
+*						　		 VBOとして使用する場合、「glBufferData」でデータを登録するしてから「glDrawElements」する。
+*								 登録するデータは[size]に「BufferData.size」を、[data]に「BufferData.data」を指定すれば良い
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -196,6 +205,11 @@ void ModelManager::GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p
 		p_ModelData->Color.pointer = (GLvoid*)((byte*)m_PiercedCube_index.vertex + sizeof(vertex[0].Vector));
 	}
 
+	//バッファーデータ設定
+	p_ModelData->BufferData.size = sizeof(vertex);
+	p_ModelData->BufferData.data = m_PiercedCube_index.vertex;
+
+	//描画情報設定
 	p_ModelData->DrawElement.mode = GL_TRIANGLE_STRIP;
 	p_ModelData->DrawElement.count = sizeof(index) / sizeof(index[0]);
 	p_ModelData->DrawElement.type = GL_UNSIGNED_BYTE;
