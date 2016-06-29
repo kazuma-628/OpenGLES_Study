@@ -68,15 +68,32 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 
 	//////////////////////////////////////
 
+	//プログラムオブジェクトの生成
+	GLuint ProgramObject = glCreateProgram();
+	//エラーチェック
+	if (0 == ProgramObject)
+	{
+		//エラーなのでプログラムオブジェクトには0にする
+		m_ProgramObject = 0;
+
+		ERROR_MESSAGE("プログラムオブジェクトの作成に失敗しました。");
+
+		return;
+	}
+
 	//バーテックスのシェーダーオブジェクト作成
 	vertex_shader = CreateShader(p_vertex_file_name, GL_VERTEX_SHADER);
 	//エラーチェック
 	if (0 == vertex_shader)
 	{
+		//メモリ解放
+		glDeleteProgram(ProgramObject);
+
 		//エラーなのでプログラムオブジェクトには0にする
 		m_ProgramObject = 0;
 		return;
 	}
+	glAttachShader(ProgramObject, vertex_shader);		// バーテックスシェーダーとプログラムを関連付ける
 
 	//フラグメントのシェーダーオブジェクト作成
 	fragment_shader = CreateShader(p_fragment_file_name, GL_FRAGMENT_SHADER);
@@ -85,29 +102,12 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 	{
 		//メモリ解放
 		glDeleteShader(vertex_shader);
+		glDeleteProgram(ProgramObject);
 
 		//エラーなのでプログラムオブジェクトには0にする
 		m_ProgramObject = 0;
 		return;
 	}
-
-	//プログラムオブジェクトの生成
-	GLuint ProgramObject = glCreateProgram();
-	//エラーチェック
-	if (0 == ProgramObject)
-	{
-		//メモリ解放
-		glDeleteShader(vertex_shader);
-		glDeleteShader(fragment_shader);
-		//エラーなのでプログラムオブジェクトには0にする
-		m_ProgramObject = 0;
-		
-		ERROR_MESSAGE("プログラムオブジェクトの作成に失敗しました。");
-
-		return;
-	}
-
-	glAttachShader(ProgramObject, vertex_shader);		// バーテックスシェーダーとプログラムを関連付ける
 	glAttachShader(ProgramObject, fragment_shader);		// フラグメントシェーダーとプログラムを関連付ける
 
 	//ジオメトリシェーダーの読み込み（指定されている場合）
