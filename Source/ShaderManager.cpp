@@ -25,9 +25,11 @@ ShaderManager::~ShaderManager()
 *	　バーテックス・フラグメントシェーダーのソースを指定されたファイルから読み込み、
 *	　コンパイル及びリンクして、プログラムオブジェクトを作成する
 *	引数
-*	　p_vertex_file_name		：[I/ ]　バーテックスシェーダーのファイル名
-*	　p_fragment_file_name		：[I/ ]　フラグメントシェーダーのファイル名
-*	　p_geometry_file_name		：[I/ ]　ジオメトリシェーダーのファイル名
+*	　p_vertex_file_name			：[I/ ]　バーテックスシェーダーのファイル名
+*	　p_fragment_file_name			：[I/ ]　フラグメントシェーダーのファイル名
+*	　p_geometry_file_name			：[I/ ]　ジオメトリシェーダーのファイル名（使用しない場合はNULLを指定）
+*	　p_tess_control_file_name		：[I/ ]　テッセレーションコントロールシェーダーのファイル名（使用しない場合はNULLを指定）
+*	　p_tess_evaluation_file_name	：[I/ ]　テッセレーション評価シェーダーのファイル名（使用しない場合はNULLを指定）
 *
 *	※どのファイル名も[Shader]フォルダ以降のファイルパスを入力してください
 *	　ディレクトリをまたぐときは「\\」で区切ってください。（例「xxx\\xxx.vert」
@@ -35,16 +37,36 @@ ShaderManager::~ShaderManager()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name)
+void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name, const char* p_tess_control_file_name, const char* p_tess_evaluation_file_name)
 {
 	GLuint vertex_shader = 0;				//バーテックスシェーダーのオブジェクト
 	GLuint fragment_shader = 0;				//フラグメントシェーダーのオブジェクト
 	GLuint geometry_shader = 0;				//ジオメトリシェーダーのオブジェクト
+	GLuint tess_control_shader = 0;			//テッセレーションコントロールシェーダーのオブジェクト
+	GLuint tess_evaluation_shader = 0;		//テッセレーション評価シェーダーのオブジェクト
 
-	//読み込むシェーダー名を記憶
+	//////////////////////////////////////
+	// 読み込むシェーダー名を記憶
+
 	strcpy(m_vertex_file_name, p_vertex_file_name);
-	strcpy(m_fragment_file_name, p_fragment_file_name);
-	strcpy(m_geometry_file_name, p_geometry_file_name);
+	strcpy(m_fragment_file_name, p_fragment_file_name); 
+	//ジオメトリシェーダーが指定されている場合（指定されている場合）
+	if (NULL != p_geometry_file_name)
+	{
+		strcpy(m_geometry_file_name, p_geometry_file_name);
+	}
+	//テッセレーションコントロールシェーダーが指定されている場合（指定されている場合）
+	if (NULL != p_tess_control_file_name)
+	{
+		strcpy(m_tess_control_file_name, p_tess_control_file_name);
+	}
+	//テッセレーション評価シェーダーの読み込み（指定されている場合）
+	if (NULL != p_tess_evaluation_file_name)
+	{
+		strcpy(m_tess_evaluation_file_name, p_tess_evaluation_file_name);
+	}
+
+	//////////////////////////////////////
 
 	//バーテックスのシェーダーオブジェクト作成
 	vertex_shader = CreateShader(p_vertex_file_name, GL_VERTEX_SHADER);
@@ -109,6 +131,51 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 		glAttachShader(ProgramObject, geometry_shader);		// フラグメントシェーダーとプログラムを関連付ける
 	}
 
+	//テッセレーションコントロールシェーダーの読み込み（指定されている場合）
+	if (NULL != p_tess_control_file_name)
+	{
+		//ジオメトリのシェーダーオブジェクト作成
+		tess_control_shader = CreateShader(p_tess_control_file_name, GL_TESS_CONTROL_SHADER);
+		//エラーチェック
+		if (0 == tess_control_shader)
+		{
+			//メモリ解放
+			glDeleteShader(vertex_shader);
+			glDeleteShader(fragment_shader);
+			glDeleteShader(geometry_shader);
+			glDeleteProgram(ProgramObject);
+
+			//エラーなのでプログラムオブジェクトには0にする
+			m_ProgramObject = 0;
+			return;
+		}
+
+		glAttachShader(ProgramObject, tess_control_shader);		// フラグメントシェーダーとプログラムを関連付ける
+	}
+
+	//テッセレーション評価シェーダーの読み込み（指定されている場合）
+	if (NULL != p_tess_evaluation_file_name)
+	{
+		//ジオメトリのシェーダーオブジェクト作成
+		tess_evaluation_shader = CreateShader(p_tess_evaluation_file_name, GL_TESS_EVALUATION_SHADER);
+		//エラーチェック
+		if (0 == tess_evaluation_shader)
+		{
+			//メモリ解放
+			glDeleteShader(vertex_shader);
+			glDeleteShader(fragment_shader);
+			glDeleteShader(geometry_shader);
+			glDeleteShader(tess_control_shader);
+			glDeleteProgram(ProgramObject);
+
+			//エラーなのでプログラムオブジェクトには0にする
+			m_ProgramObject = 0;
+			return;
+		}
+
+		glAttachShader(ProgramObject, tess_evaluation_shader);		// フラグメントシェーダーとプログラムを関連付ける
+	}
+
 	// シェーダープログラムのリンクを行う
 	printf("シェーダープログラムのリンクを開始します... ");
 	glLinkProgram(ProgramObject);
@@ -142,15 +209,28 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 		printf("完了\n");
 	}
 
-	// リンク済みのため、個々のシェーダーオブジェクトの解放フラグを立てる
+	//////////////////////////////////////
+	// シェーダーオブジェクト破棄
+
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 
-	//ジオメトリシェーダーの読み込み
+	//ジオメトリシェーダーオブジェクト破棄（指定されている場合）
 	if (NULL != p_geometry_file_name)
 	{
-		//オブジェクト削除
 		glDeleteShader(geometry_shader);
+	}
+
+	//テッセレーションコントロールシェーダーオブジェクト破棄（指定されている場合）
+	if (NULL != p_tess_control_file_name)
+	{
+		glDeleteShader(tess_control_shader);
+	}
+
+	//テッセレーション評価シェーダーオブジェクト破棄（指定されている場合）
+	if (NULL != p_tess_evaluation_file_name)
+	{
+		glDeleteShader(tess_evaluation_shader);
 	}
 
 	//リンク済みのプログラムを記憶する

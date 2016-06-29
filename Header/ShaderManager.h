@@ -28,9 +28,11 @@ public:
 	*	　バーテックス・フラグメントシェーダーのソースを指定されたファイルから読み込み、
 	*	　コンパイル及びリンクして、プログラムオブジェクトを作成する
 	*	引数
-	*	　p_vertex_file_name		：[I/ ]　バーテックスシェーダーのファイル名
-	*	　p_fragment_file_name		：[I/ ]　フラグメントシェーダーのファイル名
-	*	　p_geometry_file_name		：[I/ ]　ジオメトリシェーダーのファイル名
+	*	　p_vertex_file_name			：[I/ ]　バーテックスシェーダーのファイル名
+	*	　p_fragment_file_name			：[I/ ]　フラグメントシェーダーのファイル名
+	*	　p_geometry_file_name			：[I/ ]　ジオメトリシェーダーのファイル名（使用しない場合はNULLを指定）
+	*	　p_tess_control_file_name		：[I/ ]　テッセレーションコントロールシェーダーのファイル名（使用しない場合はNULLを指定）
+	*	　p_tess_evaluation_file_name	：[I/ ]　テッセレーション評価シェーダーのファイル名（使用しない場合はNULLを指定）
 	*
 	*	※どのファイル名も[Shader]フォルダ以降のファイルパスを入力してください
 	*	　ディレクトリをまたぐときは「\\」で区切ってください。（例「xxx\\xxx.vert」)
@@ -38,7 +40,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name);
+	void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name, const char* p_tess_control_file_name, const char* p_tess_evaluation_file_name);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -299,10 +301,12 @@ private:
 
 	//変数定義
 	GLint m_ProgramObject;		//プログラムオブジェクト
-	char m_vertex_file_name[SHADER_FILE_NAME_MAX];		//バーテックスシェーダーファイル名
-	char m_fragment_file_name[SHADER_FILE_NAME_MAX];	//フラグメントシェーダーファイル名
-	char m_geometry_file_name[SHADER_FILE_NAME_MAX];	//フラグメントシェーダーファイル名
-	
+	char m_vertex_file_name[SHADER_FILE_NAME_MAX];			//バーテックスシェーダーファイル名
+	char m_fragment_file_name[SHADER_FILE_NAME_MAX];		//フラグメントシェーダーファイル名
+	char m_geometry_file_name[SHADER_FILE_NAME_MAX];		//フラグメントシェーダーファイル名
+	char m_tess_control_file_name[SHADER_FILE_NAME_MAX];	//テッセレーションコントロールシェーダーのオブジェクト
+	char m_tess_evaluation_file_name[SHADER_FILE_NAME_MAX];	//テッセレーション評価シェーダーのオブジェクト
+
 	AttribInfo m_AttribInfo[ATTRIB_INFO_MAX];			//アトリビュート変数管理用の変数
 	int m_AttribInfoIndex;								//アトリビュート変数管理用のインデックス値
 	UniformInfo m_UniformInfo[UNIFORM_INFO_MAX];		//ユニフォーム変数管理用の変数
