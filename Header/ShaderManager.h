@@ -5,7 +5,6 @@
 #include "Common.h"
 
 //Define定義
-#define SHADER_FILE_NAME_MAX		64				//シェーダーのファイル名最大文字数（ディレクトリ名含む）
 #define SHADER_FILE_DIR				"..\\Shader\\"	//シェーダーファイルの保存ディレクトリ
 #define ATTRIB_INFO_MAX				128				//アトリビュート変数管理用の最大数
 #define ATTRIB_INFO_NAME_MAX		64				//アトリビュート変数名の最大文字数
@@ -300,12 +299,12 @@ private:
 
 
 	//変数定義
-	GLint m_ProgramObject;		//プログラムオブジェクト
-	char m_vertex_file_name[SHADER_FILE_NAME_MAX];			//バーテックスシェーダーファイル名
-	char m_fragment_file_name[SHADER_FILE_NAME_MAX];		//フラグメントシェーダーファイル名
-	char m_geometry_file_name[SHADER_FILE_NAME_MAX];		//フラグメントシェーダーファイル名
-	char m_tess_control_file_name[SHADER_FILE_NAME_MAX];	//テッセレーションコントロールシェーダーのオブジェクト
-	char m_tess_evaluation_file_name[SHADER_FILE_NAME_MAX];	//テッセレーション評価シェーダーのオブジェクト
+	GLint m_ProgramObject;					//プログラムオブジェクト
+	char *m_vertex_file_name;				//バーテックスシェーダーファイル名
+	char *m_fragment_file_name;				//フラグメントシェーダーファイル名
+	char *m_geometry_file_name;				//フラグメントシェーダーファイル名
+	char *m_tess_control_file_name;			//テッセレーションコントロールシェーダーのオブジェクト名
+	char *m_tess_evaluation_file_name;		//テッセレーション評価シェーダーのオブジェクト名
 
 	AttribInfo m_AttribInfo[ATTRIB_INFO_MAX];			//アトリビュート変数管理用の変数
 	int m_AttribInfoIndex;								//アトリビュート変数管理用のインデックス値

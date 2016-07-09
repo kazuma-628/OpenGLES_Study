@@ -6,11 +6,13 @@ ShaderManager::ShaderManager()
 	m_ProgramObject = -1;
 	m_UniformInfoIndex = 0;
 	m_AttribInfoIndex = 0;
-	memset(m_vertex_file_name, 0, sizeof(m_vertex_file_name));
-	memset(m_fragment_file_name, 0, sizeof(m_fragment_file_name));
+	m_vertex_file_name = NULL;
+	m_fragment_file_name = NULL;
+	m_geometry_file_name = NULL;
+	m_tess_control_file_name = NULL;
+	m_tess_evaluation_file_name = NULL;
 	memset(m_AttribInfo, 0, sizeof(m_AttribInfo));
 	memset(m_UniformInfo, 0, sizeof(m_UniformInfo));
-
 }
 
 //デストラクタ
@@ -18,6 +20,29 @@ ShaderManager::~ShaderManager()
 {
 	//プログラムオブジェクトを削除する
 	glDeleteProgram(m_ProgramObject);
+
+	//////////////////////////////////////
+	// 読み込んだシェーダーファイル名が保存されている場合は破棄する
+	if (NULL != m_vertex_file_name)
+	{
+		free(m_vertex_file_name);
+	}
+	if (NULL != m_fragment_file_name)
+	{
+		free(m_fragment_file_name);
+	}
+	if (NULL != m_geometry_file_name)
+	{
+		free(m_geometry_file_name);
+	}
+	if (NULL != m_tess_control_file_name)
+	{
+		free(m_tess_control_file_name);
+	}
+	if (NULL != m_tess_evaluation_file_name)
+	{
+		free(m_tess_evaluation_file_name);
+	}
 }
 
 /*-------------------------------------------------------------------------------
@@ -44,25 +69,52 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 	GLuint geometry_shader = 0;				//ジオメトリシェーダーのオブジェクト
 	GLuint tess_control_shader = 0;			//テッセレーションコントロールシェーダーのオブジェクト
 	GLuint tess_evaluation_shader = 0;		//テッセレーション評価シェーダーのオブジェクト
+	int StrLength = 0;						//読み込む各シェーダーファイル名の長さ（バイト数）
+
+	//引数チェック
+	if (NULL == p_vertex_file_name || NULL == p_fragment_file_name)
+	{
+		printf("\n■■■ エラー ■■■\n");
+		printf("バーテックスシェーダー = %s | フラグメントシェーダー = %s", p_vertex_file_name, p_fragment_file_name);
+		ERROR_MESSAGE("バーテックスシェーダー及びフラグメントシェーダーは最低でも設定する必要があります。");
+	}
 
 	//////////////////////////////////////
 	// 読み込むシェーダー名を記憶
+	// 文字列の長さを取得してメモリ確保をしてファイル名を保存
+	//（終端を明確にするため +1 する。[\0]となる）
 
+	//バーテックスシェーダー
+	StrLength = strlen(p_vertex_file_name);
+	m_vertex_file_name = (char*)calloc(StrLength + 1, sizeof(char));
 	strcpy(m_vertex_file_name, p_vertex_file_name);
-	strcpy(m_fragment_file_name, p_fragment_file_name); 
-	//ジオメトリシェーダーが指定されている場合（指定されている場合）
+
+	//フラグメントシェーダー
+	StrLength = strlen(p_fragment_file_name);
+	m_fragment_file_name = (char*)calloc(StrLength + 1, sizeof(char));
+	strcpy(m_fragment_file_name, p_fragment_file_name);
+
+	//ジオメトリシェーダーが指定されている場合
 	if (NULL != p_geometry_file_name)
 	{
+		StrLength = strlen(p_geometry_file_name);
+		m_geometry_file_name = (char*)calloc(StrLength + 1, sizeof(char));
 		strcpy(m_geometry_file_name, p_geometry_file_name);
 	}
-	//テッセレーションコントロールシェーダーが指定されている場合（指定されている場合）
+	//テッセレーションコントロールシェーダーが指定されている場合
 	if (NULL != p_tess_control_file_name)
 	{
+		//テッセレーションコントロールシェーダー
+		StrLength = strlen(p_tess_control_file_name);
+		m_tess_control_file_name = (char*)calloc(StrLength + 1, sizeof(char));
 		strcpy(m_tess_control_file_name, p_tess_control_file_name);
 	}
-	//テッセレーション評価シェーダーの読み込み（指定されている場合）
+	//テッセレーション評価シェーダーが指定されている場合
 	if (NULL != p_tess_evaluation_file_name)
 	{
+		//テッセレーション評価シェーダー
+		StrLength = strlen(p_tess_evaluation_file_name);
+		m_tess_evaluation_file_name = (char*)calloc(StrLength + 1, sizeof(char));
 		strcpy(m_tess_evaluation_file_name, p_tess_evaluation_file_name);
 	}
 
@@ -255,8 +307,8 @@ GLint ShaderManager::GetAttribLocation(const GLchar* p_name)
 
 	if (Location < 0)
 	{
-		printf("失敗\n\n");
-		printf("■■■ エラー ■■■\n");
+		printf("失敗\n");
+		printf("\n■■■ エラー ■■■\n");
 		printf("シェーダーに変数「%s」が定義されていない可能性があります\n\n", p_name);
 		ERROR_MESSAGE_SUB("");
 	}
@@ -294,8 +346,8 @@ GLint ShaderManager::GetUniformLocation(const GLchar* p_name)
 
 	if (Location < 0)
 	{
-		printf("失敗\n\n");
-		printf("■■■ エラー ■■■\n");
+		printf("失敗\n");
+		printf("\n■■■ エラー ■■■\n");
 		printf("シェーダーに変数「%s」が定義されていない可能性があります\n\n", p_name);
 		ERROR_MESSAGE_SUB("");
 
@@ -765,11 +817,16 @@ GLuint ShaderManager::CreateShader(const char* p_file_name, const GLuint p_gl_xx
 *-------------------------------------------------------------------------------*/
 char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 {
+	char *shader_dir_file_name = NULL;	//シェーダーファイルへのパス
 	FILE *fp = NULL;		//ファイルポインタ宣言
+	int StrLength = 0;		//読み込むシェーダーファイル名の長さ（バイト数）
 
-	char shader_dir_file_name[SHADER_FILE_NAME_MAX] = SHADER_FILE_DIR;
+	// 文字列の長さを取得してメモリ確保（終端を明確にするため +1 する。[\0]となる）
+	StrLength = strlen(SHADER_FILE_DIR) + strlen(p_file_name);
+	shader_dir_file_name = (char*)calloc(StrLength + 1, sizeof(char));
 
-	strcat(shader_dir_file_name, p_file_name);
+	//シェーダーファイルへのパスを生成する
+	sprintf(shader_dir_file_name, "%s%s", SHADER_FILE_DIR, p_file_name);
 
 	//ファイルのオープン
 	printf("「%s」シェーダーファイルの読み込みを開始します... ", p_file_name);
@@ -781,6 +838,9 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 		ERROR_MESSAGE("シェーダーファイルのオープンに失敗しました。\n"\
 			"「Shader」フォルダに格納されていますか？\n"\
 			"ファイル名が間違っていませんか？");
+
+		//シェーダーファイルへのパス名破棄
+		free(shader_dir_file_name);
 
 		return NULL;
 	}
@@ -794,6 +854,8 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 		printf("失敗\n");
 		ERROR_MESSAGE("空ファイルです。");
 
+		//シェーダーファイルへのパス名破棄
+		free(shader_dir_file_name);
 		//ファイルクローズ
 		fclose(fp);
 
@@ -809,6 +871,8 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 
 	//ファイルクローズ
 	fclose(fp);
+	//シェーダーファイルへのパス名破棄
+	free(shader_dir_file_name);
 
 	printf("完了\n");
 

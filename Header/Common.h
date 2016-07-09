@@ -1,8 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-//Visual Studioで「fopen,strcat,strcpy」などの関数を使用することによるエラーを出さないようにする
+//Visual Studioで「fopen,strcat,strcpy」などの関数を使用することによるエラー/ワーニングを出さないようにする
 #define _CRT_SECURE_NOWARNINGS
+#pragma warning(disable:4996)
 
 ////////////////////////////////////
 // 定義済みのヘッダーファイル読み込み
