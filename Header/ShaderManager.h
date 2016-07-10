@@ -24,7 +24,7 @@ public:
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
-	*	　バーテックス・フラグメントシェーダーのソースを指定されたファイルから読み込み、
+	*	　各シェーダーのソースを指定されたファイルから読み込み、
 	*	　コンパイル及びリンクして、プログラムオブジェクトを作成する
 	*	引数
 	*	　p_vertex_file_name			：[I/ ]　バーテックスシェーダーのファイル名
@@ -305,6 +305,7 @@ private:
 	char *m_geometry_file_name;				//フラグメントシェーダーファイル名
 	char *m_tess_control_file_name;			//テッセレーションコントロールシェーダーのオブジェクト名
 	char *m_tess_evaluation_file_name;		//テッセレーション評価シェーダーのオブジェクト名
+	char *m_AllShaderFileName;				//全シェーダーのファイル名をまとめたもの
 
 	AttribInfo m_AttribInfo[ATTRIB_INFO_MAX];			//アトリビュート変数管理用の変数
 	int m_AttribInfoIndex;								//アトリビュート変数管理用のインデックス値
