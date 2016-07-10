@@ -435,6 +435,32 @@ void ShaderManager::EnableVertexAttribArray(const GLint p_index)
 
 /*-------------------------------------------------------------------------------
 *	関数説明
+*	　Attribute変数を無効にします。（ほぼ glDisableVertexAttribArray と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
+*	引数
+*	　p_index		：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
+*					　		（GetAttribLocationで取得した返り値）
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void ShaderManager::DisableVertexAttribArray(const GLint p_index)
+{
+	if (-1 == m_AttribInfo[p_index].Location)
+	{
+		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
+			"シェーダー[%s]用の\n"\
+			"アトリビュート変数「%s」の無効化に失敗しました\n"\
+			"シェーダーに変数が定義されていない可能性があります\n\n"\
+			, m_vertex_file_name, m_AttribInfo[p_index].Name);
+	}
+	else
+	{
+		glDisableVertexAttribArray(m_AttribInfo[p_index].Location);
+	}
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
 *	　Attribute変数へデータを送信（関連付け）します。（ほぼ glVertexAttribPointer と同じです）
 *	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
