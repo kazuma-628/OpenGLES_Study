@@ -165,3 +165,58 @@ Vec3 Utility::Cross(Vec3 *p_Vector1, Vec3 *p_Vector2)
 
 	return cross;
 }
+
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　3要素の頂点で作られたポリゴンから法線を計算する
+*	引数
+*	　p_Vector1		：[I/ ]　ベクトル1
+*	　p_Vector2		：[I/ ]　ベクトル2
+*	　p_Vector3		：[I/ ]　ベクトル3
+*	　※下図のように反時計回りのベクトルで入力してください（正の値が取れます）
+*				 １
+*				／＼
+*			　／　　＼
+*			／　　　　＼
+*		　２￣￣￣￣￣￣３	
+*	戻り値
+*	　正常終了		：正規化されたベクトル
+*	　以上終了		：全要素[0.0]
+*-------------------------------------------------------------------------------*/
+Vec3 Utility::Normal(Vec3 *p_Vector1, Vec3 *p_Vector2, Vec3 *p_Vector3)
+{
+	Vec3 normal = { 0.0f };		//正規化されたベクトル
+
+	//引数チェック
+	if (NULL == p_Vector1 || NULL == p_Vector2 || NULL == p_Vector3)
+	{
+		ERROR_MESSAGE("引数エラー");
+		return normal;
+	}
+
+	//計算しやすいように代入（誤差を少なくするために[double]で計算）
+	double x1 = (double)(p_Vector1->x);
+	double y1 = (double)(p_Vector1->y);
+	double z1 = (double)(p_Vector1->z);
+
+	double x2 = (double)(p_Vector2->x);
+	double y2 = (double)(p_Vector2->y);
+	double z2 = (double)(p_Vector2->z);
+
+	double x3 = (double)(p_Vector3->x);
+	double y3 = (double)(p_Vector3->y);
+	double z3 = (double)(p_Vector3->z);
+
+	//ベクトル[1][2] と ベクトル[2][3] を求める
+	Vec3 tmp_normal1 = { float(x2 - x1), float(y2 - y1), float(z2 - z1) };
+	Vec3 tmp_normal2 = { float(x3 - x2), float(y3 - y2), float(z3 - z2) };
+
+	//ベクトル[1][2] と ベクトル[2][3]の外積を求める
+	normal = Cross(&tmp_normal1, &tmp_normal2);
+
+	//正規化して単位ベクトルにする
+	normal = Normalize(&normal);
+
+	return normal;
+}
