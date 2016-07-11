@@ -75,7 +75,7 @@ typedef struct
 	GLint y;
 	GLint z;
 	GLint w;
-}iVec4r;
+}iVec4;
 
 ////////////////////////////////////
 // カラーベクトル構造体
