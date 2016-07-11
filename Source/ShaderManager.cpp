@@ -133,13 +133,12 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 
 	//////////////////////////////////////
 	// 全シェーダーのファイル名をまとめた文字列を保存
-	//（終端を明確にするため +1 する。[\0]となる）
+	// 「 [ ] 」分の文字列数を考慮してメモリ確保する。
+	//（更に終端を明確にするため +1 する。[\0]となる）
 
-	m_AllShaderFileName = (char*)calloc(AllStrLength + 1, sizeof(char));
+	m_AllShaderFileName = (char*)calloc(AllStrLength + 11, sizeof(char));
 
-	sprintf(m_AllShaderFileName, "[%s]", m_vertex_file_name);
-
-	sprintf(m_AllShaderFileName, "%s[%s]", m_AllShaderFileName, m_fragment_file_name);
+	sprintf(m_AllShaderFileName, "[%s][%s]", m_vertex_file_name, m_fragment_file_name);
 
 	//ジオメトリシェーダーが指定されている場合
 	if (NULL != m_geometry_file_name)
