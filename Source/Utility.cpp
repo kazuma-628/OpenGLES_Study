@@ -96,7 +96,8 @@ Vec3 Utility::Normalize(Vec3 *p_Vector)
 *	関数説明
 *	　ベクトルの内積を求める
 *	引数
-*	　p_Vector		：[I/ ]　ベクトル
+*	　p_Vector1		：[I/ ]　ベクトル1
+*	　p_Vector2		：[I/ ]　ベクトル2
 *	戻り値
 *	　正常終了		：内積
 *	　以上終了		：0.0
@@ -131,7 +132,8 @@ float Utility::Dot(Vec3 *p_Vector1, Vec3 *p_Vector2)
 *	関数説明
 *	　ベクトルの外積を求める
 *	引数
-*	　p_Vector		：[I/ ]　ベクトル
+*	　p_Vector1		：[I/ ]　ベクトル1
+*	　p_Vector2		：[I/ ]　ベクトル2
 *	戻り値
 *	　正常終了		：正規化されたベクトル
 *	　以上終了		：全要素[0.0]
