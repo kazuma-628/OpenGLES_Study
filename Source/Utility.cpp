@@ -60,7 +60,7 @@ Vec3 Utility::Normalize(Vec3 *p_Vector)
 	if (NULL == p_Vector)
 	{
 		ERROR_MESSAGE("引数エラー");
-		return normal;
+		return normalize;
 	}
 
 	//計算しやすいように代入（誤差を少なくするために[double]で計算）
