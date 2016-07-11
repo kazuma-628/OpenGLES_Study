@@ -54,7 +54,7 @@ float Utility::Length(Vec3 *p_Vector)
 *-------------------------------------------------------------------------------*/
 Vec3 Utility::Normalize(Vec3 *p_Vector)
 {
-	Vec3 normal = { 0.0f };		//正規化されたベクトル
+	Vec3 normalize = { 0.0f };		//正規化されたベクトル
 
 	//引数チェック
 	if (NULL == p_Vector)
@@ -75,7 +75,7 @@ Vec3 Utility::Normalize(Vec3 *p_Vector)
 	if (length < (1e-6))
 	{
 		ERROR_MESSAGE("計算エラー");
-		return normal;
+		return normalize;
 	}
 
 	//正規化する
@@ -85,11 +85,11 @@ Vec3 Utility::Normalize(Vec3 *p_Vector)
 	z *= length;
 
 	//戻り値を設定
-	normal.x = (float)x;
-	normal.y = (float)y;
-	normal.z = (float)z;
+	normalize.x = (float)x;
+	normalize.y = (float)y;
+	normalize.z = (float)z;
 
-	return normal;
+	return normalize;
 }
 
 /*-------------------------------------------------------------------------------
