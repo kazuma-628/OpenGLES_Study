@@ -11,7 +11,7 @@ ShaderManager::ShaderManager()
 	m_geometry_file_name = NULL;
 	m_tess_control_file_name = NULL;
 	m_tess_evaluation_file_name = NULL;
-	m_AllShaderFileName == NULL;
+	m_AllShaderFileName = NULL;
 	memset(m_AttribInfo, 0, sizeof(m_AttribInfo));
 	memset(m_UniformInfo, 0, sizeof(m_UniformInfo));
 }
