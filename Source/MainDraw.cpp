@@ -60,8 +60,7 @@ void MainDraw::Drawing(GlobalData *p_Global)
 
 	//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
 	Matrix ProjModel;
-	ProjModel.SetMatrix(p_Global->ProjectionMatrix);
-	ProjModel = ProjModel * p_Global->ModelViewMatrix;
+	ProjModel = p_Global->ProjectionMatrix * p_Global->ModelViewMatrix;
 
 	//シェーダーの変数を有効化
 	m_MainShader->EnableVertexAttribArray(m_attr_pos);
@@ -88,7 +87,7 @@ void MainDraw::Drawing(GlobalData *p_Global)
 	glViewport(0, 0, p_Global->WindowSize.Width, p_Global->WindowSize.Height);
 
 	//変数を転送
-	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, ProjModel.GetMatrix());
+	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, ProjModel.GetMatrixFloat());
 
 	// [glDrawArrays]を使用した描画（一番オーソドックス（初歩的）な描画方法）
 	m_MainShader->VertexAttribPointer(m_attr_pos, PiercedCube.Vertex.size, PiercedCube.Vertex.type, PiercedCube.Vertex.normalized, PiercedCube.Vertex.stride, PiercedCube.Vertex.pointer);

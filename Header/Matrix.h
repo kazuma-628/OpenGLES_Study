@@ -14,6 +14,7 @@ class Matrix
 public:
 	//コンストラクタ
 	Matrix();
+	Matrix(const Mat4 &p_matrix);
 
 	//デストラクタ
 	~Matrix();
@@ -22,9 +23,11 @@ public:
 	*	関数説明
 	*	　演算子のオーバーロード定義
 	*-------------------------------------------------------------------------------*/
-	friend Matrix operator*(Matrix &p_left, Matrix &p_right);
-	friend Matrix operator*(Matrix &p_left, GLfloat *p_right);
-	friend Matrix operator*(GLfloat *p_left, Matrix &p_right);
+	friend Matrix operator*(const Matrix &p_left, const Matrix &p_right);
+	friend Matrix operator*(const Matrix &p_left, const Mat4 &p_right);
+	friend Matrix operator*(const Mat4 &p_left, const Matrix &p_right);
+	friend Matrix operator*(const Mat4 &p_left, const Mat4 &p_right);
+	void operator=(const Mat4 &p_matrix);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -92,9 +95,9 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Perspective(float p_left, float p_right,
-					float p_bottom, float p_top,
-					float p_near, float p_far);
+	void Perspective(const float p_left, const float p_right,
+					 const float p_bottom, const float p_top,
+					 const float p_near, const float p_far);
 	
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -110,8 +113,8 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Perspective(float p_near, float p_far,
-					float p_fovY_degree, float p_aspect);
+	void Perspective(const float p_near, const float p_far,
+					 const float p_fovY_degree, const float p_aspect);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -125,48 +128,44 @@ public:
 	
 	/*-------------------------------------------------------------------------------
 	*	関数説明
-	*	　行列の値を設定する
-	*	引数
-	*	　p_matrix		：[I/ ]　設定したい行列の値
-	*
-	*		行列は[GLfloat]型の[16]サイズを設定してください（例：GLfloat matrix[16]）
-	*		また、設定されるマトリクスの並びは下記です。
-	*		　[ 0][ 1][ 2][ 3]
-	*		　[ 4][ 5][ 6][ 7]
-	*		　[ 8][ 9][10][11]
-	*		　[12][13][14][15]
-	*
-	*	戻り値
-	*	　なし
-	*-------------------------------------------------------------------------------*/
-	inline void SetMatrix(GLfloat *p_matrix)
-	{
-		memmove(&m_val, p_matrix, sizeof(m_val));
-	}
-
-	/*-------------------------------------------------------------------------------
-	*	関数説明
 	*	　行列の値を取得する
 	*	引数
 	*	　なし
 	*	戻り値
 	*	　行列の値
 	*-------------------------------------------------------------------------------*/
-	inline const GLfloat* GetMatrix()
+	inline Mat4 GetMatrix()
 	{
 		//メンバに保存されているマトリックスを返却
 		return m_val;
 	}
 
+	/*-------------------------------------------------------------------------------
+	*	関数説明
+	*	　行列の値を取得する（GLfloat型）
+	*	　※「glUniformMatrix4fv」などでマトリクスを設定するときに使用する。
+	*　　　　単に値を取得したいだけであれば「GetMatrix」の方を使ってください。
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　行列の値（GLfloat型）
+	*-------------------------------------------------------------------------------*/
+	inline const GLfloat* GetMatrixFloat()
+	{
+		//メンバに保存されているマトリックスを返却
+		return (GLfloat*)&m_val;
+	}
+
+
 private:
 
-	//行列用の配列
+	// 行列用の配列
 	//
-	//[ 0][ 1][ 2][ 3]
-	//[ 4][ 5][ 6][ 7]
-	//[ 8][ 9][10][11]
-	//[12][13][14][15]
+	// [0][0] [0][1] [0][2] [0][3]
+	// [1][0] [1][1] [1][2] [1][3]
+	// [2][0] [2][1] [2][2] [2][3]
+	// [3][0] [3][1] [3][2] [3][3]
 	//
-	GLfloat m_val[16];
+	Mat4 m_val;
 };
 #endif

@@ -78,6 +78,23 @@ typedef struct
 }iVec4;
 
 ////////////////////////////////////
+// ベクトル構造体
+typedef struct
+{
+	GLfloat m[2][2];
+}Mat2;
+
+typedef struct
+{
+	GLfloat m[3][3];
+}Mat3;
+
+typedef struct
+{
+	GLfloat m[4][4];
+}Mat4;
+
+////////////////////////////////////
 // カラーベクトル構造体
 
 typedef struct
@@ -135,8 +152,8 @@ typedef struct
 // 構造体
 typedef struct
 {
-	GLfloat ModelViewMatrix[16];		//メインとなるモデルビューマトリクス（大元のマトリクスデータ）
-	GLfloat ProjectionMatrix[16];		//メインとなるプロジェクションマトリクス（大元のマトリクスデータ）
+	Mat4 ModelViewMatrix;		//メインとなるモデルビューマトリクス（大元のマトリクスデータ）
+	Mat4 ProjectionMatrix;		//メインとなるプロジェクションマトリクス（大元のマトリクスデータ）
 	Size WindowSize;					//ウィンドウの全体サイズ
 	Vec3 Translate;						//初期位置（X,Y,Z）からの移動量
 	Vec3 Rotate;						//初期位置（X,Y,Z）からの回転量

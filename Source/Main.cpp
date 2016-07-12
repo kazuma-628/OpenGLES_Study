@@ -216,8 +216,8 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	// 各種情報を保存
 
 	//各種行列を保存する
-	memmove(p_Global->ModelViewMatrix, ModelView.GetMatrix(), sizeof(p_Global->ModelViewMatrix));
-	memmove(p_Global->ProjectionMatrix, Projection.GetMatrix(), sizeof(p_Global->ProjectionMatrix));
+	memmove(&p_Global->ModelViewMatrix, &ModelView.GetMatrix(), sizeof(p_Global->ModelViewMatrix));
+	memmove(&p_Global->ProjectionMatrix, &Projection.GetMatrix(), sizeof(p_Global->ProjectionMatrix));
 
 	//ウィンドウサイズを保存
 	p_Global->WindowSize.Width = WindowSize.Width;
