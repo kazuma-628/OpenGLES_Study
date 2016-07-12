@@ -59,7 +59,7 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	//	ウィンドウ生成
 
 	//ここでウィンドウサイズも指定しています。サイズを変更したい場合はDefine値を変更してください。
-	printf("ウィンドウ（%d × %d）の生成を開始します... ", WINDOW_WIDTH, WINDOW_HEIGHT);
+	printf("ウィンドウ（%d × %d）の生成を開始します... ", p_Width, p_Height);
 	GLFWwindow *const window = glfwCreateWindow(p_Width, p_Height, p_Title, NULL, NULL);
 
 	//ウィンドウが生成できているかチェック

@@ -26,10 +26,10 @@
 //続行不可能なエラーの可能性があるが、デバッグ中は一時的にエラーになる可能性がある場合のメッセージ出力定義
 //デバック中はメッセージを有効にすると大量のメッセージが出力される可能性がありますので、
 //最終的に動作が上手くいかないなどのエラー確認の時のみコメントを外して見てください
-#define ERROR_MESSAGE_SUB(...)		printf(__VA_ARGS__); error_message_sub_func(__FILE__, __FUNCTION__ ,__LINE__);
+#define ERROR_MESSAGE_SUB(...)		//printf(__VA_ARGS__); error_message_sub_func(__FILE__, __FUNCTION__ ,__LINE__);
 
-#define WINDOW_WIDTH				800			//ウィンドウサイズ（幅）
-#define WINDOW_HEIGHT				600			//ウィンドウサイズ（高さ）
+#define WINDOW_WIDTH				1024			//ウィンドウサイズ（幅）
+#define WINDOW_HEIGHT				768				//ウィンドウサイズ（高さ）
 #define GL_GET_ERROR()				GL_NO_ERROR	//glGetError()	//gl関連のエラーを取得したい場合はコメントの文と入れ替える
 
 ////////////////////////////////////
