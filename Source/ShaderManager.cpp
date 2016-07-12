@@ -895,7 +895,7 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 	//ファイルのオープン
 	printf("「%s」シェーダーファイルの読み込みを開始します... ", p_file_name);
 	
-	fp = fopen(shader_dir_file_name, "r");
+	fp = fopen(shader_dir_file_name, "rb");
 	if (NULL == fp)
 	{
 		printf("失敗\n");
