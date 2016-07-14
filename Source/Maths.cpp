@@ -1,13 +1,13 @@
-#include "Utility.h"
+#include "Maths.h"
 
 //コンストラクタ
-Utility::Utility()
+Math::Math()
 {
 
 }
 
 //デストラクタ
-Utility::~Utility()
+Math::~Math()
 {
 
 }
@@ -21,7 +21,7 @@ Utility::~Utility()
 *	　正常終了		：ベクトルの長さ
 *	　以上終了		：0.0		
 *-------------------------------------------------------------------------------*/
-float Utility::Length(Vec3 &p_Vector)
+float Math::Length(Vec3 &p_Vector)
 {
 	float length = 0.0f;	//ベクトルの長さ
 	
@@ -45,7 +45,7 @@ float Utility::Length(Vec3 &p_Vector)
 *	　正常終了		：正規化されたベクトル
 *	　以上終了		：全要素[0.0]
 *-------------------------------------------------------------------------------*/
-Vec3 Utility::Normalize(Vec3 &p_Vector)
+Vec3 Math::Normalize(Vec3 &p_Vector)
 {
 	Vec3 normalize = { 0.0f };		//正規化されたベクトル
 
@@ -88,7 +88,7 @@ Vec3 Utility::Normalize(Vec3 &p_Vector)
 *	　正常終了		：内積
 *	　以上終了		：0.0
 *-------------------------------------------------------------------------------*/
-float Utility::Dot(Vec3 &p_Vector1, Vec3 &p_Vector2)
+float Math::Dot(Vec3 &p_Vector1, Vec3 &p_Vector2)
 {
 	float dot = 0.0f; //内積
 
@@ -117,7 +117,7 @@ float Utility::Dot(Vec3 &p_Vector1, Vec3 &p_Vector2)
 *	　正常終了		：正規化されたベクトル
 *	　以上終了		：全要素[0.0]
 *-------------------------------------------------------------------------------*/
-Vec3 Utility::Cross(Vec3 &p_Vector1, Vec3 &p_Vector2)
+Vec3 Math::Cross(Vec3 &p_Vector1, Vec3 &p_Vector2)
 {
 	Vec3 cross = { 0.0f };		//正規化されたベクトル
 
@@ -156,7 +156,7 @@ Vec3 Utility::Cross(Vec3 &p_Vector1, Vec3 &p_Vector2)
 *	　正常終了		：正規化されたベクトル
 *	　以上終了		：全要素[0.0]
 *-------------------------------------------------------------------------------*/
-Vec3 Utility::Normal(Vec3 &p_Vector1, Vec3 &p_Vector2, Vec3 &p_Vector3)
+Vec3 Math::Normal(Vec3 &p_Vector1, Vec3 &p_Vector2, Vec3 &p_Vector3)
 {
 	Vec3 normal = { 0.0f };		//正規化されたベクトル
 

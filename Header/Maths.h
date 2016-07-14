@@ -1,18 +1,18 @@
-#ifndef UTILITY_H
-#define UTILITY_H
+#ifndef MATHS_H
+#define MATHS_H
 
 //include定義
 #include "Common.h"
 
-class Utility
+class Math
 {
 
 public:
 	//コンストラクタ
-	Utility();
+	Math();
 
 	//デストラクタ
-	~Utility();
+	~Math();
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
