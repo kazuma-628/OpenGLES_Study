@@ -289,15 +289,78 @@ void Matrix::Perspective(const float p_near, const float p_far,
 /*-------------------------------------------------------------------------------
 *	関数説明
 *	　逆行列を求める
+*	　参考サイト：http://thira.plavox.info/blog/2008/06/_c.html
 *	引数
 *	　なし
 *	戻り値
 *	　逆行列
 *-------------------------------------------------------------------------------*/
-Matrix Matrix::Inverse() const
+void Matrix::Inverse()
 {
-	Matrix t_matrix;
+	//逆行列の結果を一時的に保存する変数
+	double in_matrix[4][4];		//入力用の行列
+	double out_matrix[4][4];	//出力用の行列
 
+	//一時的なデータを蓄える
+	double t_data; 
 
-	return t_matrix;
+	//カウンタ変数
+	int i = 0;
+	int j = 0;
+	int k = 0;
+
+	//行列の配列次数
+	//今後流用できるかもということで残しておく定義で普段は変えない値
+	int N = 4;
+
+	//入力用の行列をコピーする（計算過程で上書きされるのとついでにdoubleにしたいので）
+	for (i = 0; i < N; i++)
+	{
+		for (j = 0; j < N; j++)
+		{
+			in_matrix[i][j] = (double)m_val.m[i][j];
+		}
+	}
+
+	//単位行列を作る
+	for (i = 0; i < N; i++)
+	{
+		for (j = 0; j < N; j++)
+		{
+			out_matrix[i][j] = (i == j) ? 1.0 : 0.0;
+		}
+	}
+
+	//掃き出し法を使用して逆行列を求める
+	for (i = 0; i < N; i++)
+	{
+		t_data = 1 / in_matrix[i][i];
+		for (j = 0; j < N; j++)
+		{
+			in_matrix[i][j] *= t_data;
+			out_matrix[i][j] *= t_data;
+		}
+		
+		for (j = 0; j < N; j++)
+		{
+			if (i != j)
+			{
+				t_data = in_matrix[j][i];
+				for (k = 0; k < N; k++)
+				{
+					in_matrix[j][k] -= in_matrix[i][k] * t_data;
+					out_matrix[j][k] -= out_matrix[i][k] * t_data;
+				}
+			}
+		}
+	}
+
+	//キャスト変換しながら結果をメンバ変数にコピーする
+	for (i = 0; i < N; i++)
+	{
+		for (j = 0; j < N; j++)
+		{
+			m_val.m[i][j] = (GLfloat)out_matrix[i][j];
+		}
+	}
 }
