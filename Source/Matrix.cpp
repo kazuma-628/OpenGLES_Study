@@ -26,12 +26,6 @@ Matrix::~Matrix()
 //マトリクス同士の乗算
 Matrix operator*(const Matrix &p_left, const Matrix &p_right)
 {
-	//参考用のメモ
-	//[ 0][ 1][ 2][ 3]
-	//[ 4][ 5][ 6][ 7]
-	//[ 8][ 9][10][11]
-	//[12][13][14][15]
-
 	Matrix t_matrix;
 
 	//行列の乗算（OpenGLは行ベクトルではなく列ベクトルなことに注意、乗算は一般的な行列の乗算と違う）
