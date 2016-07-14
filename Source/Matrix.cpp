@@ -31,18 +31,16 @@ Matrix operator*(const Matrix &p_left, const Matrix &p_right)
 	//行列の乗算（OpenGLは行ベクトルではなく列ベクトルなことに注意、乗算は一般的な行列の乗算と違う）
 	for (int i = 0; i < 4; i++)
 	{
-		t_matrix.m_val.m[0][i]	= p_left.m_val.m[0][i] * p_right.m_val.m[0][0] + p_left.m_val.m[1][i] * p_right.m_val.m[0][1]
-								+ p_left.m_val.m[2][i] * p_right.m_val.m[0][2] + p_left.m_val.m[3][i] * p_right.m_val.m[0][3];
-
-		t_matrix.m_val.m[1][i]  = p_left.m_val.m[0][i] * p_right.m_val.m[1][0] + p_left.m_val.m[1][i] * p_right.m_val.m[1][1]
-								+ p_left.m_val.m[2][i] * p_right.m_val.m[1][2] + p_left.m_val.m[3][i] * p_right.m_val.m[1][3];
-
-		t_matrix.m_val.m[2][i]  = p_left.m_val.m[0][i] * p_right.m_val.m[2][0] + p_left.m_val.m[1][i] * p_right.m_val.m[2][1]
-								+ p_left.m_val.m[2][i] * p_right.m_val.m[2][2] + p_left.m_val.m[3][i] * p_right.m_val.m[2][3];
-
-		t_matrix.m_val.m[3][i]  = p_left.m_val.m[0][i] * p_right.m_val.m[3][0] + p_left.m_val.m[1][i] * p_right.m_val.m[3][1]
-								+ p_left.m_val.m[2][i] * p_right.m_val.m[3][2] + p_left.m_val.m[3][i] * p_right.m_val.m[3][3];
-	}
+		t_matrix.m_val.m[i][0] = p_left.m_val.m[0][0] * p_right.m_val.m[i][0] + p_left.m_val.m[1][0] * p_right.m_val.m[i][1]
+							   + p_left.m_val.m[2][0] * p_right.m_val.m[i][2] + p_left.m_val.m[3][0] * p_right.m_val.m[i][3];
+		t_matrix.m_val.m[i][1] = p_left.m_val.m[0][1] * p_right.m_val.m[i][0] + p_left.m_val.m[1][1] * p_right.m_val.m[i][1]
+							   + p_left.m_val.m[2][1] * p_right.m_val.m[i][2] + p_left.m_val.m[3][1] * p_right.m_val.m[i][3];
+		t_matrix.m_val.m[i][2] = p_left.m_val.m[0][2] * p_right.m_val.m[i][0] + p_left.m_val.m[1][2] * p_right.m_val.m[i][1] 
+							   + p_left.m_val.m[2][2] * p_right.m_val.m[i][2] + p_left.m_val.m[3][2] * p_right.m_val.m[i][3];
+		t_matrix.m_val.m[i][3] = p_left.m_val.m[0][3] * p_right.m_val.m[i][0] + p_left.m_val.m[1][3] * p_right.m_val.m[i][1] 
+							   + p_left.m_val.m[2][3] * p_right.m_val.m[i][2] + p_left.m_val.m[3][3] * p_right.m_val.m[i][3];
+		
+		}
 	return t_matrix;
 }
 
