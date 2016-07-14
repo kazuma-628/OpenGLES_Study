@@ -204,8 +204,8 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	ModelView.Translate(p_Global->Translate.x / 6.0f, -p_Global->Translate.y / 6.0f, p_Global->Translate.z);
 
 	//マウスでのオブジェクトの回転
-	ModelView.Rotate(-p_Global->Rotate.x / 2.0f, 0.0f, 1.0f, 0.0f);
 	ModelView.Rotate(-p_Global->Rotate.y / 2.0f, 1.0f, 0.0f, 0.0f);
+	ModelView.Rotate(-p_Global->Rotate.x / 2.0f, 0.0f, 1.0f, 0.0f);
 
 	//透視投影行列を適用する
 	Projection.Perspective(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
