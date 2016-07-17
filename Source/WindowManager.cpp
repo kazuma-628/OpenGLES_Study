@@ -65,6 +65,7 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	//ウィンドウが生成できているかチェック
 	if (NULL == window)
 	{
+		printf("失敗\n");
 		ERROR_MESSAGE("ウィンドウ生成に失敗しました。\n"\
 			"グラフィックがOpenGLESに対応していない可能性があります。\n"\
 			"グラフィックドライバを最新にしてみてください。\n"\
@@ -93,6 +94,7 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	glewExperimental = GL_TRUE;
 	if (GLEW_OK != glewInit())
 	{
+		printf("失敗\n");
 		ERROR_MESSAGE("GLEWの初期化に失敗しました。");
 	}
 	printf("完了\n");
