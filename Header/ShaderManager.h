@@ -276,7 +276,7 @@ private:
 	*	戻り値
 	*	　シェーダーオブジェクト
 	*-------------------------------------------------------------------------------*/
-	GLuint ShaderManager::CreateShader(const char* p_file_name, const GLuint p_gl_xxxx_shader);
+	GLuint CreateShader(const char* p_file_name, const GLuint p_gl_xxxx_shader);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -290,7 +290,7 @@ private:
 	*	戻り値
 	*	　シェーダーソースへの先頭ポインタ
 	*-------------------------------------------------------------------------------*/
-	char* ShaderManager::ShaderFileLoad(const char* p_file_name);
+	char* ShaderFileLoad(const char* p_file_name);
 
 	///////////////////////////////
 	//構造体定義
