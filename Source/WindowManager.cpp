@@ -129,7 +129,7 @@ void WindowManager::DrawingOnWindow(void)
 *	　p_Width	：[I/ ]　ウィンドウの幅
 *	　p_Height	：[I/ ]　ウィンドウの高さ
 *	　詳細は下記URL参照のこと
-*	　http://www.glfw.org/docs/latest/group__window.html#gaaca1c2715759d03da9834eac19323d4a
+*	　[http://www.glfw.org/docs/latest/group__window.html]の[GLFWmousebuttonfun]関数
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
