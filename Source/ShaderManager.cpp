@@ -3,7 +3,7 @@
 //コンストラクタ
 ShaderManager::ShaderManager()
 {
-	m_ProgramObject = -1;
+	m_ProgramObject = 0;
 	m_UniformInfoIndex = 0;
 	m_AttribInfoIndex = 0;
 	m_vertex_file_name = NULL;
@@ -19,37 +19,8 @@ ShaderManager::ShaderManager()
 //デストラクタ
 ShaderManager::~ShaderManager()
 {
-	//プログラムオブジェクトが作成されていれば破棄する
-	if (0 != m_ProgramObject)
-	{
-		glDeleteProgram(m_ProgramObject);
-	}
-	//////////////////////////////////////
-	// 読み込んだシェーダーファイル名が保存されている場合は破棄する
-	if (NULL != m_vertex_file_name)
-	{
-		free(m_vertex_file_name);
-	}
-	if (NULL != m_fragment_file_name)
-	{
-		free(m_fragment_file_name);
-	}
-	if (NULL != m_geometry_file_name)
-	{
-		free(m_geometry_file_name);
-	}
-	if (NULL != m_tess_control_file_name)
-	{
-		free(m_tess_control_file_name);
-	}
-	if (NULL != m_tess_evaluation_file_name)
-	{
-		free(m_tess_evaluation_file_name);
-	}
-	if (NULL != m_AllShaderFileName)
-	{
-		free(m_AllShaderFileName);
-	}
+	//破棄処理する
+	DeleteShaderProgram();
 }
 
 /*-------------------------------------------------------------------------------
@@ -176,11 +147,9 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 	//エラーチェック
 	if (0 == vertex_shader)
 	{
-		//メモリ解放
-		glDeleteProgram(ProgramObject);
+		//破棄処理する
+		DeleteShaderProgram();
 
-		//エラーなのでプログラムオブジェクトには0にする
-		m_ProgramObject = 0;
 		return;
 	}
 	glAttachShader(ProgramObject, vertex_shader);		// バーテックスシェーダーとプログラムを関連付ける
@@ -192,10 +161,10 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 	{
 		//メモリ解放
 		glDeleteShader(vertex_shader);
-		glDeleteProgram(ProgramObject);
+		
+		//破棄処理する
+		DeleteShaderProgram();
 
-		//エラーなのでプログラムオブジェクトには0にする
-		m_ProgramObject = 0;
 		return;
 	}
 	glAttachShader(ProgramObject, fragment_shader);		// フラグメントシェーダーとプログラムを関連付ける
@@ -211,10 +180,10 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 			//メモリ解放
 			glDeleteShader(vertex_shader);
 			glDeleteShader(fragment_shader);
-			glDeleteProgram(ProgramObject);
 
-			//エラーなのでプログラムオブジェクトには0にする
-			m_ProgramObject = 0;
+			//破棄処理する
+			DeleteShaderProgram();
+
 			return;
 		}
 
@@ -233,10 +202,10 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 			glDeleteShader(vertex_shader);
 			glDeleteShader(fragment_shader);
 			glDeleteShader(geometry_shader);
-			glDeleteProgram(ProgramObject);
 
-			//エラーなのでプログラムオブジェクトには0にする
-			m_ProgramObject = 0;
+			//破棄処理する
+			DeleteShaderProgram();
+			
 			return;
 		}
 
@@ -256,10 +225,10 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 			glDeleteShader(fragment_shader);
 			glDeleteShader(geometry_shader);
 			glDeleteShader(tess_control_shader);
-			glDeleteProgram(ProgramObject);
 
-			//エラーなのでプログラムオブジェクトには0にする
-			m_ProgramObject = 0;
+			//破棄処理する
+			DeleteShaderProgram();
+
 			return;
 		}
 
@@ -287,9 +256,8 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 			printf("%s", message);
 			free((void*)message);
 
-			//メモリ解放
-			glDeleteProgram(ProgramObject);
-			ProgramObject = 0;
+			//破棄処理する
+			DeleteShaderProgram();
 
 			ERROR_MESSAGE("シェーダープログラムのリンクに失敗しました。");
 		}
@@ -329,6 +297,92 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 
 /*-------------------------------------------------------------------------------
 *	関数説明
+*	　コンパイル及びリンクしたプログラムオブジェクトを削除する
+*	　また、プログラムオブジェクト作成時に確保した各メンバ変数のメモリも開放・初期化する
+*	引数
+*	　なし
+*	戻り値
+*	　シェーダーオブジェクト
+*-------------------------------------------------------------------------------*/
+void ShaderManager::DeleteShaderProgram(void)
+{
+	//プログラムオブジェクトが作成されていれば破棄する
+	if (0 != m_ProgramObject)
+	{
+		glDeleteProgram(m_ProgramObject);
+		m_ProgramObject = 0;
+	}
+
+	//////////////////////////////////////
+	// 読み込んだシェーダーファイル名が保存されている場合は破棄する
+
+	if (NULL != m_vertex_file_name)
+	{
+		free(m_vertex_file_name);
+		m_vertex_file_name = NULL;
+	}
+	if (NULL != m_fragment_file_name)
+	{
+		free(m_fragment_file_name);
+		m_fragment_file_name = NULL;
+	}
+	if (NULL != m_geometry_file_name)
+	{
+		free(m_geometry_file_name);
+		m_geometry_file_name = NULL;
+	}
+	if (NULL != m_tess_control_file_name)
+	{
+		free(m_tess_control_file_name);
+		m_tess_control_file_name = NULL;
+	}
+	if (NULL != m_tess_evaluation_file_name)
+	{
+		free(m_tess_evaluation_file_name);
+		m_tess_control_file_name = NULL;
+	}
+	if (NULL != m_AllShaderFileName)
+	{
+		free(m_AllShaderFileName);
+		m_AllShaderFileName = NULL;
+	}
+
+	//////////////////////////////////////
+	// アトリビュート・ユニフォーム変数の管理用データを破棄する
+
+	for (int index = 0; index < ATTRIB_INFO_MAX; index++)
+	{
+		//変数名が保存されていない = これ以上は未使用領域なのでループを抜ける
+		if (NULL == m_AttribInfo[index].Name)
+		{
+			break;
+		}
+		//変数名保存用のメモリを開放
+		free(m_AttribInfo[index].Name);
+	}
+	//0で初期化
+	memset(m_AttribInfo, 0, sizeof(m_AttribInfo));
+	//インデックス値を初期化
+	m_AttribInfoIndex = 0;
+
+	for (int index = 0; index < UNIFORM_INFO_MAX; index++)
+	{
+		//変数名が保存されていない = これ以上は未使用領域なのでループを抜ける
+		if (NULL == m_UniformInfo[index].Name)
+		{
+			break;
+		}
+		//変数名保存用のメモリを開放
+		free(m_UniformInfo[index].Name);
+	}
+	//0で初期化
+	memset(m_UniformInfo, 0, sizeof(m_UniformInfo));
+	//インデックス値を初期化
+	m_UniformInfoIndex = 0;
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
 *	　Attribute変数のロケーションを生成（ほぼ glGetAttribLocation と同じです）
 *	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
@@ -338,6 +392,8 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 *-------------------------------------------------------------------------------*/
 GLint ShaderManager::GetAttribLocation(const GLchar* p_name)
 {
+	int StrLength = 0;			//生成するロケーションの変数名の長さ（バイト数）
+
 	printf("シェーダー[%s]用の\n", m_vertex_file_name);
 	printf("アトリビュート変数「%s」のロケーションの生成を開始します... ", p_name);
 
@@ -355,8 +411,11 @@ GLint ShaderManager::GetAttribLocation(const GLchar* p_name)
 		printf("完了\n");
 	}
 
-	//変数名とロケーションIDを保存
-	memmove(m_AttribInfo[m_AttribInfoIndex].Name, p_name, strlen(p_name));
+	//変数名とロケーションIDを保存（終端を明確にするため +1 する。[\0]となる）
+	StrLength = strlen(p_name);
+	m_AttribInfo[m_UniformInfoIndex].Name = (char*)calloc(StrLength + 1, sizeof(char));
+	strcpy(m_AttribInfo[m_UniformInfoIndex].Name, p_name);
+
 	m_AttribInfo[m_AttribInfoIndex].Location = Location;
 
 	//インデックス値を1つ進める
@@ -377,6 +436,8 @@ GLint ShaderManager::GetAttribLocation(const GLchar* p_name)
 *-------------------------------------------------------------------------------*/
 GLint ShaderManager::GetUniformLocation(const GLchar* p_name)
 {
+	int StrLength = 0;			//生成するロケーションの変数名の長さ（バイト数）
+
 	printf("シェーダー%s用の\n", m_AllShaderFileName);
 	printf("ユニホーム変数「%s」のロケーションの生成を開始します... ", p_name);
 
@@ -395,8 +456,11 @@ GLint ShaderManager::GetUniformLocation(const GLchar* p_name)
 		printf("完了\n");
 	}
 
-	//変数名とロケーションIDを保存
-	memmove(m_UniformInfo[m_UniformInfoIndex].Name, p_name, strlen(p_name));
+	//変数名とロケーションIDを保存（終端を明確にするため +1 する。[\0]となる）
+	StrLength = strlen(p_name);
+	m_UniformInfo[m_UniformInfoIndex].Name = (char*)calloc(StrLength + 1, sizeof(char));
+	strcpy(m_UniformInfo[m_UniformInfoIndex].Name, p_name);
+
 	m_UniformInfo[m_UniformInfoIndex].Location = Location;
 
 	//インデックス値を1つ進める

@@ -7,9 +7,7 @@
 //Define定義
 #define SHADER_FILE_DIR				"..\\Shader\\"	//シェーダーファイルの保存ディレクトリ
 #define ATTRIB_INFO_MAX				128				//アトリビュート変数管理用の最大数
-#define ATTRIB_INFO_NAME_MAX		64				//アトリビュート変数名の最大文字数
 #define UNIFORM_INFO_MAX			128				//ユニフォーム変数管理用の最大数
-#define UNIFORM_INFO_NAME_MAX		64				//ユニフォーム変数名の最大文字数
 
 class ShaderManager
 {
@@ -39,7 +37,18 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name, const char* p_tess_control_file_name, const char* p_tess_evaluation_file_name);
+	void CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name, const char* p_tess_control_file_name, const char* p_tess_evaluation_file_name);
+
+	/*-------------------------------------------------------------------------------
+	*	関数説明
+	*	　コンパイル及びリンクした、プログラムオブジェクトを削除する
+	*	　また、プログラムオブジェクト作成時に確保した各メンバ変数のメモリも開放・初期化する
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　なし
+	*-------------------------------------------------------------------------------*/
+	void DeleteShaderProgram(void);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -298,20 +307,20 @@ private:
 	//アトリビュート変数管理用の構造体
 	typedef struct
 	{
-		char Name[ATTRIB_INFO_NAME_MAX];		//変数名
-		GLint Location;							//ロケーション
+		char *Name;				//変数名
+		GLint Location;			//ロケーション
 	}AttribInfo;
 
 	//ユニフォーム変数管理用の構造体
 	typedef struct
 	{
-		char Name[UNIFORM_INFO_NAME_MAX];		//変数名
-		GLint Location;							//ロケーション
+		char *Name;				//変数名
+		GLint Location;			//ロケーション
 	}UniformInfo;
 
 
 	//変数定義
-	GLint m_ProgramObject;					//プログラムオブジェクト
+	GLuint m_ProgramObject;					//プログラムオブジェクト
 	char *m_vertex_file_name;				//バーテックスシェーダーファイル名
 	char *m_fragment_file_name;				//フラグメントシェーダーファイル名
 	char *m_geometry_file_name;				//フラグメントシェーダーファイル名
