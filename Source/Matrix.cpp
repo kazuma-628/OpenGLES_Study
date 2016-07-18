@@ -208,6 +208,50 @@ void Matrix::Rotate(const GLfloat p_rotate, const GLfloat p_x, const GLfloat p_y
 
 /*-------------------------------------------------------------------------------
 *	関数説明
+*	　平行投影変換行列を適応する
+*	引数
+*	　p_left	：[I/ ]　近くの面(p_near面)の左側までの距離
+*	　p_right	：[I/ ]　近くの面(p_near面)の右側までの距離
+*	　p_bottom	：[I/ ]　近くの面(p_near面)の下側までの距離
+*	　p_top		：[I/ ]　近くの面(p_near面)の上側までの距離
+*	　p_near	：[I/ ]　近くの面までの距離
+*	　p_far		：[I/ ]　遠くの面までの距離
+*
+*	　図は下記URLの「平行投影変換」項目参照
+*	　http://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20090829
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void  Matrix::Orthogonal(const float p_left, const float p_right,
+						 const float p_bottom, const float p_top,
+						 const float p_near, const float p_far)
+{
+	Matrix t_matrix;
+
+	float dx = p_right - p_left;
+	float dy = p_top - p_bottom;
+	float dz = p_far - p_near;
+
+	if (0 == dx || 0 == dy || 0 == dz)
+	{
+		printf("デバッグ情報\n");
+		printf("p_right = %f, p_left = %f, p_top = %f, p_bottom = %f, p_far = %f, p_near = %f\n",
+			p_right, p_left, p_top, p_bottom, p_far, p_near);
+		ERROR_MESSAGE("平行投影変換行列の引数異常です");
+	}
+
+	t_matrix.m_val.m[0][0] = 2.0f / dx;
+	t_matrix.m_val.m[1][1] = 2.0f / dy;
+	t_matrix.m_val.m[2][2] = -2.0f / dz;
+	t_matrix.m_val.m[3][0] = -(p_right + p_left) / dx;
+	t_matrix.m_val.m[3][1] = -(p_top + p_bottom) / dy;
+	t_matrix.m_val.m[3][2] = -(p_far + p_near) / dz;
+
+	*this = *this * t_matrix;
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
 *	　透視投影変換行列を適応する
 *	　一つ下にある「Perspective」関数でも行列を作成することが可能です（オーバーロードしてあります）
 *	　引数が違うので、使いやすい方や用途に合わせて使用すること（結果的には同じことができます）
@@ -230,7 +274,6 @@ void Matrix::Perspective(const float p_left, const float p_right,
 {
 	Matrix t_matrix;
 
-	//透視投影変換行列を適用する
 	float dx = p_right - p_left;
 	float dy = p_top - p_bottom;
 	float dz = p_far - p_near;
@@ -242,7 +285,6 @@ void Matrix::Perspective(const float p_left, const float p_right,
 			p_right, p_left, p_top, p_bottom, p_far, p_near);
 		ERROR_MESSAGE("透視投影変換行列の引数異常です");
 	}
-	
 	
 	t_matrix.m_val.m[0][0] = 2.0f * p_near / dx;
 	t_matrix.m_val.m[1][1] = 2.0f * p_near / dy;
