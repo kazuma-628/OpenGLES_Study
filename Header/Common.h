@@ -152,11 +152,13 @@ typedef struct
 // 構造体
 typedef struct
 {
-	Mat4 ModelViewMatrix;		//メインとなるモデルビューマトリクス（大元のマトリクスデータ）
-	Mat4 ProjectionMatrix;		//メインとなるプロジェクションマトリクス（大元のマトリクスデータ）
-	Size WindowSize;					//ウィンドウの全体サイズ
-	Vec3 Translate;						//初期位置（X,Y,Z）からの移動量
-	Vec3 Rotate;						//初期位置（X,Y,Z）からの回転量
+	Mat4 ModelViewMatrix;		//モデルビューマトリクス（大元のマトリクスデータ）
+	Mat4 ProjectionMatrix;		//プロジェクションマトリクス（大元のマトリクスデータ）
+	GLfloat Near;				//プロジェクションマトリクス生成時に使用したNear値（大元のマトリクスデータ）
+	GLfloat Far;				//プロジェクションマトリクス生成時に使用したFar値（大元のマトリクスデータ）
+	Size WindowSize;			//ウィンドウの全体サイズ
+	Vec3 Translate;				//初期位置（X,Y,Z）からの移動量
+	Vec3 Rotate;				//初期位置（X,Y,Z）からの回転量
 }GlobalData;
 
 /*-------------------------------------------------------------------------------
