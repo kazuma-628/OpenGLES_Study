@@ -33,6 +33,7 @@ ShaderManager::~ShaderManager()
 *	　p_geometry_file_name			：[I/ ]　ジオメトリシェーダーのファイル名（使用しない場合はNULLを指定）
 *	　p_tess_control_file_name		：[I/ ]　テッセレーションコントロールシェーダーのファイル名（使用しない場合はNULLを指定）
 *	　p_tess_evaluation_file_name	：[I/ ]　テッセレーション評価シェーダーのファイル名（使用しない場合はNULLを指定）
+*	　p_TransformFeedbackInfo		：[I/ ]　トランスフォームフィードバックの設定情報（使用しない場合はNULLを指定）
 *
 *	※どのファイル名も[Shader]フォルダ以降のファイルパスを入力してください
 *	　ディレクトリをまたぐときは「\\」で区切ってください。（例「xxx\\xxx.vert」
@@ -40,7 +41,7 @@ ShaderManager::~ShaderManager()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name, const char* p_tess_control_file_name, const char* p_tess_evaluation_file_name)
+void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name, const char* p_tess_control_file_name, const char* p_tess_evaluation_file_name, const TransformFeedbackInfo *p_TransformFeedbackInfo)
 {
 	GLuint vertex_shader = 0;				//バーテックスシェーダーのオブジェクト
 	GLuint fragment_shader = 0;				//フラグメントシェーダーのオブジェクト
@@ -142,6 +143,9 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 		return;
 	}
 
+	//////////////////////////////////////
+	// 各シェーダーオブジェクトの作成
+
 	//バーテックスのシェーダーオブジェクト作成
 	vertex_shader = CreateShader(p_vertex_file_name, GL_VERTEX_SHADER);
 	//エラーチェック
@@ -234,6 +238,15 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const ch
 
 		glAttachShader(ProgramObject, tess_evaluation_shader);		// フラグメントシェーダーとプログラムを関連付ける
 	}
+
+	//////////////////////////////////////
+
+	//トランスフォームフィードバックの設定（指定されている場合）
+	if (NULL != p_TransformFeedbackInfo)
+	{
+		glTransformFeedbackVaryings(ProgramObject, p_TransformFeedbackInfo->count, p_TransformFeedbackInfo->varyings, p_TransformFeedbackInfo->bufferMode);
+	}
+
 
 	// シェーダープログラムのリンクを行う
 	printf("シェーダープログラムのリンクを開始します... ");

@@ -9,6 +9,18 @@
 #define ATTRIB_INFO_MAX				128				//アトリビュート変数管理用の最大数
 #define UNIFORM_INFO_MAX			128				//ユニフォーム変数管理用の最大数
 
+//構造体定義
+
+//トランスフォームフィードバックの設定情報
+//（[glTransformFeedbackVaryings]の引数に登録するデータを設定する、プログラムオブジェクトは指定しなくて良い）
+typedef struct
+{
+	//各変数に設定する内容は[glTransformFeedbackVaryings]の仕様を確認すること
+	GLsizei count;
+	const char **varyings;
+	GLenum bufferMode;
+}TransformFeedbackInfo;
+
 class ShaderManager
 {
 
@@ -30,6 +42,7 @@ public:
 	*	　p_geometry_file_name			：[I/ ]　ジオメトリシェーダーのファイル名（使用しない場合はNULLを指定）
 	*	　p_tess_control_file_name		：[I/ ]　テッセレーションコントロールシェーダーのファイル名（使用しない場合はNULLを指定）
 	*	　p_tess_evaluation_file_name	：[I/ ]　テッセレーション評価シェーダーのファイル名（使用しない場合はNULLを指定）
+	*	　p_TransformFeedbackInfo		：[I/ ]　トランスフォームフィードバックの設定情報（使用しない場合はNULLを指定）
 	*
 	*	※どのファイル名も[Shader]フォルダ以降のファイルパスを入力してください
 	*	　ディレクトリをまたぐときは「\\」で区切ってください。（例「xxx\\xxx.vert」)
@@ -37,7 +50,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name, const char* p_tess_control_file_name, const char* p_tess_evaluation_file_name);
+	void CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name, const char* p_tess_control_file_name, const char* p_tess_evaluation_file_name, const TransformFeedbackInfo *p_TransformFeedbackInfo);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
