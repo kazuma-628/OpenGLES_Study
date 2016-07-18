@@ -21,7 +21,7 @@ Math::~Math()
 *	　正常終了		：ベクトルの長さ
 *	　異常終了		：0.0		
 *-------------------------------------------------------------------------------*/
-float Math::Length(Vec3 &p_Vector)
+float Math::Length(const Vec3 &p_Vector)
 {
 	float length = 0.0f;	//ベクトルの長さ
 	
@@ -45,7 +45,7 @@ float Math::Length(Vec3 &p_Vector)
 *	　正常終了		：正規化されたベクトル
 *	　異常終了		：全要素[0.0]
 *-------------------------------------------------------------------------------*/
-Vec3 Math::Normalize(Vec3 &p_Vector)
+Vec3 Math::Normalize(const Vec3 &p_Vector)
 {
 	Vec3 normalize = { 0.0f };		//正規化されたベクトル
 
@@ -88,7 +88,7 @@ Vec3 Math::Normalize(Vec3 &p_Vector)
 *	　正常終了		：内積
 *	　異常終了		：0.0
 *-------------------------------------------------------------------------------*/
-float Math::Dot(Vec3 &p_Vector1, Vec3 &p_Vector2)
+float Math::Dot(const Vec3 &p_Vector1, const Vec3 &p_Vector2)
 {
 	float dot = 0.0f; //内積
 
@@ -117,7 +117,7 @@ float Math::Dot(Vec3 &p_Vector1, Vec3 &p_Vector2)
 *	　正常終了		：正規化されたベクトル
 *	　異常終了		：全要素[0.0]
 *-------------------------------------------------------------------------------*/
-Vec3 Math::Cross(Vec3 &p_Vector1, Vec3 &p_Vector2)
+Vec3 Math::Cross(const Vec3 &p_Vector1, const Vec3 &p_Vector2)
 {
 	Vec3 cross = { 0.0f };		//正規化されたベクトル
 
@@ -156,7 +156,7 @@ Vec3 Math::Cross(Vec3 &p_Vector1, Vec3 &p_Vector2)
 *	　正常終了		：正規化されたベクトル
 *	　異常終了		：全要素[0.0]
 *-------------------------------------------------------------------------------*/
-Vec3 Math::Normal(Vec3 &p_Vector1, Vec3 &p_Vector2, Vec3 &p_Vector3)
+Vec3 Math::Normal(const Vec3 &p_Vector1, const Vec3 &p_Vector2, const Vec3 &p_Vector3)
 {
 	Vec3 normal = { 0.0f };		//正規化されたベクトル
 
