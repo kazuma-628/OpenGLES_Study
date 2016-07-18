@@ -41,7 +41,12 @@ ShaderManager::~ShaderManager()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name, const char* p_tess_control_file_name, const char* p_tess_evaluation_file_name, const TransformFeedbackInfo *p_TransformFeedbackInfo)
+void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name,
+										const char* p_fragment_file_name, 
+										const char* p_geometry_file_name, 
+										const char* p_tess_control_file_name, 
+										const char* p_tess_evaluation_file_name, 
+										const TransformFeedbackInfo *p_TransformFeedbackInfo)
 {
 	GLuint vertex_shader = 0;				//バーテックスシェーダーのオブジェクト
 	GLuint fragment_shader = 0;				//フラグメントシェーダーのオブジェクト

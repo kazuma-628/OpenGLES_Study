@@ -12,10 +12,11 @@
 //構造体定義
 
 //トランスフォームフィードバックの設定情報
-//（[glTransformFeedbackVaryings]の引数に登録するデータを設定する、プログラムオブジェクトは指定しなくて良い）
+//（[glTransformFeedbackVaryings]の引数に登録するデータを設定する）
 typedef struct
 {
 	//各変数に設定する内容は[glTransformFeedbackVaryings]の仕様を確認すること
+	//※プログラムオブジェクトは設定なし
 	GLsizei count;
 	const char **varyings;
 	GLenum bufferMode;
@@ -50,7 +51,12 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void CreateShaderProgram(const char* p_vertex_file_name, const char* p_fragment_file_name, const char* p_geometry_file_name, const char* p_tess_control_file_name, const char* p_tess_evaluation_file_name, const TransformFeedbackInfo *p_TransformFeedbackInfo);
+	void CreateShaderProgram(const char* p_vertex_file_name,
+							 const char* p_fragment_file_name,
+							 const char* p_geometry_file_name,
+							 const char* p_tess_control_file_name,
+							 const char* p_tess_evaluation_file_name,
+							 const TransformFeedbackInfo *p_TransformFeedbackInfo);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
