@@ -208,6 +208,62 @@ void Matrix::Rotate(const GLfloat p_rotate, const GLfloat p_x, const GLfloat p_y
 
 /*-------------------------------------------------------------------------------
 *	関数説明
+*	　視野変換行列を適応する
+*	引数
+*	　p_eye		：[I/ ]　カメラの位置
+*	　p_look	：[I/ ]　カメラの注視点
+*	　p_up		：[I/ ]　カメラの上向きベクトル
+*				  （例：Y 成分が上下成分で、上が上向きの場合は、Y だけ 1.0、その他は 0.0 を指定）
+*
+*	　図は下記URLの「視野変換行列」項目参照
+*	　http://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20090902
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void Matrix::LookAt(const Vec3 &p_eye, const Vec3 &p_look, const Vec3 &p_up)
+{
+	Matrix t_matrix;
+	
+	Vec3 d = { p_look.x - p_eye.x, p_look.y - p_eye.y, p_look.z - p_eye.z  };
+	//ベクトルが[0]はエラー
+	if (0 == d.x && 0 == d.y && 0 == d.z)
+	{
+		ERROR_MESSAGE("視野変換行列 計算エラー 引数が不正です。");
+		return;
+	}
+
+	Vec3 f = Math::Normalize( d );
+	Vec3 u = Math::Normalize(p_up);
+
+	Vec3 s = Math::Cross(f, u);
+	//ベクトルが[0]はエラー
+	if (0 == s.x && 0 == s.y && 0 == s.z)
+	{
+		ERROR_MESSAGE("視野変換行列 計算エラー 引数が不正です。");
+		return;
+	}
+
+	s = Math::Normalize( s );
+	u = Math::Cross(s, f);
+
+	t_matrix.m_val.m[0][0] = s.x;
+	t_matrix.m_val.m[1][0] = s.y;
+	t_matrix.m_val.m[2][0] = s.z;
+	t_matrix.m_val.m[0][1] = u.x;
+	t_matrix.m_val.m[1][1] = u.y;
+	t_matrix.m_val.m[2][1] = u.z;
+	t_matrix.m_val.m[0][2] = -f.x;
+	t_matrix.m_val.m[1][2] = -f.y;
+	t_matrix.m_val.m[2][2] = -f.z;
+	t_matrix.m_val.m[3][0] = -(Math::Dot(s, p_eye));
+	t_matrix.m_val.m[3][1] = -(Math::Dot(u, p_eye));
+	t_matrix.m_val.m[3][2] = Math::Dot(f, p_eye);
+
+	*this = *this * t_matrix;
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
 *	　平行投影変換行列を適応する
 *	引数
 *	　p_left	：[I/ ]　近くの面(p_near面)の左側までの距離
