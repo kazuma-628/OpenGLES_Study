@@ -139,7 +139,7 @@ void Matrix::Translate(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　回転行列を適用する
+*	　拡大/縮小行列を適応する
 *	引数
 *	　p_x	：[I/ ]　X 座標の倍率
 *	　p_y	：[I/ ]　Y 座標の倍率
@@ -160,7 +160,7 @@ void Matrix::Scale(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 	//拡大縮小行列を適用
 	t_matrix.m_val.m[0][0] = p_x;
 	t_matrix.m_val.m[1][1] = p_y;
-	t_matrix.m_val.m[2][2] =  p_z;
+	t_matrix.m_val.m[2][2] = p_z;
 
 	*this = *this * t_matrix;
 }
