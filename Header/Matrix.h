@@ -93,9 +93,9 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Orthogonal(const float p_left, const float p_right,
-					const float p_bottom, const float p_top,
-					const float p_near, const float p_far);
+	void Orthogonal(const GLfloat p_left, const GLfloat p_right,
+					const GLfloat p_bottom, const GLfloat p_top,
+					const GLfloat p_near, const GLfloat p_far);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -115,9 +115,9 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Perspective(const float p_left, const float p_right,
-					 const float p_bottom, const float p_top,
-					 const float p_near, const float p_far);
+	void Perspective(const GLfloat p_left, const GLfloat p_right,
+					 const GLfloat p_bottom, const GLfloat p_top,
+					 const GLfloat p_near, const GLfloat p_far);
 	
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -133,8 +133,8 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Perspective(const float p_near, const float p_far,
-					 const float p_fovY_degree, const float p_aspect);
+	void Perspective(const GLfloat p_near, const GLfloat p_far,
+					 const GLfloat p_fovY_degree, const GLfloat p_aspect);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明

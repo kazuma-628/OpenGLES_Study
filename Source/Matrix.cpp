@@ -222,15 +222,15 @@ void Matrix::Rotate(const GLfloat p_rotate, const GLfloat p_x, const GLfloat p_y
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void  Matrix::Orthogonal(const float p_left, const float p_right,
-						 const float p_bottom, const float p_top,
-						 const float p_near, const float p_far)
+void  Matrix::Orthogonal(const GLfloat p_left, const GLfloat p_right,
+						 const GLfloat p_bottom, const GLfloat p_top,
+						 const GLfloat p_near, const GLfloat p_far)
 {
 	Matrix t_matrix;
 
-	float dx = p_right - p_left;
-	float dy = p_top - p_bottom;
-	float dz = p_far - p_near;
+	GLfloat dx = p_right - p_left;
+	GLfloat dy = p_top - p_bottom;
+	GLfloat dz = p_far - p_near;
 
 	if (0 == dx || 0 == dy || 0 == dz)
 	{
@@ -268,15 +268,15 @@ void  Matrix::Orthogonal(const float p_left, const float p_right,
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Matrix::Perspective(const float p_left, const float p_right,
-						 const float p_bottom, const float p_top,
-						 const float p_near, const float p_far)
+void Matrix::Perspective(const GLfloat p_left, const GLfloat p_right,
+						 const GLfloat p_bottom, const GLfloat p_top,
+						 const GLfloat p_near, const GLfloat p_far)
 {
 	Matrix t_matrix;
 
-	float dx = p_right - p_left;
-	float dy = p_top - p_bottom;
-	float dz = p_far - p_near;
+	GLfloat dx = p_right - p_left;
+	GLfloat dy = p_top - p_bottom;
+	GLfloat dz = p_far - p_near;
 
 	if (0 == dx || 0 == dy || 0 == dz)
 	{
@@ -312,8 +312,8 @@ void Matrix::Perspective(const float p_left, const float p_right,
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Matrix::Perspective(const float p_near, const float p_far,
-						 const float p_fovY_degree, const float p_aspect)
+void Matrix::Perspective(const GLfloat p_near, const GLfloat p_far,
+						 const GLfloat p_fovY_degree, const GLfloat p_aspect)
 {
 	Matrix t_matrix;
 
