@@ -295,7 +295,7 @@ void Matrix::Perspective(const float p_near, const float p_far,
 *	戻り値
 *	　逆行列
 *-------------------------------------------------------------------------------*/
-void Matrix::Inverse()
+void Matrix::Inverse(void)
 {
 	//逆行列の結果を一時的に保存する変数
 	double in_matrix[4][4];		//入力用の行列
@@ -363,4 +363,33 @@ void Matrix::Inverse()
 			m_val.m[i][j] = (GLfloat)out_matrix[i][j];
 		}
 	}
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　転置行列を求める
+*	引数
+*	　なし
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void Matrix::Transpose(void)
+{
+	Matrix t_matrix;
+
+	//カウンタ変数
+	int i = 0;
+	int j = 0;
+
+	//行列の配列次数
+	//今後流用できるかもということで残しておく定義で普段は変えない値
+	int N = 4;
+
+	for (i = 0; i < N; i++) {
+		for (j = 0; j < N; j++) {
+			t_matrix.m_val.m[j][i] = m_val.m[i][j];
+		}
+	}
+
+	*this = t_matrix;
 }
