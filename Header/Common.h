@@ -20,9 +20,15 @@
 ////////////////////////////////////////
 // Defineベクトル構造体
 
+//デバッグメッセージ出力用マクロ（ユーザーが直接使用することはありません）
+//エラー・ワーニングメッセージを出力したい場合は「ERROR_MESSAGE」又は「WARNING_MESSAGE」を使用してください。
+#define DEBUG_PRINT(Level, String, ...)		printf("\n■■■ " Level " ■■■　\nファイル：%s　\n行数：%d　関数名：%s　\n" String "\n", __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);
+
 //続行不可能なエラーが発生した場合のメッセージ出力用定義
-#define ERROR_PRINT(String, ...)		printf("\n■■■ エラー ■■■　\nファイル：%s　\n行数：%d　関数名：%s　\n" String, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);
-#define ERROR_MESSAGE(String, ...)		ERROR_PRINT(String, __VA_ARGS__);	error_message_func();
+#define ERROR_MESSAGE(String, ...)			DEBUG_PRINT("エラー", String, __VA_ARGS__);	error_message_func();
+
+//続行不可能ではないが、修正が必要な可能性がある場合のメッセージ出力用定義
+#define WARNING_MESSAGE(String, ...)		DEBUG_PRINT("ワーニング", String, __VA_ARGS__);
 
 //続行不可能なエラーの可能性はあるが、デバッグ中は一時的にエラーになる可能性がある場合のメッセージ出力定義
 //動くはずのプログラムが動作しないなどのエラー確認時のみコメントを外して見てください。なにか見つかるかもしれません。
