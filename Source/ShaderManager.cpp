@@ -56,6 +56,17 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name,
 	int StrLength = 0;						//読み込む各シェーダーファイル名の長さ（バイト数）
 	int AllStrLength = 0;					//読み込む各シェーダーファイル名の合計の長さ（バイト数）
 
+	//既にプログラムオブジェクトが作成されているかの確認
+	if (0 != m_ProgramObject)
+	{
+		//作成されていれば破棄してから新規作成
+		DeleteShaderProgram();
+
+		//本来であれば上書きはありえないはずなので、警告メッセージを表示しておく
+		WARNING_MESSAGE("プログラムオブジェクトの再作成がされました。\n" \
+						"破棄処理を忘れていませんか？\n");
+	}
+
 	//引数チェック
 	if (NULL == p_vertex_file_name || NULL == p_fragment_file_name)
 	{
