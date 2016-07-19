@@ -79,8 +79,8 @@ TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const Pixe
 		{
 			printf("失敗\n");
 			ERROR_MESSAGE("テクスチャファイルの読み込みに失敗しました。\n"\
-				"「Resource」フォルダに格納されていますか？\n"\
-				"ファイル名が間違っていませんか？");
+						  "「Resource」フォルダに格納されていますか？\n"\
+						  "ファイル名が間違っていませんか？");
 		}
 
 		/////////////////////////////////////////////////

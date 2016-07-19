@@ -41,7 +41,10 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	{
 		ERROR_MESSAGE("GLFWの初期化に失敗しました");
 	}
-	printf("完了\n");
+	else
+	{
+		printf("完了\n");
+	}
 
 	//プログラム終了時の処理を登録する（GLFWの終了処理をする）
 	atexit(glfwTerminate);
@@ -67,13 +70,16 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	{
 		printf("失敗\n");
 		ERROR_MESSAGE("ウィンドウ生成に失敗しました。\n"\
-			"グラフィックがOpenGLESに対応していない可能性があります。\n"\
-			"グラフィックドライバを最新にしてみてください。\n"\
-			"それでもダメな場合は、残念ながらお使いの環境では使用することができません。\n"\
-			"設定では、OpenGLES3.0に対応するOpenGL4.3を設定しています。\n"\
-			"お使いの環境が対応しているかネットなどで調べてみてください。");
+					  "グラフィックがOpenGLESに対応していない可能性があります。\n"\
+					  "グラフィックドライバを最新にしてみてください。\n"\
+					  "それでもダメな場合は、残念ながらお使いの環境では使用することができません。\n"\
+					  "設定では、OpenGLES3.0に対応するOpenGL4.3を設定しています。\n"\
+					  "お使いの環境が対応しているかネットなどで調べてみてください。");
 	}
-	printf("完了\n");
+	else
+	{
+		printf("完了\n");
+	}
 
 	// 作成したウィンドウをOpenGLの処理対象にする
 	glfwMakeContextCurrent(window);
@@ -97,8 +103,11 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 		printf("失敗\n");
 		ERROR_MESSAGE("GLEWの初期化に失敗しました。");
 	}
-	printf("完了\n");
-	
+	else
+	{
+		printf("完了\n");
+	}
+
 	//////////////////////////////////////////////////////
 	//	生成した情報を保存
 

@@ -228,7 +228,11 @@ void Matrix::LookAt(const Vec3 &p_eye, const Vec3 &p_look, const Vec3 &p_up)
 	//ベクトルが[0]はエラー
 	if (0 == d.x && 0 == d.y && 0 == d.z)
 	{
-		ERROR_MESSAGE("視野変換行列 計算エラー 引数が不正です。");
+		ERROR_MESSAGE("視野変換行列 計算エラー 引数が不正です。\n" \
+					  "p_eye.x = %f, p_eye.y = %f, p_eye.z = %f\n" \
+					  "p_look.x = %f, p_look.y = %f, p_look.z = %f\n" \
+					  "p_up.x = %f, p_up.y = %f, p_up.z = %f\n" \
+					  , p_eye.x, p_eye.y, p_eye.z, p_look.x, p_look.y, p_look.z, p_up.x, p_up.y, p_up.z);
 		return;
 	}
 
@@ -239,7 +243,11 @@ void Matrix::LookAt(const Vec3 &p_eye, const Vec3 &p_look, const Vec3 &p_up)
 	//ベクトルが[0]はエラー
 	if (0 == s.x && 0 == s.y && 0 == s.z)
 	{
-		ERROR_MESSAGE("視野変換行列 計算エラー 引数が不正です。");
+		ERROR_MESSAGE("視野変換行列 計算エラー 引数が不正です。\n" \
+					  "p_eye.x = %f, p_eye.y = %f, p_eye.z = %f\n" \
+					  "p_look.x = %f, p_look.y = %f, p_look.z = %f\n" \
+					  "p_up.x = %f, p_up.y = %f, p_up.z = %f\n" \
+					  , p_eye.x, p_eye.y, p_eye.z, p_look.x, p_look.y, p_look.z, p_up.x, p_up.y, p_up.z);
 		return;
 	}
 
@@ -290,10 +298,9 @@ void  Matrix::Orthogonal(const GLfloat p_left, const GLfloat p_right,
 
 	if (0 == dx || 0 == dy || 0 == dz)
 	{
-		printf("デバッグ情報\n");
-		printf("p_right = %f, p_left = %f, p_top = %f, p_bottom = %f, p_far = %f, p_near = %f\n",
-			p_right, p_left, p_top, p_bottom, p_far, p_near);
-		ERROR_MESSAGE("平行投影変換行列の引数異常です");
+		ERROR_MESSAGE("平行投影変換行列 計算エラー 引数が不正です。\n" \
+					  "p_left = %f, p_right = %f, p_bottom = %f p_top = %f, p_near = %f, p_far = %f\n" \
+					  , p_left, p_right, p_bottom, p_top, p_near, p_far);
 	}
 
 	t_matrix.m_val.m[0][0] = 2.0f / dx;
@@ -336,10 +343,9 @@ void Matrix::Perspective(const GLfloat p_left, const GLfloat p_right,
 
 	if (0 == dx || 0 == dy || 0 == dz)
 	{
-		printf("デバッグ情報\n");
-		printf("p_right = %f, p_left = %f, p_top = %f, p_bottom = %f, p_far = %f, p_near = %f\n",
-			p_right, p_left, p_top, p_bottom, p_far, p_near);
-		ERROR_MESSAGE("透視投影変換行列の引数異常です");
+		ERROR_MESSAGE("透視投影変換行列 計算エラー 引数が不正です。\n" \
+					  "p_left = %f, p_right = %f, p_bottom = %f p_top = %f, p_near = %f, p_far = %f\n" \
+					  , p_left, p_right, p_bottom, p_top, p_near, p_far);
 	}
 	
 	t_matrix.m_val.m[0][0] = 2.0f * p_near / dx;

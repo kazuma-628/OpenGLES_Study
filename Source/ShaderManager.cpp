@@ -59,9 +59,8 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name,
 	//引数チェック
 	if (NULL == p_vertex_file_name || NULL == p_fragment_file_name)
 	{
-		printf("\n■■■ エラー ■■■\n");
-		printf("バーテックスシェーダー = %s | フラグメントシェーダー = %s\n", p_vertex_file_name, p_fragment_file_name);
-		ERROR_MESSAGE("バーテックスシェーダー及びフラグメントシェーダーは最低でも設定する必要があります。");
+		ERROR_MESSAGE("バーテックスシェーダー及びフラグメントシェーダーは最低でも設定する必要があります。\n" \
+					  "バーテックスシェーダー = %s | フラグメントシェーダー = %s\n", p_vertex_file_name, p_fragment_file_name);
 	}
 
 	//////////////////////////////////////
@@ -260,17 +259,21 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name,
 	// リンクエラーをチェックする
 	GLint linkSuccess = 0;
 	glGetProgramiv(ProgramObject, GL_LINK_STATUS, &linkSuccess);
-	if (GL_FALSE == linkSuccess) {
+	if (GL_FALSE == linkSuccess)
+	{
 		// エラーが発生した
+		printf("失敗\n");
+
 		GLint infoLen = 0;
 		// エラーメッセージを取得
 		glGetProgramiv(ProgramObject, GL_INFO_LOG_LENGTH, &infoLen);
-		if (infoLen > 1) {
+		if (infoLen > 1)
+		{
 			GLchar *message = (GLchar*)calloc(infoLen, sizeof(GLchar));
 			glGetProgramInfoLog(ProgramObject, infoLen, NULL, message);
 
 			//エラーメッセージ表示
-			printf("\n\nリンクエラーの情報は以下です。\n");
+			printf("\nリンクエラーの情報は以下です。\n");
 			printf("%s", message);
 			free((void*)message);
 
@@ -502,11 +505,10 @@ void ShaderManager::EnableVertexAttribArray(const GLint p_index)
 {
 	if (-1 == m_AttribInfo[p_index].Location)
 	{
-		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
-			"シェーダー[%s]用の\n"\
-			"アトリビュート変数「%s」の有効化に失敗しました\n"\
-			"シェーダーに変数が定義されていない可能性があります\n\n"\
-			, m_vertex_file_name, m_AttribInfo[p_index].Name);
+		ERROR_MESSAGE_SUB("シェーダー[%s]用の\n"\
+						  "アトリビュート変数「%s」の有効化に失敗しました\n"\
+						  "シェーダーに変数が定義されていない可能性があります\n"\
+						  , m_vertex_file_name, m_AttribInfo[p_index].Name);
 	}
 	else
 	{
@@ -528,11 +530,10 @@ void ShaderManager::DisableVertexAttribArray(const GLint p_index)
 {
 	if (-1 == m_AttribInfo[p_index].Location)
 	{
-		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
-			"シェーダー[%s]用の\n"\
-			"アトリビュート変数「%s」の無効化に失敗しました\n"\
-			"シェーダーに変数が定義されていない可能性があります\n\n"\
-			, m_vertex_file_name, m_AttribInfo[p_index].Name);
+		ERROR_MESSAGE_SUB("シェーダー[%s]用の\n"\
+						  "アトリビュート変数「%s」の無効化に失敗しました\n"\
+						  "シェーダーに変数が定義されていない可能性があります\n"\
+						  , m_vertex_file_name, m_AttribInfo[p_index].Name);
 	}
 	else
 	{
@@ -560,11 +561,10 @@ void ShaderManager::VertexAttribPointer(const GLint p_index, const GLint p_size,
 {
 	if (-1 == m_AttribInfo[p_index].Location)
 	{
-		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
-			"シェーダー[%s]用の\n"\
-			"アトリビュート変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
-			"シェーダーに変数が定義されていない可能性があります\n\n"\
-			, m_vertex_file_name, m_AttribInfo[p_index].Name);
+		ERROR_MESSAGE_SUB("シェーダー[%s]用の\n"\
+						  "アトリビュート変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+						  "シェーダーに変数が定義されていない可能性があります\n"\
+						  , m_vertex_file_name, m_AttribInfo[p_index].Name);
 	}
 	else
 	{
@@ -595,11 +595,10 @@ void ShaderManager::UniformXf(const GLint p_index, const GLint p_scalar, const G
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{
-		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
-			"シェーダー%s用の\n"\
-			"ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
-			"シェーダーに変数が定義されていない可能性があります\n\n"\
-			, m_AllShaderFileName, m_UniformInfo[p_index].Name);
+		ERROR_MESSAGE_SUB("シェーダー%s用の\n"\
+						  "ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+						  "シェーダーに変数が定義されていない可能性があります\n\n"\
+						  , m_AllShaderFileName, m_UniformInfo[p_index].Name);
 	}
 	else
 	{
@@ -621,12 +620,10 @@ void ShaderManager::UniformXf(const GLint p_index, const GLint p_scalar, const G
 		}
 		else
 		{
-			printf("\n■■■ エラー ■■■\n");
-			printf("シェーダー%s用の\n", m_AllShaderFileName);
-			printf("ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n", m_UniformInfo[p_index].Name);
-			printf("「glUniformXf」関数「p_scalar」引数のエラーです\n");
-			printf("正しい値が設定されていません → 設定値：%d\n\n", p_scalar);
-			ERROR_MESSAGE("Uniform変数へのデータを送信（関連付け）に失敗しました。");
+			ERROR_MESSAGE("シェーダー%s用の\n" \
+						  "ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n" \
+						  "「p_scalar」引数のエラーです → 設定値：%d\n" \
+						  , m_AllShaderFileName, m_UniformInfo[p_index].Name, p_scalar);
 		}
 	}
 }
@@ -654,11 +651,10 @@ void ShaderManager::UniformXi(const GLint p_index, const GLint p_scalar, const G
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{
-		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
-			"シェーダー%s用の\n"\
-			"ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
-			"シェーダーに変数が定義されていない可能性があります\n\n"\
-			, m_AllShaderFileName, m_UniformInfo[p_index].Name);
+		ERROR_MESSAGE_SUB("シェーダー%s用の\n"\
+						  "ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+						  "シェーダーに変数が定義されていない可能性があります\n\n"\
+						  , m_AllShaderFileName, m_UniformInfo[p_index].Name);
 	}
 	else
 	{
@@ -680,12 +676,10 @@ void ShaderManager::UniformXi(const GLint p_index, const GLint p_scalar, const G
 		}
 		else
 		{
-			printf("\n■■■ エラー ■■■\n");
-			printf("シェーダー%s用の\n", m_AllShaderFileName);
-			printf("ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n", m_UniformInfo[p_index].Name);
-			printf("「glUniformXi」関数「p_scalar」引数のエラーです\n");
-			printf("正しい値が設定されていません → 設定値：%d\n\n", p_scalar);
-			ERROR_MESSAGE("Uniform変数へのデータを送信（関連付け）に失敗しました。");
+			ERROR_MESSAGE("シェーダー%s用の\n" \
+						  "ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n" \
+						  "「p_scalar」引数のエラーです → 設定値：%d\n" \
+						  , m_AllShaderFileName, m_UniformInfo[p_index].Name, p_scalar);
 		}
 	}
 }
@@ -709,11 +703,10 @@ void ShaderManager::UniformXfv(const GLint p_index, const GLint p_scalar, const 
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{
-		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
-			"シェーダー%s用の\n"\
-			"ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
-			"シェーダーに変数が定義されていない可能性があります\n\n"\
-			, m_AllShaderFileName, m_UniformInfo[p_index].Name);
+		ERROR_MESSAGE_SUB("シェーダー%s用の\n"\
+						  "ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+						  "シェーダーに変数が定義されていない可能性があります\n\n"\
+						  , m_AllShaderFileName, m_UniformInfo[p_index].Name);
 	}
 	else
 	{
@@ -735,12 +728,10 @@ void ShaderManager::UniformXfv(const GLint p_index, const GLint p_scalar, const 
 		}
 		else
 		{
-			printf("\n■■■ エラー ■■■\n");
-			printf("シェーダー%s用の\n", m_AllShaderFileName);
-			printf("ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n", m_UniformInfo[p_index].Name);
-			printf("「glUniformXfv」関数「p_scalar」引数のエラーです\n");
-			printf("正しい値が設定されていません → 設定値：%d\n\n", p_scalar);
-			ERROR_MESSAGE("Uniform変数へのデータを送信（関連付け）に失敗しました。");
+			ERROR_MESSAGE("シェーダー%s用の\n" \
+						  "ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n" \
+						  "「p_scalar」引数のエラーです → 設定値：%d\n" \
+						  , m_AllShaderFileName, m_UniformInfo[p_index].Name, p_scalar);
 		}
 	}
 }
@@ -764,11 +755,10 @@ void ShaderManager::UniformXiv(const GLint p_index, const GLint p_scalar, const 
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{
-		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
-			"シェーダー%s用の\n"\
-			"ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
-			"シェーダーに変数が定義されていない可能性があります\n\n"\
-			, m_AllShaderFileName, m_UniformInfo[p_index].Name);
+		ERROR_MESSAGE_SUB("シェーダー%s用の\n"\
+						  "ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+						  "シェーダーに変数が定義されていない可能性があります\n\n"\
+						  , m_AllShaderFileName, m_UniformInfo[p_index].Name);
 	}
 	else
 	{
@@ -790,12 +780,10 @@ void ShaderManager::UniformXiv(const GLint p_index, const GLint p_scalar, const 
 		}
 		else
 		{
-			printf("\n■■■ エラー ■■■\n");
-			printf("シェーダー%s用の\n", m_AllShaderFileName);
-			printf("ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n", m_UniformInfo[p_index].Name);
-			printf("「glUniformXiv」関数「p_scalar」引数のエラーです\n");
-			printf("正しい値が設定されていません → 設定値：%d\n\n", p_scalar);
-			ERROR_MESSAGE("Uniform変数へのデータを送信（関連付け）に失敗しました。");
+			ERROR_MESSAGE("シェーダー%s用の\n" \
+						  "ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n" \
+						  "「p_scalar」引数のエラーです → 設定値：%d\n" \
+						  , m_AllShaderFileName, m_UniformInfo[p_index].Name, p_scalar);
 		}
 	}
 }
@@ -821,11 +809,10 @@ void ShaderManager::UniformMatrixXfv(const GLint p_index, const GLint p_scalar, 
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{
-		ERROR_MESSAGE_SUB("\n■■■ エラー ■■■\n"\
-			"シェーダー%s用の\n"\
-			"ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
-			"シェーダーに変数が定義されていない可能性があります\n\n"\
-			, m_AllShaderFileName, m_UniformInfo[p_index].Name);
+		ERROR_MESSAGE_SUB("シェーダー%s用の\n"\
+						  "ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+						  "シェーダーに変数が定義されていない可能性があります\n\n"\
+						  , m_AllShaderFileName, m_UniformInfo[p_index].Name);
 	}
 	else
 	{
@@ -843,12 +830,10 @@ void ShaderManager::UniformMatrixXfv(const GLint p_index, const GLint p_scalar, 
 		}
 		else
 		{
-			printf("\n■■■ エラー ■■■\n");
-			printf("シェーダー%s用の\n", m_AllShaderFileName);
-			printf("ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n", m_UniformInfo[p_index].Name);
-			printf("「glUniformMatrixXfv」関数「p_scalar」引数のエラーです\n");
-			printf("正しい値が設定されていません → 設定値：%d\n\n", p_scalar);
-			ERROR_MESSAGE("Uniform変数へのデータを送信（関連付け）に失敗しました。");
+			ERROR_MESSAGE("シェーダー%s用の\n" \
+						  "ユニフォーム変数「%s」へのデータの送信（関連付け）に失敗しました\n" \
+						  "「p_scalar」引数のエラーです → 設定値：%d\n" \
+						  , m_AllShaderFileName, m_UniformInfo[p_index].Name, p_scalar);
 		}
 	}
 }
@@ -872,8 +857,8 @@ void ShaderManager::UseProgram(void)
 	}
 	else
 	{
-		printf("シェーダー%s用の処理でエラーが発生しました。\n", m_AllShaderFileName);
-		ERROR_MESSAGE("シェーダープログラムの利用に失敗しました。");
+		ERROR_MESSAGE("シェーダー%s用の\n" \
+					  "シェーダープログラムの利用に失敗しました。", m_AllShaderFileName);
 	}
 }
 
@@ -918,15 +903,18 @@ GLuint ShaderManager::CreateShader(const char* p_file_name, const GLuint p_gl_xx
 	if (GL_FALSE == compileSuccess)
 	{
 		// エラーが発生した
+		printf("失敗\n");
+		
 		GLint infoLen = 0;
 		// エラーメッセージを取得
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
-		if (infoLen > 1) {
+		if (infoLen > 1)
+		{
 			GLchar *message = (GLchar*)calloc(infoLen, sizeof(GLchar));
 			glGetShaderInfoLog(shader, infoLen, NULL, message);
 
 			//エラーメッセージ表示
-			printf("\n\nコンパイルエラーの情報は以下です。\n");
+			printf("\nコンパイルエラーの情報は以下です。\n");
 			printf("%s", message);
 			
 			//メモリ解放
@@ -982,8 +970,8 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 	{
 		printf("失敗\n");
 		ERROR_MESSAGE("シェーダーファイルのオープンに失敗しました。\n"\
-			"「Shader」フォルダに格納されていますか？\n"\
-			"ファイル名が間違っていませんか？");
+					  "「Shader」フォルダに格納されていますか？\n"\
+					  "ファイル名が間違っていませんか？");
 
 		//シェーダーファイルへのパス名破棄
 		free(shader_dir_file_name);

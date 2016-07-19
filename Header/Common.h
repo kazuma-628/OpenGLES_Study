@@ -21,12 +21,12 @@
 // Defineベクトル構造体
 
 //続行不可能なエラーが発生した場合のメッセージ出力用定義
-#define ERROR_MESSAGE(Message)		error_message_func(Message, __FILE__, __FUNCTION__ ,__LINE__);
+#define ERROR_PRINT(String, ...)		printf("\n■■■ エラー ■■■　\nファイル：%s　\n行数：%d　関数名：%s　\n" String, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);
+#define ERROR_MESSAGE(String, ...)		ERROR_PRINT(String, __VA_ARGS__);	error_message_func();
 
-//続行不可能なエラーの可能性があるが、デバッグ中は一時的にエラーになる可能性がある場合のメッセージ出力定義
-//デバック中はメッセージを有効にすると大量のメッセージが出力される可能性がありますので、
-//最終的に動作が上手くいかないなどのエラー確認の時のみコメントを外して見てください
-#define ERROR_MESSAGE_SUB(...)		//printf(__VA_ARGS__); error_message_sub_func(__FILE__, __FUNCTION__ ,__LINE__);
+//続行不可能なエラーの可能性はあるが、デバッグ中は一時的にエラーになる可能性がある場合のメッセージ出力定義
+//動くはずのプログラムが動作しないなどのエラー確認時のみコメントを外して見てください。なにか見つかるかもしれません。
+#define ERROR_MESSAGE_SUB(String, ...)	//ERROR_PRINT(String, __VA_ARGS__);	error_message_func();
 
 #define WINDOW_WIDTH				1024			//ウィンドウサイズ（幅）
 #define WINDOW_HEIGHT				768				//ウィンドウサイズ（高さ）
@@ -154,8 +154,8 @@ typedef struct
 {
 	Mat4 ModelViewMatrix;		//モデルビューマトリクス（大元のマトリクスデータ）
 	Mat4 ProjectionMatrix;		//プロジェクションマトリクス（大元のマトリクスデータ）
-	GLfloat Near;				//プロジェクションマトリクス生成時に使用したNear値（大元のマトリクスデータ）
-	GLfloat Far;				//プロジェクションマトリクス生成時に使用したFar値（大元のマトリクスデータ）
+	GLfloat NearClip;			//プロジェクションマトリクス生成時に使用したNear値（大元のマトリクスデータ）
+	GLfloat FarClip;			//プロジェクションマトリクス生成時に使用したFar値（大元のマトリクスデータ）
 	Size WindowSize;			//ウィンドウの全体サイズ
 	Vec3 Translate;				//初期位置（X,Y,Z）からの移動量
 	Vec3 Rotate;				//初期位置（X,Y,Z）からの回転量
@@ -164,39 +164,25 @@ typedef struct
 /*-------------------------------------------------------------------------------
 *	関数説明
 *	　本関数は外部からユーザーが使うことはありません。
-*	　本エラーメッセージを表示したい場合は、「ERROR_MESSAGE」マクロを使用してしてください。
-*	　本マクロの意味については、「Define」定義のコメントを確認してください。
+*	　エラーメッセージを表示したい場合は、「ERROR_MESSAGE」マクロを使用してしてください。
 *
 *	　続行不可能なエラーが発生した場合、メッセージボックスを表示して、自滅リセットする関数です。
-*	　
 *	引数
-*	　Message	：[I/ ]　メッセージボックスに表示したいエラーメッセージ
-*	　File		：[I/ ]　エラーが発生したファイル名
-*	　Line		：[I/ ]　エラーが発生した行数
+*	　なし
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-//Define定義
-#define ERR_ALL_MES_MAX 512		//エラーメッセージの全文の最大文字数
-#define ERR_TMP_MES_MAX 256		//エラーメッセージのテンプ領域の最大文字数
 
-inline void error_message_func(const char* Message, const char* File, const char* func, const int Line)
+inline void error_message_func(void)
 {
-	char All_Message[ERR_ALL_MES_MAX] = { 0 };
-	char tmp_char[ERR_TMP_MES_MAX] = { 0 };
-	char* Err_Message = "\n\n続行不可能なエラーが発生しました。\n"\
-						"情報はコマンドプロンプトを確認してください。\n\n";
-
-	//エラーが発生したファイルと行数を文字列として生成
-	sprintf(tmp_char, "%s%s\n%s%s\n%s%d", "ファイル：", File, "関数名：", func, "行数：", Line);
-	
-	//デバック情報の各文字列を結合
-	strcat_s(All_Message, sizeof(All_Message), Message);
-	strcat_s(All_Message, sizeof(All_Message), Err_Message);
-	strcat_s(All_Message, sizeof(All_Message), tmp_char);
+	char* ErrorMessage = "続行不可能なエラーが発生しました。\n" \
+						 "情報はコマンドプロンプトを確認してください。\n\n" \
+						 "関数の呼び出し履歴を見たい場合は、\n" \
+						 "[error_message_func]関数の自滅リセットを有効にしてください。\n\n" \
+						 "OKを押すとプログラムを終了 又は デバッグします。";
 
 	//メッセージボックス表示
-	MessageBox(NULL, All_Message, "Debug Message", MB_OK | MB_ICONSTOP);
+	MessageBox(NULL, ErrorMessage, "Error Message", MB_OK | MB_ICONSTOP);
 
 	//デバックで呼び出し履歴が分かるように自滅リセットさせる（有効にする場合はコメントを外す）
 	//エラーが発生したら「中断（デバッグの停止じゃない）」して、
@@ -205,32 +191,8 @@ inline void error_message_func(const char* Message, const char* File, const char
 //	ResetFunc test = (ResetFunc)0xFF;
 //	test(0);
 
-	exit(EXIT_FAILURE);		//プログラムを終了する
-}
-
-/*-------------------------------------------------------------------------------
-*	関数説明
-*	　本関数は外部からユーザーが使うことはありません。
-*	　本エラーメッセージを表示したい場合は、「ERROR_MESSAGE_SUB」マクロを使用してしてください。
-*	　本マクロの意味については、「Define」定義のコメントを確認してください。
-*
-*	　続行不可能なエラーの可能性があるが、デバッグ中は一時的にエラーになる可能性がある場合、
-*	　メッセージボックスを表示して、自滅リセットする関数です。
-*	　
-*	引数
-*	　File			：[I/ ]　エラーが発生したファイル名
-*	　Line			：[I/ ]　エラーが発生した行数
-*	戻り値
-*	　なし
-*-------------------------------------------------------------------------------*/
-inline void error_message_sub_func(const char* File, const char* func, const int Line)
-{
-	//メッセージボックスへのエラーメッセージの作成
-	char *Message = "Attribute/Uniform変数のロケーション生成、\n"\
-		"もしくはデータの送信（関連付け）に失敗しました。";
-
-	//デバッグ情報と共にメッセージボックスを表示する
-	error_message_func(Message, File, func, Line);
+	//プログラムを終了する
+	exit(EXIT_FAILURE);
 }
 
 #endif

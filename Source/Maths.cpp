@@ -18,8 +18,7 @@ Math::~Math()
 *	引数
 *	　p_Vector		：[I/ ]　ベクトル
 *	戻り値
-*	　正常終了		：ベクトルの長さ
-*	　異常終了		：0.0		
+*	　正常終了		：ベクトルの長さ	
 *-------------------------------------------------------------------------------*/
 float Math::Length(const Vec3 &p_Vector)
 {
@@ -54,15 +53,15 @@ Vec3 Math::Normalize(const Vec3 &p_Vector)
 	double y = (double)(p_Vector.y);
 	double z = (double)(p_Vector.z);
 
-	//ベクトルの長さを求める
-	double length = sqrt(x * x + y * y + z * z);
-
-	//ベクトルの長さが[0]だと0除算になるのでエラー
-	if (length < (1e-6))
+	//引数チェック
+	if (0.0 == x || 0.0 == y || 0.0 == z)
 	{
-		ERROR_MESSAGE("計算エラー");
+		ERROR_MESSAGE("ベクトルを正規化 引数エラー ベクトルが[0]です。\n");
 		return normalize;
 	}
+
+	//ベクトルの長さを求める
+	double length = sqrt(x * x + y * y + z * z);
 
 	//正規化する
 	length = 1.0 / length;
@@ -86,7 +85,6 @@ Vec3 Math::Normalize(const Vec3 &p_Vector)
 *	　p_Vector2		：[I/ ]　ベクトル2
 *	戻り値
 *	　正常終了		：内積
-*	　異常終了		：0.0
 *-------------------------------------------------------------------------------*/
 float Math::Dot(const Vec3 &p_Vector1, const Vec3 &p_Vector2)
 {
@@ -115,7 +113,6 @@ float Math::Dot(const Vec3 &p_Vector1, const Vec3 &p_Vector2)
 *	　p_Vector2		：[I/ ]　ベクトル2
 *	戻り値
 *	　正常終了		：正規化されたベクトル
-*	　異常終了		：全要素[0.0]
 *-------------------------------------------------------------------------------*/
 Vec3 Math::Cross(const Vec3 &p_Vector1, const Vec3 &p_Vector2)
 {
@@ -179,6 +176,17 @@ Vec3 Math::Normal(const Vec3 &p_Vector1, const Vec3 &p_Vector2, const Vec3 &p_Ve
 
 	//ベクトル[1][2] と ベクトル[2][3]の外積を求める
 	normal = Cross(tmp_normal1, tmp_normal2);
+
+	//引数チェック
+	if (0.0 == normal.x || 0.0 == normal.y || 0.0 == normal.z)
+	{
+		ERROR_MESSAGE("法線を計算 引数エラー\n" \
+					  "p_Vector1.x = %f, p_Vector1.y = %f, p_Vector1.z = %f\n" \
+					  "p_Vector2.x = %f, p_Vector2.y = %f, p_Vector2.z = %f\n" \
+					  "p_Vector3.x = %f, p_Vector3.y = %f, p_Vector3.z = %f\n" \
+					  , p_Vector1.x, p_Vector1.y, p_Vector1.z, p_Vector2.x, p_Vector2.y, p_Vector2.z, p_Vector3.x, p_Vector3.y, p_Vector3.z );
+		return normal;
+	}
 
 	//正規化して単位ベクトルにする
 	normal = Normalize(normal);

@@ -110,7 +110,7 @@ void main(void)
 		//GLエラーチェック
 		if (GL_NO_ERROR != GL_GET_ERROR())
 		{
-			ERROR_MESSAGE("プログラム内のどこかでGL関連のエラーが発生しました。\n原因を追求してください");
+			ERROR_MESSAGE("プログラム内のどこかでGL関連のエラーが発生しました。\n原因を追求してください\n");
 		}
 	}
 
@@ -208,10 +208,10 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	ModelView.Rotate(-p_Global->Rotate.x / 2.0f, 0.0f, 1.0f, 0.0f);
 
 	//投資投影行列で使用する値をグローバル領域に保存
-	p_Global->Near = 1.0f;
-	p_Global->Far = 100.0f;
+	p_Global->NearClip = 1.0f;
+	p_Global->FarClip = 200.0f;
 	//透視投影行列を適用する
-	Projection.Perspective(-1.0f, 1.0f, -1.0f, 1.0f, p_Global->Near, p_Global->Far);
+	Projection.Perspective(-1.0f, 1.0f, -1.0f, 1.0f, p_Global->NearClip, p_Global->FarClip);
 
 	///////////////////////////////////
 	// 各種情報を保存
