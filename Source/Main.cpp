@@ -157,14 +157,14 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	// オブジェクト移動関係の処理
 
 	//スペースで初期位置に戻す
-	if (true == KeyBoard.Change.Key_SPACE)
+	if (true == KeyBoard.StateChange.Key_SPACE)
 	{
 		memset(&p_Global->Translate, 0, sizeof(p_Global->Translate));
 		memset(&p_Global->Rotate, 0, sizeof(p_Global->Rotate));
 	}
 
 	//平行移動用の変数にマウス情報の座標を加える
-	if (GLFW_PRESS == MouseButton.Left.State)
+	if (GLFW_PRESS == MouseButton.Left.StateChange)
 	{
 		p_Global->Translate.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
 		p_Global->Translate.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
@@ -174,26 +174,26 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 
 	//回転用の変数にマウス情報の座標を加える
 	//本来であれば360度回転したら変数を初期化した方が良いが、サンプルなので割愛
-	if (GLFW_PRESS == MouseButton.Right.State)
+	if (GLFW_PRESS == MouseButton.Right.StateChange)
 	{
 		p_Global->Rotate.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
 		p_Global->Rotate.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
 	}
 
 	//更にキーボードの情報を加える
-	if (GLFW_PRESS == KeyBoard.Change.Key_W)
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_W)
 	{
 		p_Global->Translate.y += 1.0f;
 	}
-	if (GLFW_PRESS == KeyBoard.Change.Key_S)
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_S)
 	{
 		p_Global->Translate.y -= 1.0f;
 	}
-	if (GLFW_PRESS == KeyBoard.Change.Key_A)
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_A)
 	{
 		p_Global->Translate.x += 1.0f;
 	}
-	if (GLFW_PRESS == KeyBoard.Change.Key_D)
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_D)
 	{
 		p_Global->Translate.x -= 1.0f;
 	}

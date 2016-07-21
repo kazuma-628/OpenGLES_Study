@@ -13,7 +13,8 @@
 //マウスの詳細情報
 typedef struct
 {
-	int State;				//マウスのクリック状態（押されている（GLFW_PRESS） or 離されている（GLFW_RELEASE））
+	int StateChange;		//マウスがクリックされていると「GLFW_PRESS」、されていないと「GLFW_RELEASE」（クリック状態でチェンジする）							
+	int StateKeep;			//マウスをクリックするたびに「true」と「false」が交互に切り替わる（クリック状態をキープする）
 	Vec2 ClickDiffPos;		//マウスがクリックされた座標からの差分座標（クリックされていない時は [0] ）
 							//　例：[x:50][y:50]でクリックして、ドラッグ状態で[x:40][y:60]に移動させた場合、
 							//　　　格納される値は[x:-10][y:10]となる
@@ -51,8 +52,8 @@ typedef struct
 //キー（キーボード）の情報
 typedef struct
 {
-	KeyState Change;		//キーが押されていると「GLFW_PRESS」、離されていると「GLFW_RELEASE」（キー状態でチェンジする）
-	KeyState Keep;			//キーを押すたびに「true」と「false」が交互に切り替わる（キー状態をキープする）
+	KeyState StateChange;		//キーが押されていると「GLFW_PRESS」、離されていると「GLFW_RELEASE」（キー状態でチェンジする）
+	KeyState StateKeep;			//キーを押すたびに「true」と「false」が交互に切り替わる（キー状態をキープする）
 }KeyInfo;
 
 
@@ -172,19 +173,18 @@ private:
 	//キー情報を一元管理するための構造体
 	typedef struct
 	{
-		char* KeyChar;		//キーの文字列
-		int KeyDef;			//キーの定義値
-		int *Change;		//「KeyInfo」の「Change」メンバと同等（詳細は左記メンバ参照のこと）
-		int *Keep;			//「KeyInfo」の「Keep」メンバと同等（詳細は左記メンバ参照のこと）
+		char *KeyChar;			//キーの文字列
+		int KeyDefine;			//キーの定義値
+		int *StateChange;		//「KeyInfo」の「StateChange」メンバと同等（詳細は左記メンバ参照のこと）
+		int *StateKeep;			//「KeyInfo」の「StateKeep」メンバと同等（詳細は左記メンバ参照のこと）
 	}KeyInfoSummary;
 
 	GLFWwindow* m_window;			//ウィンドウハンドル
 	static MouseInfo m_MouseInfo;	//マウスの情報
 	static KeyInfo m_KeyInfo;		//キー（キーボード）の情報
 	static Vec2 m_RightClickPos;	//マウスが右クリックされた時のカーソル座標
-	static Vec2 m_LeftClickPos;	//マウスが左クリックされた時のカーソル座標
+	static Vec2 m_LeftClickPos;		//マウスが左クリックされた時のカーソル座標
 	static Vec2 m_MiddleClickPos;	//マウスが中央クリックされた時のカーソル座標
-
 
 };
 
