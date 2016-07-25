@@ -96,9 +96,15 @@ TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const Pixe
 		{
 			case PIXELFORMAT_24BIT_RGB:
 				m_TextureData[m_AttribInfoIndex].InternalFormat = GL_RGB;
+				break;
 
 			case PIXELFORMAT_32BIT_RGBA:
 				m_TextureData[m_AttribInfoIndex].InternalFormat = GL_RGBA;
+				break;
+			default:
+				printf("失敗\n");
+				ERROR_MESSAGE("ピクセルフォーマットの引数が不正です。\n"\
+							  "p_PixelFotmat = %d", p_PixelFotmat);
 		}
 
 		//ロードしたテクスチャは「BGR」で格納されているので「RGB」に変換しつつコピーする
