@@ -188,8 +188,8 @@ void Matrix::Rotate(const GLfloat p_rotate, const GLfloat p_x, const GLfloat p_y
 	Matrix t_matrix;
 
 	//âÒì]çsóÒÇìKóp
-	GLfloat t_c = cosf(DEGREE_TO_RADIAN(p_rotate));
-	GLfloat t_s = sinf(DEGREE_TO_RADIAN(p_rotate));
+	GLfloat t_c = cosf((float)DEGREE_TO_RADIAN(p_rotate));
+	GLfloat t_s = sinf((float)DEGREE_TO_RADIAN(p_rotate));
 
 	t_matrix.m_val.m[0][0] = (p_x * p_x) * (1.0f - t_c) + t_c;
 	t_matrix.m_val.m[0][1] = (p_x * p_y) * (1.0f - t_c) - p_z * t_s;
@@ -379,7 +379,7 @@ void Matrix::Perspective(const GLfloat p_near, const GLfloat p_far,
 {
 	Matrix t_matrix;
 
-	GLfloat t_f = 1.0f / (tanf(DEGREE_TO_RADIAN(p_fovY_degree)) / 2.0f);
+	GLfloat t_f = 1.0f / (tanf((float)DEGREE_TO_RADIAN(p_fovY_degree)) / 2.0f);
 
 	t_matrix.m_val.m[0][0] = t_f / p_aspect;
 	t_matrix.m_val.m[1][1] = t_f;

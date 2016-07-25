@@ -5,10 +5,6 @@
 #include "Common.h"
 #include "Maths.h"
 
-//Define’è‹`
-#define DEGREE_TO_RADIAN(degree) ((degree * (float)M_PI) / 180.0f)
-#define M_PI (3.14159265358979323846)
-
 class Matrix
 {
 

@@ -4,6 +4,11 @@
 //include’è‹`
 #include "Common.h"
 
+//Define’è‹`
+#define PI 3.141592653589793
+#define RADIAN_TO_DEGREE(radian)	(radian * 180.0 / PI)
+#define DEGREE_TO_RADIAN(degree)	(degree * PI / 180.0)
+
 class Math
 {
 
