@@ -15,6 +15,8 @@
 #include <glew.h>
 #include <glfw3.h>
 #include <math.h>
+#include <locale.h>
+
 
 
 ////////////////////////////////////////
