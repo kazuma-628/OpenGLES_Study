@@ -5,7 +5,7 @@
 #include "Common.h"
 
 //Define定義
-#define SHADER_FILE_DIR				"..\\Shader\\"	//シェーダーファイルの保存ディレクトリ
+#define SHADER_FILE_DIR				"../Shader/"	//シェーダーファイルの保存ディレクトリ
 #define ATTRIB_INFO_MAX				128				//アトリビュート変数管理用の最大数
 #define UNIFORM_INFO_MAX			128				//ユニフォーム変数管理用の最大数
 
@@ -46,7 +46,7 @@ public:
 	*	　p_TransformFeedbackInfo		：[I/ ]　トランスフォームフィードバックの設定情報（使用しない場合はNULLを指定）
 	*
 	*	※どのファイル名も[Shader]フォルダ以降のファイルパスを入力してください
-	*	　ディレクトリをまたぐときは「\\」で区切ってください。（例「xxx\\xxx.vert」)
+	*	　ディレクトリをまたぐときは「/」で区切ってください。（例「xxx/xxx.vert」)
 	*
 	*	戻り値
 	*	　なし

@@ -36,7 +36,7 @@ ShaderManager::~ShaderManager()
 *	　p_TransformFeedbackInfo		：[I/ ]　トランスフォームフィードバックの設定情報（使用しない場合はNULLを指定）
 *
 *	※どのファイル名も[Shader]フォルダ以降のファイルパスを入力してください
-*	　ディレクトリをまたぐときは「\\」で区切ってください。（例「xxx\\xxx.vert」
+*	　ディレクトリをまたぐときは「/」で区切ってください。（例「xxx/xxx.vert」）
 *
 *	戻り値
 *	　なし
