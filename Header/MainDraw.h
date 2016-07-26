@@ -8,7 +8,7 @@
 #include "DeviceManager.h"
 #include "WindowManager.h"
 #include "ModelManager.h"
-#include "ResourceManager.h"
+#include "Texture.h"
 
 class MainDraw
 {

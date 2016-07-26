@@ -1,20 +1,20 @@
-#include "ResourceManager.h"
+#include "Texture.h"
 
 /////////////////////////////////////////////
 //static変数の実体を定義
 
-TextureData ResourceManager::m_TextureData[TEXTURE_DATA_MAX];	//テクスチャ管理用の変数
-int ResourceManager::m_AttribInfoIndex;							//テクスチャ変数管理用のインデックス値
+TextureData Texture::m_TextureData[TEXTURE_DATA_MAX];	//テクスチャ管理用の変数
+int Texture::m_AttribInfoIndex;							//テクスチャ変数管理用のインデックス値
 
 //コンストラクタ
-ResourceManager::ResourceManager()
+Texture::Texture()
 {
 	m_AttribInfoIndex = 0;
 	memset(m_TextureData, 0, sizeof(m_TextureData));
 }
 
 //デストラクタ
-ResourceManager::~ResourceManager()
+Texture::~Texture()
 {
 	//読み込み済みかを検索する
 	for (int index = 0; index < TEXTURE_DATA_MAX; index++)
@@ -39,7 +39,7 @@ ResourceManager::~ResourceManager()
 *	　テクスチャデータ（幅,高さ,ピクセルデータなど → 詳細は[TextureData]構造体参照）
 *	　[TextureData]構造体の[PixelData]は不要になった時点で必ず[free]でメモリ解放してください。
 *-------------------------------------------------------------------------------*/
-TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat)
+TextureData* Texture::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat)
 {
 
 	//一時的に使用するテクスチャデータ変数
@@ -139,7 +139,7 @@ TextureData* ResourceManager::TextureDataLoad(const char* p_FileName, const Pixe
 *	　テクスチャデータがまだ読み込まれていない場合
 *		→NULL
 *-------------------------------------------------------------------------------*/
-TextureData* ResourceManager::TextureDataSearch(const char* p_FileName)
+TextureData* Texture::TextureDataSearch(const char* p_FileName)
 {
 	//読み込み済みかを検索する
 	for (int index = 0; index < TEXTURE_DATA_MAX; index++)
@@ -164,7 +164,7 @@ TextureData* ResourceManager::TextureDataSearch(const char* p_FileName)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ResourceManager::TextureDataBRGtoRGB(const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData, const int p_PixelFotmat)
+void Texture::TextureDataBRGtoRGB(const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData, const int p_PixelFotmat)
 {
 	//1色分の情報のバイト数
 	int ColorByte = 0;

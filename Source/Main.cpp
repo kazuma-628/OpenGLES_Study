@@ -53,11 +53,6 @@ void main(void)
 	//デバイス管理用のオブジェクト生成
 	DeviceManager *m_DeviceManager = new DeviceManager;
 
-	//リソース管理用のオブジェクト生成
-	//※このオブジェクトを直接操作することはないが、
-	//　コンストラクタとデストラクタを明示的にコールさせるために生成する
-	ResourceManager *m_ResourceManager = new ResourceManager;
-
 	//モデルデータ管理用のオブジェクト生成
 	//※このオブジェクトを直接操作することはないが、
 	//　コンストラクタとデストラクタを明示的にコールさせるために生成する
@@ -121,7 +116,6 @@ void main(void)
 	delete m_MainDraw;
 	delete m_WindowManager;
 	delete m_DeviceManager;
-	delete m_ResourceManager;
 	delete m_ModelManager;
 }
 

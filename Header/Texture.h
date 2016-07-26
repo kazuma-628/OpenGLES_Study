@@ -1,5 +1,5 @@
-#ifndef RESOURCE_MANAGER_H
-#define RESOURCE_MANAGER_H
+#ifndef TEXTURE_H
+#define TEXTURE_H
 
 //include定義
 #include "Common.h"
@@ -28,15 +28,15 @@ typedef struct
 }TextureData;
 
 
-class ResourceManager
+class Texture
 {
 
 public:
 	//コンストラクタ
-	ResourceManager();
+	Texture();
 
 	//デストラクタ
-	~ResourceManager();
+	~Texture();
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明

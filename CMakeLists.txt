@@ -26,7 +26,7 @@ add_executable(
 	Source/Matrix.cpp
 	Source/DeviceManager.cpp
 	Source/WindowManager.cpp
-	Source/ResourceManager.cpp
+	Source/Texture.cpp
 	Source/ModelManager.cpp
 	Source/Maths.cpp
 
@@ -38,7 +38,7 @@ add_executable(
 	Header/Matrix.h
 	Header/DeviceManager.h
 	Header/WindowManager.h
-	Header/ResourceManager.h
+	Header/Texture.h
 	Header/ModelManager.h
 	Header/Maths.h
 
