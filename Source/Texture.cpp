@@ -23,7 +23,7 @@ Texture::~Texture()
 *	　p_PixelFotmat	：[I/ ]　画像ファイルのフォーマット
 *							 [PIXELFORMAT_24BIT_RGB] or [PIXELFORMAT_32BIT_RGBA] で指定（詳細は定義部分のコメント参照）
 *	　p_TextureData	：[ /O]　テクスチャデータ
-*							 [TextureData]構造体の[PixelData]は不要になった時点で必ず[free]でメモリ解放してください。
+*							 [TextureData]構造体の[data]変数は不要になった時点で必ず[free]でメモリ解放してください。
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
