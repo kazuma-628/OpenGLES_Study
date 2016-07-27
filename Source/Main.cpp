@@ -25,13 +25,6 @@
 
 #include "Main.h"
 
-typedef struct
-{
-	Vec2 OldPosition;				//【1イベント前】マウスのカーソル座標
-	Vec2 OldScrollAmount;			//【1イベント前】スクロールの合計量、初期状態は[x:0（横[左右]スクロール）][y:0（縦[上下]スクロール）]で、
-									//　スクロールした分だけ値が蓄積（加算/減算）されていく
-}TmpGlobalData;
-
 static TmpGlobalData TmpGlobal = { 0 };
 
 /*-------------------------------------------------------------------------------
@@ -138,15 +131,6 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//キー（キーボード）の情報を取得
 	KeyInfo KeyBoard = p_DeviceManager->GetKeyInfo();
 
-	////////////////////////////////////
-	// メインとなるモデルビューマトリクスの作成（大元のマトリクスデータ）
-
-	//オブジェクトを移動させるための行列
-	Matrix ModelView;
-
-	//3D空間にするための行列
-	Matrix Projection;
-
 	///////////////////////////////////
 	// オブジェクト移動関係の処理
 
@@ -163,8 +147,57 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 		p_Global->Translate.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
 		p_Global->Translate.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
 	}
+	else
+	{
+		//左クリックされていない状態 かつ 1イベント前では左クリックされていた場合
+		//（要するにフリックされた）
+		if (TmpGlobal.OldLeftState != MouseButton.Left.StateChange)
+		{
+			//フリック速度に応じた1イベント分の惰性量を算出
+			TmpGlobal.InertiaTranslate.x = MouseButton.Position.x - TmpGlobal.OldPosition.x;
+			TmpGlobal.InertiaTranslate.y = MouseButton.Position.y - TmpGlobal.OldPosition.y;
+		}
+
+		//X方向の惰性がある場合
+		if (0 != TmpGlobal.InertiaTranslate.x)
+		{
+			//惰性量を減衰させる
+			p_Global->Translate.x += TmpGlobal.InertiaTranslate.x;
+			TmpGlobal.InertiaTranslate.x -= TmpGlobal.InertiaTranslate.x * InertiaTranslateWeight;
+
+		}
+		//Y方向の惰性がある場合
+		if (0 != TmpGlobal.InertiaTranslate.y)
+		{
+			//惰性量を減衰させる
+			p_Global->Translate.y += TmpGlobal.InertiaTranslate.y;
+			TmpGlobal.InertiaTranslate.y -= TmpGlobal.InertiaTranslate.y * InertiaTranslateWeight;
+		}
+	}
+
+	//更にキーボードの情報を加える
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_W)
+	{
+		p_Global->Translate.y += 2.0f;
+	}
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_S)
+	{
+		p_Global->Translate.y -= 2.0f;
+	}
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_A)
+	{
+		p_Global->Translate.x += 2.0f;
+	}
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_D)
+	{
+		p_Global->Translate.x -= 2.0f;
+	}
+
 	//スクロールはボタンが押されていなくても適応する
 	p_Global->Translate.z += MouseButton.ScrollAmount.y - TmpGlobal.OldScrollAmount.y;
+
+	///////////////////////////////////
+	// オブジェクト回転関係の処理
 
 	//回転用の変数にマウス情報の座標を加える
 	//本来であれば360度回転したら変数を初期化した方が良いが、サンプルなので割愛
@@ -172,25 +205,45 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	{
 		p_Global->Rotate.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
 		p_Global->Rotate.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
+		p_Global->Rotate.x = (GLfloat)fmod(p_Global->Rotate.x, 360.0 * RotateSpeedWeight);
+		p_Global->Rotate.y = (GLfloat)fmod(p_Global->Rotate.y, 360.0 * RotateSpeedWeight);
+	}
+	else
+	{
+		//右クリックされていない状態 かつ 1イベント前では右クリックされていた場合
+		//（要するにフリックされた）
+		if (TmpGlobal.OldRightState != MouseButton.Right.StateChange)
+		{
+			//フリック速度に応じた1イベント分の惰性量を算出
+			TmpGlobal.InertiaRotate.x = MouseButton.Position.x - TmpGlobal.OldPosition.x;
+			TmpGlobal.InertiaRotate.y = MouseButton.Position.y - TmpGlobal.OldPosition.y;
+		}
+
+		//X方向の惰性がある場合
+		if (0 != TmpGlobal.InertiaRotate.x)
+		{
+			//惰性量を減衰させる
+			p_Global->Rotate.x += TmpGlobal.InertiaRotate.x;
+			TmpGlobal.InertiaRotate.x -= TmpGlobal.InertiaRotate.x * InertiaRotateWeight;
+
+		}
+		//Y方向の惰性がある場合
+		if (0 != TmpGlobal.InertiaRotate.y)
+		{
+			//惰性量を減衰させる
+			p_Global->Rotate.y += TmpGlobal.InertiaRotate.y;
+			TmpGlobal.InertiaRotate.y -= TmpGlobal.InertiaRotate.y * InertiaRotateWeight;
+		}
 	}
 
-	//更にキーボードの情報を加える
-	if (GLFW_PRESS == KeyBoard.StateChange.Key_W)
-	{
-		p_Global->Translate.y += 1.0f;
-	}
-	if (GLFW_PRESS == KeyBoard.StateChange.Key_S)
-	{
-		p_Global->Translate.y -= 1.0f;
-	}
-	if (GLFW_PRESS == KeyBoard.StateChange.Key_A)
-	{
-		p_Global->Translate.x += 1.0f;
-	}
-	if (GLFW_PRESS == KeyBoard.StateChange.Key_D)
-	{
-		p_Global->Translate.x -= 1.0f;
-	}
+	////////////////////////////////////
+	// メインとなるモデルビューマトリクスの作成（大元のマトリクスデータ）
+
+	//オブジェクトを移動させるための行列
+	Matrix ModelView;
+
+	//3D空間にするための行列
+	Matrix Projection;
 
 	//カメラの映る位置に移動させる
 	ModelView.Translate(0.0, 0.0, -35.0f);
@@ -198,8 +251,8 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	ModelView.Translate(p_Global->Translate.x / 6.0f, -p_Global->Translate.y / 6.0f, p_Global->Translate.z);
 
 	//マウスでのオブジェクトの回転
-	ModelView.Rotate(-p_Global->Rotate.y / 2.0f, 1.0f, 0.0f, 0.0f);
-	ModelView.Rotate(-p_Global->Rotate.x / 2.0f, 0.0f, 1.0f, 0.0f);
+	ModelView.Rotate(-p_Global->Rotate.y / RotateSpeedWeight, 1.0f, 0.0f, 0.0f);
+	ModelView.Rotate(-p_Global->Rotate.x / RotateSpeedWeight, 0.0f, 1.0f, 0.0f);
 
 	//投資投影行列で使用する値をグローバル領域に保存
 	p_Global->NearClip = 1.0f;
@@ -223,6 +276,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	TmpGlobal.OldPosition.y = MouseButton.Position.y;
 	TmpGlobal.OldScrollAmount.x = MouseButton.ScrollAmount.x;
 	TmpGlobal.OldScrollAmount.y = MouseButton.ScrollAmount.y;
+	TmpGlobal.OldLeftState = MouseButton.Left.StateChange;
+	TmpGlobal.OldRightState = MouseButton.Right.StateChange;
 }
-
 
