@@ -29,7 +29,7 @@ Texture::~Texture()
 *-------------------------------------------------------------------------------*/
 void Texture::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureData *p_TextureData)
 {
-	printf("テクスチャ「%s」の新規読み込みを開始します...", p_FileName);
+	printf("テクスチャ「%s」の読み込みを開始します...", p_FileName);
 
 	//引数チェック
 	if (NULL == p_FileName || NULL == p_TextureData)
