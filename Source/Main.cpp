@@ -137,15 +137,15 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//スペースで初期位置に戻す
 	if (true == KeyBoard.StateChange.Key_SPACE)
 	{
-		memset(&p_Global->Translate, 0, sizeof(p_Global->Translate));
-		memset(&p_Global->Rotate, 0, sizeof(p_Global->Rotate));
+		memset(&p_Global->TranslateAmount, 0, sizeof(p_Global->TranslateAmount));
+		memset(&p_Global->RotateAmount, 0, sizeof(p_Global->RotateAmount));
 	}
 
 	//平行移動用の変数にマウス情報の座標を加える
 	if (GLFW_PRESS == MouseButton.Left.StateChange)
 	{
-		p_Global->Translate.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
-		p_Global->Translate.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
+		p_Global->TranslateAmount.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
+		p_Global->TranslateAmount.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
 	}
 	else
 	{
@@ -162,7 +162,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 		if (0 != TmpGlobal.InertiaTranslate.x)
 		{
 			//惰性量を減衰させる
-			p_Global->Translate.x += TmpGlobal.InertiaTranslate.x;
+			p_Global->TranslateAmount.x += TmpGlobal.InertiaTranslate.x;
 			TmpGlobal.InertiaTranslate.x -= TmpGlobal.InertiaTranslate.x * InertiaTranslateWeight;
 
 		}
@@ -170,7 +170,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 		if (0 != TmpGlobal.InertiaTranslate.y)
 		{
 			//惰性量を減衰させる
-			p_Global->Translate.y += TmpGlobal.InertiaTranslate.y;
+			p_Global->TranslateAmount.y += TmpGlobal.InertiaTranslate.y;
 			TmpGlobal.InertiaTranslate.y -= TmpGlobal.InertiaTranslate.y * InertiaTranslateWeight;
 		}
 	}
@@ -178,23 +178,23 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//更にキーボードの情報を加える
 	if (GLFW_PRESS == KeyBoard.StateChange.Key_W)
 	{
-		p_Global->Translate.y += 2.0f;
+		p_Global->TranslateAmount.y += 2.0f;
 	}
 	if (GLFW_PRESS == KeyBoard.StateChange.Key_S)
 	{
-		p_Global->Translate.y -= 2.0f;
+		p_Global->TranslateAmount.y -= 2.0f;
 	}
 	if (GLFW_PRESS == KeyBoard.StateChange.Key_A)
 	{
-		p_Global->Translate.x += 2.0f;
+		p_Global->TranslateAmount.x += 2.0f;
 	}
 	if (GLFW_PRESS == KeyBoard.StateChange.Key_D)
 	{
-		p_Global->Translate.x -= 2.0f;
+		p_Global->TranslateAmount.x -= 2.0f;
 	}
 
 	//スクロールはボタンが押されていなくても適応する
-	p_Global->Translate.z += MouseButton.ScrollAmount.y - TmpGlobal.OldScrollAmount.y;
+	p_Global->TranslateAmount.z += MouseButton.ScrollAmount.y - TmpGlobal.OldScrollAmount.y;
 
 	///////////////////////////////////
 	// オブジェクト回転関係の処理
@@ -203,11 +203,11 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//本来であれば360度回転したら変数を初期化した方が良いが、サンプルなので割愛
 	if (GLFW_PRESS == MouseButton.Right.StateChange)
 	{
-		p_Global->Rotate.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
-		p_Global->Rotate.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
+		p_Global->RotateAmount.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
+		p_Global->RotateAmount.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
 		//360度を超えたら0度に戻す（360度と0度は同じなので）
-		p_Global->Rotate.x = fmodf(p_Global->Rotate.x, 360.0 * RotateSpeedWeight);
-		p_Global->Rotate.y = fmodf(p_Global->Rotate.y, 360.0 * RotateSpeedWeight);
+		p_Global->RotateAmount.x = fmodf(p_Global->RotateAmount.x, 360.0 * RotateSpeedWeight);
+		p_Global->RotateAmount.y = fmodf(p_Global->RotateAmount.y, 360.0 * RotateSpeedWeight);
 	}
 	else
 	{
@@ -224,7 +224,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 		if (0 != TmpGlobal.InertiaRotate.x)
 		{
 			//惰性量を減衰させる
-			p_Global->Rotate.x += TmpGlobal.InertiaRotate.x;
+			p_Global->RotateAmount.x += TmpGlobal.InertiaRotate.x;
 			TmpGlobal.InertiaRotate.x -= TmpGlobal.InertiaRotate.x * InertiaRotateWeight;
 
 		}
@@ -232,7 +232,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 		if (0 != TmpGlobal.InertiaRotate.y)
 		{
 			//惰性量を減衰させる
-			p_Global->Rotate.y += TmpGlobal.InertiaRotate.y;
+			p_Global->RotateAmount.y += TmpGlobal.InertiaRotate.y;
 			TmpGlobal.InertiaRotate.y -= TmpGlobal.InertiaRotate.y * InertiaRotateWeight;
 		}
 	}
@@ -249,15 +249,15 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//カメラの映る位置に移動させる
 	ModelView.Translate(0.0, 0.0, -35.0f);
 	//マウスでのオブジェクトの移動
-	ModelView.Translate(p_Global->Translate.x / 6.0f, -p_Global->Translate.y / 6.0f, p_Global->Translate.z);
+	ModelView.Translate(p_Global->TranslateAmount.x / 6.0f, -p_Global->TranslateAmount.y / 6.0f, p_Global->TranslateAmount.z);
 
 	//アスペクト比（幅 ÷ 高さ）を算出、歪み補正する
 	GLfloat Aspect = (GLfloat)WindowSize.Width / WindowSize.Height;
 	ModelView.Scale(1.0f, Aspect, 1.0);
 
 	//マウスでのオブジェクトの回転
-	ModelView.Rotate(-p_Global->Rotate.y / RotateSpeedWeight, 1.0f, 0.0f, 0.0f);
-	ModelView.Rotate(-p_Global->Rotate.x / RotateSpeedWeight, 0.0f, 1.0f, 0.0f);
+	ModelView.Rotate(-p_Global->RotateAmount.y / RotateSpeedWeight, 1.0f, 0.0f, 0.0f);
+	ModelView.Rotate(-p_Global->RotateAmount.x / RotateSpeedWeight, 0.0f, 1.0f, 0.0f);
 
 	//投資投影行列で使用する値をグローバル領域に保存
 	p_Global->NearClip = 1.0f;

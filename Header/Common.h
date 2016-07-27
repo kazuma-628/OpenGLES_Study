@@ -166,8 +166,8 @@ typedef struct
 	GLfloat FarClip;			//プロジェクションマトリクス生成時に使用したFar値（大元のマトリクスデータ）
 	Size WindowSize;			//ウィンドウの全体サイズ
 	GLfloat Aspect;				//アスペクト比（幅 ÷ 高さ）（横の大きさを[?]とした時、縦の大きさは[? * Aspect]となる）
-	Vec3 Translate;				//初期位置（X,Y,Z）からの移動量
-	Vec3 Rotate;				//初期位置（X,Y,Z）からの回転量
+	Vec3 TranslateAmount;		//初期位置（X,Y,Z）からの移動量
+	Vec3 RotateAmount;			//初期位置（X,Y,Z）からの回転量
 }GlobalData;
 
 /*-------------------------------------------------------------------------------
