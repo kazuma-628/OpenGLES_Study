@@ -205,6 +205,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	{
 		p_Global->Rotate.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
 		p_Global->Rotate.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
+		//360度を超えたら0度に戻す（360度と0度は同じなので）
 		p_Global->Rotate.x = (GLfloat)fmod(p_Global->Rotate.x, 360.0 * RotateSpeedWeight);
 		p_Global->Rotate.y = (GLfloat)fmod(p_Global->Rotate.y, 360.0 * RotateSpeedWeight);
 	}
