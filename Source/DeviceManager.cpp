@@ -12,18 +12,14 @@ Vec2 DeviceManager::m_MiddleClickPos;		//ƒ}ƒEƒX‚ª’†‰›ƒNƒŠƒbƒN‚³‚ê‚½‚ÌƒJ[ƒ\ƒ‹
 //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 DeviceManager::DeviceManager()
 {
+	//‰Šú‰»
 	m_window = NULL;
 	memset(&m_RightClickPos, 0, sizeof(m_RightClickPos));
 	memset(&m_LeftClickPos, 0, sizeof(m_LeftClickPos));
 	memset(&m_MiddleClickPos, 0, sizeof(m_MiddleClickPos));
 
 	memset(&m_MouseInfo, 0, sizeof(m_MouseInfo));
-	m_MouseInfo.Right.StateChange = GLFW_RELEASE;
-	m_MouseInfo.Left.StateChange = GLFW_RELEASE;
-//	m_MouseInfo.Middle.StateChange = GLFW_RELEASE;
-
 	memset(&m_KeyInfo, 0, sizeof(m_KeyInfo));
-	memset(&m_KeyInfo.StateChange, GLFW_RELEASE, sizeof(m_KeyInfo.StateChange));
 }
 
 //ƒfƒXƒgƒ‰ƒNƒ^
@@ -96,10 +92,10 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 		{
 			printf("‰EƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½\n");
 
-			//[StateChange]‚É‚Í ƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚éuGLFW_PRESSv or ‚³‚ê‚Ä‚¢‚È‚¢uGLFW_RELEASEv‚ğ‚»‚Ì‚Ü‚ÜŠi”[
-			m_MouseInfo.Right.StateChange = p_action;
+			//[StateChange]‚É‚ÍAƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚é‚Æutruev‚ğİ’è
+			m_MouseInfo.Right.StateChange = true;
 
-			//[StateKeep]‚É‚Í ƒNƒŠƒbƒN‚·‚é‚½‚Ñ‚Éutruev‚Æufalsev‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦‚é
+			//[StateKeep]‚É‚ÍAƒNƒŠƒbƒN‚·‚é‚½‚Ñ‚Éutruev‚Æufalsev‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦‚é
 			m_MouseInfo.Right.StateKeep = !m_MouseInfo.Right.StateKeep;
 
 			//[PushCount]‚É‚ÍAƒNƒŠƒbƒN‚·‚é‚½‚Ñ‚É’l‚ğ‰ÁZ‚µ‚Ä‚¢‚­
@@ -112,8 +108,8 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 		//—£‚³‚ê‚½ê‡
 		else if (GLFW_RELEASE == p_action)
 		{
-			//[StateChange]‚É‚Í ƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚éuGLFW_PRESSv or ‚³‚ê‚Ä‚¢‚È‚¢uGLFW_RELEASEv‚ğ‚»‚Ì‚Ü‚ÜŠi”[
-			m_MouseInfo.Right.StateChange = p_action;
+			//[StateChange]‚É‚ÍAƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚È‚¢‚Æufalsev‚ğİ’è
+			m_MouseInfo.Right.StateChange = false;
 
 			//•Û‚µ‚Ä‚¢‚½À•W‚ğ‰Šú‰»
 			memset(&m_MouseInfo.Right.ClickDiffPos, 0, sizeof(m_MouseInfo.Right.ClickDiffPos));
@@ -129,10 +125,10 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 		{
 			printf("¶ƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½\n");
 
-			//[StateChange]‚É‚Í ƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚éuGLFW_PRESSv or ‚³‚ê‚Ä‚¢‚È‚¢uGLFW_RELEASEv‚ğ‚»‚Ì‚Ü‚ÜŠi”[
-			m_MouseInfo.Left.StateChange = p_action;
+			//[StateChange]‚É‚ÍAƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚é‚Æutruev‚ğİ’è
+			m_MouseInfo.Left.StateChange = true;
 
-			//[StateKeep]‚É‚Í ƒNƒŠƒbƒN‚·‚é‚½‚Ñ‚Éutruev‚Æufalsev‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦‚é
+			//[StateKeep]‚É‚ÍAƒNƒŠƒbƒN‚·‚é‚½‚Ñ‚Éutruev‚Æufalsev‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦‚é
 			m_MouseInfo.Left.StateKeep = !m_MouseInfo.Left.StateKeep;
 
 			//[PushCount]‚É‚ÍAƒNƒŠƒbƒN‚·‚é‚½‚Ñ‚É’l‚ğ‰ÁZ‚µ‚Ä‚¢‚­
@@ -145,8 +141,8 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 		//—£‚³‚ê‚½ê‡
 		else if (GLFW_RELEASE == p_action)
 		{
-			//[StateChange]‚É‚Í ƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚éuGLFW_PRESSv or ‚³‚ê‚Ä‚¢‚È‚¢uGLFW_RELEASEv‚ğ‚»‚Ì‚Ü‚ÜŠi”[
-			m_MouseInfo.Left.StateChange = p_action;
+			//[StateChange]‚É‚ÍAƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚È‚¢‚Æufalsev‚ğİ’è
+			m_MouseInfo.Left.StateChange = false;
 
 			//•Û‚µ‚Ä‚¢‚½À•W‚ğ‰Šú‰»
 			memset(&m_MouseInfo.Left.ClickDiffPos, 0, sizeof(m_MouseInfo.Left.ClickDiffPos));
@@ -197,7 +193,7 @@ void DeviceManager::CursorPosCallback(GLFWwindow* p_window, double p_xpos, doubl
 	m_MouseInfo.Position = Pos;
 
 	//‰EƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚Ä‚¢‚éê‡
-	if (GLFW_PRESS == m_MouseInfo.Right.StateChange)
+	if (true == m_MouseInfo.Right.StateChange)
 	{
 		//ƒNƒŠƒbƒN‚³‚ê‚½‚©‚ç‚Ì·•ª‚ğXV
 		m_MouseInfo.Right.ClickDiffPos.x = Pos.x - m_RightClickPos.x;
@@ -205,7 +201,7 @@ void DeviceManager::CursorPosCallback(GLFWwindow* p_window, double p_xpos, doubl
 	}
 
 	//¶ƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚Ä‚¢‚éê‡
-	if (GLFW_PRESS == m_MouseInfo.Left.StateChange)
+	if (true == m_MouseInfo.Left.StateChange)
 	{
 		//ƒNƒŠƒbƒN‚³‚ê‚½‚©‚ç‚Ì·•ª‚ğXV
 		m_MouseInfo.Left.ClickDiffPos.x = Pos.x - m_LeftClickPos.x;
@@ -340,15 +336,15 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 			//ŠY“–‚·‚éƒL[‚ª‚ ‚ê‚Î
 			if (KeySummary[index].KeyDefine == p_key)
 			{
-				//[StateChange]‚É‚Í ‰Ÿ‚³‚ê‚½uGLFW_PRESSv or —£‚³‚ê‚½uGLFW_RELEASEv‚ğ‚»‚Ì‚Ü‚ÜŠi”[
-				*KeySummary[index].StateChange = p_action;
+				//[StateChange]‚É‚ÍA‰Ÿ‚³‚ê‚Ä‚¢‚é‚Æutruev or ‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢‚Æufalsev‚ğİ’è
+				*KeySummary[index].StateChange = p_action == GLFW_PRESS ? true : false;
 
 				//‰Ÿ‚³‚ê‚½ê‡
 				if (GLFW_PRESS == p_action)
 				{
 					printf("[%s]ƒL[‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½\n", KeySummary[index].KeyChar);
 
-					//[StateKeep]‚É‚Í ‰Ÿ‚·‚½‚Ñ‚Éutruev‚Æufalsev‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦‚é
+					//[StateKeep]‚É‚ÍA‰Ÿ‚·‚½‚Ñ‚Éutruev‚Æufalsev‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦‚é
 					*KeySummary[index].StateKeep = !*KeySummary[index].StateKeep;
 
 					//[PushCount]‚É‚ÍA‰Ÿ‚·‚½‚Ñ‚É’l‚ğ‰ÁZ‚µ‚Ä‚¢‚­

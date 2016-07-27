@@ -13,8 +13,8 @@
 //マウスの詳細情報
 typedef struct
 {
-	int StateChange;		//マウスがクリックされていると「GLFW_PRESS」、されていないと「GLFW_RELEASE」（クリック状態でチェンジする）							
-	int StateKeep;			//マウスをクリックするたびに「true」と「false」が交互に切り替わる（クリック状態をキープする）
+	bool StateChange;		//マウスがクリックされていると「true」、されていないと「false」（クリック状態でチェンジする）							
+	bool StateKeep;			//マウスをクリックするたびに「true」と「false」が交互に切り替わる（クリック状態をキープする）
 	int PushCount;			//マウスを押した（クリックした）合計回数
 							//　初期状態は[0]で、押した（クリックした）回数分、値が加算されていく
 	Vec2 ClickDiffPos;		//マウスがクリックされた座標からの差分座標（クリックされていない時は [0] ）
@@ -40,21 +40,21 @@ typedef struct
 //各変数に保存される値やその意味は「KeyInfo」構造体のメンバを参照すること
 typedef struct
 {
-	int Key_A; int Key_B; int Key_C; int Key_D; int Key_E; int Key_F; int Key_G;
-	int Key_H; int Key_I; int Key_J; int Key_K; int Key_L; int Key_M; int Key_N;
-	int Key_O; int Key_P; int Key_Q; int Key_R; int Key_S; int Key_T; int Key_U;
-	int Key_V; int Key_W; int Key_X; int Key_Y; int Key_Z;
-	int Key_0; int Key_1; int Key_2; int Key_3; int Key_4; int Key_5; int Key_6;
-	int Key_7; int Key_8; int Key_9;
-	int Key_DIVIDE; int Key_MULTIPLY; int Key_SUBTRACT; int Key_ADD;
-	int Key_SHIFT; int Key_CONTROL; int Key_ALT; int Key_SPACE;
-	int Key_RIGHT; int Key_LEFT; int Key_DOWN; int Key_UP;
+	bool Key_A; bool Key_B; bool Key_C; bool Key_D; bool Key_E; bool Key_F; bool Key_G;
+	bool Key_H; bool Key_I; bool Key_J; bool Key_K; bool Key_L; bool Key_M; bool Key_N;
+	bool Key_O; bool Key_P; bool Key_Q; bool Key_R; bool Key_S; bool Key_T; bool Key_U;
+	bool Key_V; bool Key_W; bool Key_X; bool Key_Y; bool Key_Z;
+	bool Key_0; bool Key_1; bool Key_2; bool Key_3; bool Key_4; bool Key_5; bool Key_6;
+	bool Key_7; bool Key_8; bool Key_9;
+	bool Key_DIVIDE; bool Key_MULTIPLY; bool Key_SUBTRACT; bool Key_ADD;
+	bool Key_SHIFT; bool Key_CONTROL; bool Key_ALT; bool Key_SPACE;
+	bool Key_RIGHT; bool Key_LEFT; bool Key_DOWN; bool Key_UP;
 }KeyState;
 
 //キー（キーボード）の情報
 typedef struct
 {
-	KeyState StateChange;		//キーが押されていると「GLFW_PRESS」、離されていると「GLFW_RELEASE」（キー状態でチェンジする）
+	KeyState StateChange;		//キーが押されていると「true」、離されていると「false」（キー状態でチェンジする）
 	KeyState StateKeep;			//キーを押すたびに「true」と「false」が交互に切り替わる（キー状態をキープする）
 	KeyState PushCount;			//キーを押した合計回数
 								//　初期状態は[0]で、押した回数分、値が加算されていく
@@ -179,9 +179,9 @@ private:
 	{
 		char *KeyChar;			//キーの文字列
 		int KeyDefine;			//キーの定義値
-		int *StateChange;		//「KeyInfo」の「StateChange」メンバと同等（詳細は左記メンバ参照のこと）
-		int *StateKeep;			//「KeyInfo」の「StateKeep」メンバと同等（詳細は左記メンバ参照のこと）
-		int *PushCount;			//「KeyInfo」の「PushCount」メンバと同等（詳細は左記メンバ参照のこと）
+		bool *StateChange;		//「KeyInfo」の「StateChange」メンバと同等（詳細は左記メンバ参照のこと）
+		bool *StateKeep;		//「KeyInfo」の「StateKeep」メンバと同等（詳細は左記メンバ参照のこと）
+		bool *PushCount;		//「KeyInfo」の「PushCount」メンバと同等（詳細は左記メンバ参照のこと）
 	}KeyInfoSummary;
 
 	GLFWwindow* m_window;			//ウィンドウハンドル
