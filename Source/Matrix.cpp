@@ -47,7 +47,7 @@ Matrix operator*(const Matrix &p_left, const Matrix &p_right)
 //マトリクス同士の乗算
 Matrix operator*(const Matrix &p_left, const Mat4 &p_right)
 {
-	Matrix t_matrix(p_right);
+	Matrix t_matrix = p_right;
 
 	t_matrix = p_left * t_matrix;
 
@@ -57,7 +57,7 @@ Matrix operator*(const Matrix &p_left, const Mat4 &p_right)
 //マトリクス同士の乗算
 Matrix operator*(const Mat4 &p_left, const Matrix &p_right)
 {
-	Matrix t_matrix(p_left);
+	Matrix t_matrix = p_left;
 
 	t_matrix = t_matrix * p_right;
 
@@ -68,8 +68,8 @@ Matrix operator*(const Mat4 &p_left, const Matrix &p_right)
 Matrix operator*(const Mat4 &p_left, const Mat4 &p_right)
 {
 	Matrix t_matrix;
-	Matrix t_matrix_left(p_left);
-	Matrix t_matrix_right(p_right);
+	Matrix t_matrix_left = p_left;
+	Matrix t_matrix_right = p_right;
 
 	t_matrix = t_matrix_left * t_matrix_right;
 
