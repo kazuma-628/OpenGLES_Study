@@ -251,6 +251,10 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//マウスでのオブジェクトの移動
 	ModelView.Translate(p_Global->Translate.x / 6.0f, -p_Global->Translate.y / 6.0f, p_Global->Translate.z);
 
+	//アスペクト比（幅 ÷ 高さ）を算出、歪み補正する
+	GLfloat Aspect = (GLfloat)WindowSize.Width / WindowSize.Height;
+	ModelView.Scale(1.0f, Aspect, 1.0);
+
 	//マウスでのオブジェクトの回転
 	ModelView.Rotate(-p_Global->Rotate.y / RotateSpeedWeight, 1.0f, 0.0f, 0.0f);
 	ModelView.Rotate(-p_Global->Rotate.x / RotateSpeedWeight, 0.0f, 1.0f, 0.0f);
@@ -263,6 +267,9 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 
 	///////////////////////////////////
 	// 各種情報を保存
+
+	//アスペクト比（幅 ÷ 高さ）を保存
+	p_Global->Aspect = Aspect;
 
 	//各種行列を保存する
 	p_Global->ModelViewMatrix = ModelView.GetMatrix();
