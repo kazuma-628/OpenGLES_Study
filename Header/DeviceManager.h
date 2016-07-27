@@ -15,6 +15,8 @@ typedef struct
 {
 	int StateChange;		//マウスがクリックされていると「GLFW_PRESS」、されていないと「GLFW_RELEASE」（クリック状態でチェンジする）							
 	int StateKeep;			//マウスをクリックするたびに「true」と「false」が交互に切り替わる（クリック状態をキープする）
+	int PushCount;			//マウスを押した（クリックした）合計回数
+							//　初期状態は[0]で、押した（クリックした）回数分、値が加算されていく
 	Vec2 ClickDiffPos;		//マウスがクリックされた座標からの差分座標（クリックされていない時は [0] ）
 							//　例：[x:50][y:50]でクリックして、ドラッグ状態で[x:40][y:60]に移動させた場合、
 							//　　　格納される値は[x:-10][y:10]となる
@@ -54,6 +56,8 @@ typedef struct
 {
 	KeyState StateChange;		//キーが押されていると「GLFW_PRESS」、離されていると「GLFW_RELEASE」（キー状態でチェンジする）
 	KeyState StateKeep;			//キーを押すたびに「true」と「false」が交互に切り替わる（キー状態をキープする）
+	KeyState PushCount;			//キーを押した合計回数
+								//　初期状態は[0]で、押した回数分、値が加算されていく
 }KeyInfo;
 
 
@@ -177,6 +181,7 @@ private:
 		int KeyDefine;			//キーの定義値
 		int *StateChange;		//「KeyInfo」の「StateChange」メンバと同等（詳細は左記メンバ参照のこと）
 		int *StateKeep;			//「KeyInfo」の「StateKeep」メンバと同等（詳細は左記メンバ参照のこと）
+		int *PushCount;			//「KeyInfo」の「PushCount」メンバと同等（詳細は左記メンバ参照のこと）
 	}KeyInfoSummary;
 
 	GLFWwindow* m_window;			//ウィンドウハンドル
