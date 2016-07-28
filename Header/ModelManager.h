@@ -55,7 +55,7 @@ typedef struct
 {
 	VertexAttribPointerInfo Vertex;		//頂点情報
 	VertexAttribPointerInfo Color;		//カラー情報
-	DrawElementsInfo DrawElement;		//描画情報
+	DrawElementsInfo DrawElements;		//描画情報
 	BufferDataInfo BufferData;			//バッファー情報
 }ModelDataInfo_index;
 

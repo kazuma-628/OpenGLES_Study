@@ -210,8 +210,8 @@ void ModelManager::GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p
 	p_ModelData->BufferData.data = m_PiercedCube_index.vertex;
 
 	//•`‰æî•ñÝ’è
-	p_ModelData->DrawElement.mode = GL_TRIANGLE_STRIP;
-	p_ModelData->DrawElement.count = sizeof(index) / sizeof(index[0]);
-	p_ModelData->DrawElement.type = GL_UNSIGNED_BYTE;
-	p_ModelData->DrawElement.indices = m_PiercedCube_index.index;
+	p_ModelData->DrawElements.mode = GL_TRIANGLE_STRIP;
+	p_ModelData->DrawElements.count = sizeof(index) / sizeof(index[0]);
+	p_ModelData->DrawElements.type = GL_UNSIGNED_BYTE;
+	p_ModelData->DrawElements.indices = m_PiercedCube_index.index;
 }

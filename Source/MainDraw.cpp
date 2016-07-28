@@ -97,7 +97,7 @@ void MainDraw::Drawing(GlobalData *p_Global)
 	// [glDrawElements]を使用した描画（インデックスバッファを使用する場合）
 //	m_MainShader->VertexAttribPointer(m_attr_pos, PiercedCube_index.Vertex.size, PiercedCube_index.Vertex.type, PiercedCube_index.Vertex.normalized, PiercedCube_index.Vertex.stride, PiercedCube_index.Vertex.pointer);
 //	m_MainShader->VertexAttribPointer(m_attr_color, PiercedCube_index.Color.size, PiercedCube_index.Color.type, PiercedCube_index.Color.normalized, PiercedCube_index.Color.stride, PiercedCube_index.Color.pointer);
-//	glDrawElements(PiercedCube_index.DrawElement.mode, PiercedCube_index.DrawElement.count, PiercedCube_index.DrawElement.type, PiercedCube_index.DrawElement.indices);
+//	glDrawElements(PiercedCube_index.DrawElements.mode, PiercedCube_index.DrawElements.count, PiercedCube_index.DrawElements.type, PiercedCube_index.DrawElements.indices);
 
 }
 
