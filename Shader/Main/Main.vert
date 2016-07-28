@@ -1,20 +1,20 @@
-#version 320 es
+ï»¿#version 320 es
 
-//’¸“_ƒf[ƒ^
+//é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
 in mediump vec4 attr_pos;
 
-//’¸“_ƒJƒ‰[
+//é ‚ç‚¹ã‚«ãƒ©ãƒ¼
 in lowp vec4 attr_color;
 
-//ƒWƒIƒƒgƒŠƒVƒF[ƒ_‚Ö‚Ì•Ï”
+//ã‚¸ã‚ªãƒ¡ãƒˆãƒªã‚·ã‚§ãƒ¼ãƒ€ã¸ã®å¤‰æ•°
 out lowp vec4 vary_color;
 
 void main()
 {
 
-	//’¸“_İ’è
+	//é ‚ç‚¹è¨­å®š
 	gl_Position = attr_pos;
 
-	// ’¸“_ƒJƒ‰[o—Í
+	// é ‚ç‚¹ã‚«ãƒ©ãƒ¼å‡ºåŠ›
 	vary_color = attr_color;
 }

@@ -1,43 +1,43 @@
-#ifndef DEVICE_MANAGER_H
+﻿#ifndef DEVICE_MANAGER_H
 #define DEVICE_MANAGER_H
 
-//include��`
+//include定義
 #include "Common.h"
 
-//Define��`
+//Define定義
 
 
 /////////////////////////////////////////////
-//	�}�E�X�֘A�̍\���̒�`
+//	マウス関連の構造体定義
 
-//�}�E�X�̏ڍ׏��
+//マウスの詳細情報
 typedef struct
 {
-	bool StateChange;		//�}�E�X���N���b�N����Ă���Ɓutrue�v�A����Ă��Ȃ��Ɓufalse�v�i�N���b�N��ԂŃ`�F���W����j							
-	bool StateKeep;			//�}�E�X���N���b�N���邽�тɁutrue�v�Ɓufalse�v�����݂ɐ؂�ւ��i�N���b�N��Ԃ��L�[�v����j
-	int PushCount;			//�}�E�X���������i�N���b�N�����j���v��
-							//�@������Ԃ�[0]�ŁA�������i�N���b�N�����j�񐔕��A�l�����Z����Ă���
-	Vec2 ClickDiffPos;		//�}�E�X���N���b�N���ꂽ���W����̍������W�i�N���b�N����Ă��Ȃ����� [0] �j
-							//�@��F[x:50][y:50]�ŃN���b�N���āA�h���b�O��Ԃ�[x:40][y:60]�Ɉړ��������ꍇ�A
-							//�@�@�@�i�[�����l��[x:-10][y:10]�ƂȂ�
+	bool StateChange;		//マウスがクリックされていると「true」、されていないと「false」（クリック状態でチェンジする）							
+	bool StateKeep;			//マウスをクリックするたびに「true」と「false」が交互に切り替わる（クリック状態をキープする）
+	int PushCount;			//マウスを押した（クリックした）合計回数
+							//　初期状態は[0]で、押した（クリックした）回数分、値が加算されていく
+	Vec2 ClickDiffPos;		//マウスがクリックされた座標からの差分座標（クリックされていない時は [0] ）
+							//　例：[x:50][y:50]でクリックして、ドラッグ状態で[x:40][y:60]に移動させた場合、
+							//　　　格納される値は[x:-10][y:10]となる
 }MouseDetail;
 
-//�}�E�X�̏��
+//マウスの情報
 typedef struct
 {
-	MouseDetail Right;			//�}�E�X�̉E�N���b�N�̏��
-	MouseDetail Left;			//�}�E�X�̍��N���b�N�̏��
-//	MouseDetail Middle;			//�}�E�X�̒����N���b�N�̏��
-	Vec2 Position;				//�}�E�X�̃J�[�\�����W
-	Vec2 ScrollAmount;			//�X�N���[���̍��v�ʁA������Ԃ�[x:0�i��[���E]�X�N���[���j][y:0�i�c[�㉺]�X�N���[���j]�ŁA
-								//�@�X�N���[�������������l���~�ρi���Z/���Z�j����Ă���
+	MouseDetail Right;			//マウスの右クリックの情報
+	MouseDetail Left;			//マウスの左クリックの情報
+//	MouseDetail Middle;			//マウスの中央クリックの情報
+	Vec2 Position;				//マウスのカーソル座標
+	Vec2 ScrollAmount;			//スクロールの合計量、初期状態は[x:0（横[左右]スクロール）][y:0（縦[上下]スクロール）]で、
+								//　スクロールした分だけ値が蓄積（加算/減算）されていく
 }MouseInfo;
 
 /////////////////////////////////////////////
-//	�L�[�i�L�[�{�[�h�j�֘A�̍\���̒�`
+//	キー（キーボード）関連の構造体定義
 
-//�e�L�[�i�L�[�{�[�h�j�̏��
-//�e�ϐ��ɕۑ������l�₻�̈Ӗ��́uKeyInfo�v�\���̂̃����o���Q�Ƃ��邱��
+//各キー（キーボード）の情報
+//各変数に保存される値やその意味は「KeyInfo」構造体のメンバを参照すること
 typedef struct
 {
 	bool Key_A; bool Key_B; bool Key_C; bool Key_D; bool Key_E; bool Key_F; bool Key_G;
@@ -51,108 +51,108 @@ typedef struct
 	bool Key_RIGHT; bool Key_LEFT; bool Key_DOWN; bool Key_UP;
 }KeyState;
 
-//�L�[�i�L�[�{�[�h�j�̏��
+//キー（キーボード）の情報
 typedef struct
 {
-	KeyState StateChange;		//�L�[��������Ă���Ɓutrue�v�A������Ă���Ɓufalse�v�i�L�[��ԂŃ`�F���W����j
-	KeyState StateKeep;			//�L�[���������тɁutrue�v�Ɓufalse�v�����݂ɐ؂�ւ��i�L�[��Ԃ��L�[�v����j
-	KeyState PushCount;			//�L�[�����������v��
-								//�@������Ԃ�[0]�ŁA�������񐔕��A�l�����Z����Ă���
+	KeyState StateChange;		//キーが押されていると「true」、離されていると「false」（キー状態でチェンジする）
+	KeyState StateKeep;			//キーを押すたびに「true」と「false」が交互に切り替わる（キー状態をキープする）
+	KeyState PushCount;			//キーを押した合計回数
+								//　初期状態は[0]で、押した回数分、値が加算されていく
 }KeyInfo;
 
 
 /////////////////////////////////////////////
-//	�N���X��`
+//	クラス定義
 
 class DeviceManager
 {
 
 public:
-	//�R���X�g���N�^
+	//コンストラクタ
 	DeviceManager();
 
-	//�f�X�g���N�^
+	//デストラクタ
 	~DeviceManager();
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Key�Ǘ��}�l�[�W���[������������
-	*	�@/�� �E�B���h�E�𕡐��������āA���ꂼ��Key�Ǘ����邱�Ƃ͂܂��Ή����Ă��Ȃ��̂Œ��� ��
-	*	����
-	*	�@p_window	�F[I/ ]�@�E�B���h�E�n���h��
-	*	�߂�l
-	*	�@�Ȃ�
+	*	関数説明
+	*	　Key管理マネージャーを初期化する
+	*	　/※ ウィンドウを複数生成して、それぞれKey管理することはまだ対応していないので注意 ※
+	*	引数
+	*	　p_window	：[I/ ]　ウィンドウハンドル
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void Initialize(GLFWwindow* const p_window);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�}�E�X�{�^�����ω��������ɃR�[���o�b�N�����֐�
-	*	����
-	*	�@p_window	�F[I/ ]�@�E�B���h�E�n���h��
-	*	�@p_button	�F[I/ ]�@�ǂ̃{�^�����ω�������
-	*	�@p_action	�F[I/ ]�@�����ꂽ�iGLFW_PRESS�j or �����ꂽ�iGLFW_RELEASE�j
-	*	�@p_mods	�F[I/ ]�@�悭�킩��Ȃ�
-	*	�@�ڍׂ͉��L�Q�Ƃ̂���
-	*	�@[http://www.glfw.org/docs/latest/group__input.html]��[GLFWmousebuttonfun]�֐�
-	*	�߂�l
-	*	�@�Ȃ�
+	*	関数説明
+	*	　マウスボタンが変化した時にコールバックされる関数
+	*	引数
+	*	　p_window	：[I/ ]　ウィンドウハンドル
+	*	　p_button	：[I/ ]　どのボタンが変化したか
+	*	　p_action	：[I/ ]　押された（GLFW_PRESS） or 離された（GLFW_RELEASE）
+	*	　p_mods	：[I/ ]　よくわからない
+	*	　詳細は下記参照のこと
+	*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWmousebuttonfun]関数
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	static void MouseButtonCallback(GLFWwindow* p_window, int p_button, int p_action, int p_mods);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�}�E�X�J�[�\�������������ɃR�[���o�b�N�����֐�
-	*	�@�i����������̃}�E�X�{�^����������Ă���Œ��̂ݗL���ɂ��Ă���
-	*�@�@�@�@�̂ŁA�^�C�~���O�͉E�L�֐��Q�Ɓ@DeviceManager::MouseButtonCallback�j
-	*	����
-	*	�@p_window	�F[I/ ]�@�E�B���h�E�n���h��
-	*	�@p_xpos	�F[I/ ]�@X ���W
-	*	�@p_xpos	�F[I/ ]�@Y ���W
-	*	�@�ڍׂ͉��LURL�Q�Ƃ̂���
-	*	�@[http://www.glfw.org/docs/latest/group__input.html]��[GLFWcursorposfun]�֐�
-	*	�߂�l
-	*	�@�Ȃ�
+	*	関数説明
+	*	　マウスカーソルが動いた時にコールバックされる関数
+	*	　（ただし特定のマウスボタンが押されている最中のみ有効にしてある
+	*　　　　ので、タイミングは右記関数参照　DeviceManager::MouseButtonCallback）
+	*	引数
+	*	　p_window	：[I/ ]　ウィンドウハンドル
+	*	　p_xpos	：[I/ ]　X 座標
+	*	　p_xpos	：[I/ ]　Y 座標
+	*	　詳細は下記URL参照のこと
+	*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWcursorposfun]関数
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	static void CursorPosCallback(GLFWwindow* p_window, double p_xpos, double p_ypos);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�}�E�X�z�C�[�����ω��������ɃR�[���o�b�N�����֐�
-	*	����
-	*	�@p_window	�F[I/ ]�@�E�B���h�E�n���h��
-	*	�@p_xoffset	�F[I/ ]�@�X�N���[����X���I�t�Z�b�g
-	*	�@p_yoffset	�F[I/ ]�@�X�N���[����Y���I�t�Z�b�g
-	*	�@�ڍׂ͉��LURL�Q�Ƃ̂���
-	*	�@[http://www.glfw.org/docs/latest/group__input.html]��[GLFWscrollfun]�֐�
-	*	�߂�l
-	*	�@�Ȃ�
+	*	関数説明
+	*	　マウスホイールが変化した時にコールバックされる関数
+	*	引数
+	*	　p_window	：[I/ ]　ウィンドウハンドル
+	*	　p_xoffset	：[I/ ]　スクロールのX軸オフセット
+	*	　p_yoffset	：[I/ ]　スクロールのY軸オフセット
+	*	　詳細は下記URL参照のこと
+	*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWscrollfun]関数
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	static void ScrollCallback(GLFWwindow* p_window, double p_xoffset, double p_yoffset);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�L�[�i�L�[�{�[�h�j���ω��������ɃR�[���o�b�N�����֐�
-	*	����
-	*	�@p_window		�F[I/ ]�@�E�B���h�E�n���h��
-	*	�@p_key			�F[I/ ]�@�L�[�{�[�h�̃L�[
-	*	�@p_scancode	�F[I/ ]�@�悭�킩��Ȃ��i�V�X�e���ŗL�̂ǂ����炱������j
-	*	�@p_action		�F[I/ ]�@�����ꂽ�iGLFW_PRESS�j or �����ꂽ�iGLFW_RELEASE�j
-	*	�@p_mods		�F[I/ ]�@Shift��Ctrl�Ȃǂ�������Ă��邩�̔��f�i��`����URL�Q�Ɓj
-	*	�@�ڍׂ͉��LURL�Q�Ƃ̂���
-	*	�@[http://www.glfw.org/docs/latest/group__input.html]��[GLFWkeyfun]�֐�
-	*	�߂�l
-	*	�@�Ȃ�
+	*	関数説明
+	*	　キー（キーボード）が変化した時にコールバックされる関数
+	*	引数
+	*	　p_window		：[I/ ]　ウィンドウハンドル
+	*	　p_key			：[I/ ]　キーボードのキー
+	*	　p_scancode	：[I/ ]　よくわからない（システム固有のどうたらこうたら）
+	*	　p_action		：[I/ ]　押された（GLFW_PRESS） or 離された（GLFW_RELEASE）
+	*	　p_mods		：[I/ ]　ShiftやCtrlなどが押されているかの判断（定義名はURL参照）
+	*	　詳細は下記URL参照のこと
+	*	　[http://www.glfw.org/docs/latest/group__input.html]の[GLFWkeyfun]関数
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	static void KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode, int p_action, int p_mods);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�}�E�X�̏����擾
-	*	����
-	*	�@�Ȃ�
-	*	�߂�l
-	*	�@�}�E�X�̏��
+	*	関数説明
+	*	　マウスの情報を取得
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　マウスの情報
 	*-------------------------------------------------------------------------------*/
 	inline MouseInfo GetMouseInfo(void)
 	{
@@ -160,12 +160,12 @@ public:
 	}
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�L�[�i�L�[�{�[�h�j�̏����擾
-	*	����
-	*	�@�Ȃ�
-	*	�߂�l
-	*	�@�L�[�i�L�[�{�[�h�j�̏��
+	*	関数説明
+	*	　キー（キーボード）の情報を取得
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　キー（キーボード）の情報
 	*-------------------------------------------------------------------------------*/
 	inline KeyInfo GetKeyInfo(void)
 	{
@@ -174,22 +174,22 @@ public:
 
 private:
 
-	//�L�[�����ꌳ�Ǘ����邽�߂̍\����
+	//キー情報を一元管理するための構造体
 	typedef struct
 	{
-		char *KeyChar;			//�L�[�̕�����
-		int KeyDefine;			//�L�[�̒�`�l
-		bool *StateChange;		//�uKeyInfo�v�́uStateChange�v�����o�Ɠ����i�ڍׂ͍��L�����o�Q�Ƃ̂��Ɓj
-		bool *StateKeep;		//�uKeyInfo�v�́uStateKeep�v�����o�Ɠ����i�ڍׂ͍��L�����o�Q�Ƃ̂��Ɓj
-		bool *PushCount;		//�uKeyInfo�v�́uPushCount�v�����o�Ɠ����i�ڍׂ͍��L�����o�Q�Ƃ̂��Ɓj
+		char *KeyChar;			//キーの文字列
+		int KeyDefine;			//キーの定義値
+		bool *StateChange;		//「KeyInfo」の「StateChange」メンバと同等（詳細は左記メンバ参照のこと）
+		bool *StateKeep;		//「KeyInfo」の「StateKeep」メンバと同等（詳細は左記メンバ参照のこと）
+		bool *PushCount;		//「KeyInfo」の「PushCount」メンバと同等（詳細は左記メンバ参照のこと）
 	}KeyInfoSummary;
 
-	GLFWwindow* m_window;			//�E�B���h�E�n���h��
-	static MouseInfo m_MouseInfo;	//�}�E�X�̏��
-	static KeyInfo m_KeyInfo;		//�L�[�i�L�[�{�[�h�j�̏��
-	static Vec2 m_RightClickPos;	//�}�E�X���E�N���b�N���ꂽ���̃J�[�\�����W
-	static Vec2 m_LeftClickPos;		//�}�E�X�����N���b�N���ꂽ���̃J�[�\�����W
-	static Vec2 m_MiddleClickPos;	//�}�E�X�������N���b�N���ꂽ���̃J�[�\�����W
+	GLFWwindow* m_window;			//ウィンドウハンドル
+	static MouseInfo m_MouseInfo;	//マウスの情報
+	static KeyInfo m_KeyInfo;		//キー（キーボード）の情報
+	static Vec2 m_RightClickPos;	//マウスが右クリックされた時のカーソル座標
+	static Vec2 m_LeftClickPos;		//マウスが左クリックされた時のカーソル座標
+	static Vec2 m_MiddleClickPos;	//マウスが中央クリックされた時のカーソル座標
 
 };
 

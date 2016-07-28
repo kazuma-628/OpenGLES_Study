@@ -1,22 +1,22 @@
-#ifndef SHADER_MANAGER_H
+﻿#ifndef SHADER_MANAGER_H
 #define SHADER_MANAGER_H
 
-//include��`
+//include定義
 #include "Common.h"
 
-//Define��`
-#define SHADER_FILE_DIR				"../Shader/"	//�V�F�[�_�[�t�@�C���̕ۑ��f�B���N�g��
-#define ATTRIB_INFO_MAX				128				//�A�g���r���[�g�ϐ��Ǘ��p�̍ő吔
-#define UNIFORM_INFO_MAX			128				//���j�t�H�[���ϐ��Ǘ��p�̍ő吔
+//Define定義
+#define SHADER_FILE_DIR				"../Shader/"	//シェーダーファイルの保存ディレクトリ
+#define ATTRIB_INFO_MAX				128				//アトリビュート変数管理用の最大数
+#define UNIFORM_INFO_MAX			128				//ユニフォーム変数管理用の最大数
 
-//�\���̒�`
+//構造体定義
 
-//�g�����X�t�H�[���t�B�[�h�o�b�N�̐ݒ���
-//�i[glTransformFeedbackVaryings]�̈����ɓo�^����f�[�^��ݒ肷��j
+//トランスフォームフィードバックの設定情報
+//（[glTransformFeedbackVaryings]の引数に登録するデータを設定する）
 typedef struct
 {
-	//�e�ϐ��ɐݒ肷����e��[glTransformFeedbackVaryings]�̎d�l���m�F���邱��
-	//���v���O�����I�u�W�F�N�g�͐ݒ�Ȃ�
+	//各変数に設定する内容は[glTransformFeedbackVaryings]の仕様を確認すること
+	//※プログラムオブジェクトは設定なし
 	GLsizei count;
 	const char **varyings;
 	GLenum bufferMode;
@@ -27,29 +27,29 @@ class ShaderManager
 
 public:
 
-	//�R���X�g���N�^
+	//コンストラクタ
 	ShaderManager();
 
-	//�f�X�g���N�^
+	//デストラクタ
 	~ShaderManager();
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�e�V�F�[�_�[�̃\�[�X���w�肳�ꂽ�t�@�C������ǂݍ��݁A
-	*	�@�R���p�C���y�у����N���āA�v���O�����I�u�W�F�N�g���쐬����
-	*	����
-	*	�@p_vertex_file_name			�F[I/ ]�@�o�[�e�b�N�X�V�F�[�_�[�̃t�@�C����
-	*	�@p_fragment_file_name			�F[I/ ]�@�t���O�����g�V�F�[�_�[�̃t�@�C����
-	*	�@p_geometry_file_name			�F[I/ ]�@�W�I���g���V�F�[�_�[�̃t�@�C�����i�g�p���Ȃ��ꍇ��NULL���w��j
-	*	�@p_tess_control_file_name		�F[I/ ]�@�e�b�Z���[�V�����R���g���[���V�F�[�_�[�̃t�@�C�����i�g�p���Ȃ��ꍇ��NULL���w��j
-	*	�@p_tess_evaluation_file_name	�F[I/ ]�@�e�b�Z���[�V�����]���V�F�[�_�[�̃t�@�C�����i�g�p���Ȃ��ꍇ��NULL���w��j
-	*	�@p_TransformFeedbackInfo		�F[I/ ]�@�g�����X�t�H�[���t�B�[�h�o�b�N�̐ݒ���i�g�p���Ȃ��ꍇ��NULL���w��j
+	*	関数説明
+	*	　各シェーダーのソースを指定されたファイルから読み込み、
+	*	　コンパイル及びリンクして、プログラムオブジェクトを作成する
+	*	引数
+	*	　p_vertex_file_name			：[I/ ]　バーテックスシェーダーのファイル名
+	*	　p_fragment_file_name			：[I/ ]　フラグメントシェーダーのファイル名
+	*	　p_geometry_file_name			：[I/ ]　ジオメトリシェーダーのファイル名（使用しない場合はNULLを指定）
+	*	　p_tess_control_file_name		：[I/ ]　テッセレーションコントロールシェーダーのファイル名（使用しない場合はNULLを指定）
+	*	　p_tess_evaluation_file_name	：[I/ ]　テッセレーション評価シェーダーのファイル名（使用しない場合はNULLを指定）
+	*	　p_TransformFeedbackInfo		：[I/ ]　トランスフォームフィードバックの設定情報（使用しない場合はNULLを指定）
 	*
-	*	���ǂ̃t�@�C������[Shader]�t�H���_�ȍ~�̃t�@�C���p�X����͂��Ă�������
-	*	�@�f�B���N�g�����܂����Ƃ��́u/�v�ŋ�؂��Ă��������B�i��uxxx/xxx.vert�v)
+	*	※どのファイル名も[Shader]フォルダ以降のファイルパスを入力してください
+	*	　ディレクトリをまたぐときは「/」で区切ってください。（例「xxx/xxx.vert」)
 	*
-	*	�߂�l
-	*	�@�Ȃ�
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void CreateShaderProgram(const char* p_vertex_file_name,
 							 const char* p_fragment_file_name,
@@ -59,199 +59,199 @@ public:
 							 const TransformFeedbackInfo *p_TransformFeedbackInfo);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�R���p�C���y�у����N�����A�v���O�����I�u�W�F�N�g���폜����
-	*	�@�܂��A�v���O�����I�u�W�F�N�g�쐬���Ɋm�ۂ����e�����o�ϐ��̃��������J���E����������
-	*	����
-	*	�@�Ȃ�
-	*	�߂�l
-	*	�@�Ȃ�
+	*	関数説明
+	*	　コンパイル及びリンクした、プログラムオブジェクトを削除する
+	*	　また、プログラムオブジェクト作成時に確保した各メンバ変数のメモリも開放・初期化する
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void DeleteShaderProgram(void);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Attribute�ϐ��̃��P�[�V�����𐶐��i�ق� glGetAttribLocation �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@p_name		�F[I/ ]�@�V�F�[�_�[�Ŏg�p����Attribute�ϐ��̖��O
-	*	�߂�l
-	*	�@Attribute�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
+	*	関数説明
+	*	　Attribute変数のロケーションを生成（ほぼ glGetAttribLocation と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　p_name		：[I/ ]　シェーダーで使用するAttribute変数の名前
+	*	戻り値
+	*	　Attribute変数のロケーションを呼び出すためのインデックス値
 	*
-	*	�@�C���f�b�N�X�l�ł͂Ȃ��A�f��Attribute�ϐ��̃��P�[�V�������擾�������ꍇ�́A
-	*	�@�{�֐����s��ɁuGetAttribLocationOriginal�v�֐��𗘗p���擾���Ă��������B
+	*	　インデックス値ではなく、素のAttribute変数のロケーションを取得したい場合は、
+	*	　本関数実行後に「GetAttribLocationOriginal」関数を利用し取得してください。
 	*-------------------------------------------------------------------------------*/
 	GLint GetAttribLocation(const GLchar* p_name);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Uniform�ϐ��̃��P�[�V�����𐶐��i�ق� glGetUniformLocation �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@p_name		�F[I/ ]�@�V�F�[�_�[�Ŏg�p����Uniform�ϐ��̖��O
-	*	�߂�l
-	*	�@Uniform�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
+	*	関数説明
+	*	　Uniform変数のロケーションを生成（ほぼ glGetUniformLocation と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　p_name		：[I/ ]　シェーダーで使用するUniform変数の名前
+	*	戻り値
+	*	　Uniform変数のロケーションを呼び出すためのインデックス値
 	*
-	*	�@�C���f�b�N�X�l�ł͂Ȃ��A�f��Uniform�ϐ��̃��P�[�V�������擾�������ꍇ�́A
-	*	�@�{�֐����s��ɁuGetUniformLocationOriginal�v�֐��𗘗p���擾���Ă��������B
+	*	　インデックス値ではなく、素のUniform変数のロケーションを取得したい場合は、
+	*	　本関数実行後に「GetUniformLocationOriginal」関数を利用し取得してください。
 	*-------------------------------------------------------------------------------*/
 	GLint GetUniformLocation(const GLchar* p_name);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Attribute�ϐ���L���ɂ��܂��B�i�ق� glEnableVertexAttribArray �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@p_index		�F[I/ ]�@Attribute�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
-	*					�@		�iGetAttribLocation�Ŏ擾�����Ԃ�l�j
-	*	�߂�l
-	*	�@�Ȃ�
+	*	関数説明
+	*	　Attribute変数を有効にします。（ほぼ glEnableVertexAttribArray と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　p_index		：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
+	*					　		（GetAttribLocationで取得した返り値）
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void EnableVertexAttribArray(const GLint p_index);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Attribute�ϐ��𖳌��ɂ��܂��B�i�ق� glDisableVertexAttribArray �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@p_index		�F[I/ ]�@Attribute�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
-	*					�@		�iGetAttribLocation�Ŏ擾�����Ԃ�l�j
-	*	�߂�l
-	*	�@�Ȃ�
+	*	関数説明
+	*	　Attribute変数を無効にします。（ほぼ glDisableVertexAttribArray と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　p_index		：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
+	*					　		（GetAttribLocationで取得した返り値）
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void DisableVertexAttribArray(const GLint p_index);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Attribute�ϐ��փf�[�^�𑗐M�i�֘A�t���j���܂��B�i�ق� glVertexAttribPointer �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@p_index		�F[I/ ]�@Attribute�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
-	*					�@		�iGetAttribLocation�Ŏ擾�����Ԃ�l�j
-	*	�@p_size		�F[I/ ]�@���_�f�[�^�̗v�f��
-	*	�@p_type		�F[I/ ]�@���_�f�[�^�̌^
-	*	�@p_normalized	�F[I/ ]�@���_�f�[�^�𐳋K�����Ē��_�V�F�[�_�[�ɓn���ꍇ�́uGL_TRUE�v���w��A
-	*							 ���͂��̂܂܂ɒ��_�V�F�[�_�[�ɓn���ꍇ�́uGL_FALSE�v���w��
-	*	�@p_stride		�F[I/ ]�@���_�̐擪�ʒu���Ƃ̃I�t�Z�b�g�l�A0�w��\
-	*	�@p_pointer		�F[I/ ]�@�֘A�t���钸�_�̐擪�|�C���^
-	*	�߂�l
-	*	�@�Ȃ�
+	*	関数説明
+	*	　Attribute変数へデータを送信（関連付け）します。（ほぼ glVertexAttribPointer と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　p_index		：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
+	*					　		（GetAttribLocationで取得した返り値）
+	*	　p_size		：[I/ ]　頂点データの要素数
+	*	　p_type		：[I/ ]　頂点データの型
+	*	　p_normalized	：[I/ ]　頂点データを正規化して頂点シェーダーに渡す場合は「GL_TRUE」を指定、
+	*							 入力そのままに頂点シェーダーに渡す場合は「GL_FALSE」を指定
+	*	　p_stride		：[I/ ]　頂点の先頭位置ごとのオフセット値、0指定可能
+	*	　p_pointer		：[I/ ]　関連付ける頂点の先頭ポインタ
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void VertexAttribPointer(const GLint p_index, const GLint p_size, const GLenum p_type, const GLboolean p_normalized, const GLsizei p_stride, const GLvoid *p_pointer);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Uniform�ϐ��փf�[�^�𑗐M�i�֘A�t���j���܂��B�i�ق� glUniform1f, glUniform2f, glUniform3f, glUniform4f �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@p_index		�F[I/ ]�@Uniform�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
-	*					�@		�iGetUniformLocation�Ŏ擾�����Ԃ�l�j
-	*	�@p_scalar		�F[I/ ]�@�]������f�[�^�̌��i�V�F�[�_�[���ϐ��̃x�N�g�������Ɠ���������́@��)[4] �� vec4�j
-	*							 �� �v�񂷂�� [1]���w�肷��� �� glUniform1f�A[4]���w�肷��� �� glUniform4f ���R�[������� ��
+	*	関数説明
+	*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1f, glUniform2f, glUniform3f, glUniform4f と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+	*					　		（GetUniformLocationで取得した返り値）
+	*	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → vec4）
+	*							 ※ 要約すると [1]を指定すれば → glUniform1f、[4]を指定すれば → glUniform4f がコールされる ※
 	*					----------------------------------------------------------
-	*					���L�����ɂ��ẮA�����up_scalar�v�Ŏw�肵���������u�f�[�^1�v����l�߂ē��͂���
-	*					�i�g�p���Ȃ��������o�Ă���Ǝv���邪�A���̈����ɂ́u0�v���w�肷�邱�Ɓj
-	*	�@p_param1		�F[I/ ]�@�]������f�[�^ 1�i�V�F�[�_�[���ϐ��� X�x�N�g�������ɊY���j
-	*	�@p_param2		�F[I/ ]�@�]������f�[�^ 2�i�V�F�[�_�[���ϐ��� Y�x�N�g�������ɊY���j
-	*	�@p_param3		�F[I/ ]�@�]������f�[�^ 3�i�V�F�[�_�[���ϐ��� Z�x�N�g�������ɊY���j
-	*	�@p_param4		�F[I/ ]�@�]������f�[�^ 4�i�V�F�[�_�[���ϐ��� W�x�N�g�������ɊY���j
-	*	�߂�l
-	*	�@�Ȃ�
+	*					下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
+	*					（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
+	*	　p_param1		：[I/ ]　転送するデータ 1（シェーダー内変数の Xベクトル成分に該当）
+	*	　p_param2		：[I/ ]　転送するデータ 2（シェーダー内変数の Yベクトル成分に該当）
+	*	　p_param3		：[I/ ]　転送するデータ 3（シェーダー内変数の Zベクトル成分に該当）
+	*	　p_param4		：[I/ ]　転送するデータ 4（シェーダー内変数の Wベクトル成分に該当）
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void UniformXf(const GLint p_index, const GLint p_scalar, const GLfloat p_param1, const GLfloat p_param2, const GLfloat p_param3, const GLfloat p_param4);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Uniform�ϐ��փf�[�^�𑗐M�i�֘A�t���j���܂��B�i�ق� glUniform1i, glUniform2i, glUniform3i, glUniform4i �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@p_index		�F[I/ ]�@Uniform�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
-	*					�@		�iGetUniformLocation�Ŏ擾�����Ԃ�l�j
-	*	�@p_scalar		�F[I/ ]�@�]������f�[�^�̌��i�V�F�[�_�[���ϐ��̃x�N�g�������Ɠ���������́@��)[4] �� ivec4�j
-	*							 �� �v�񂷂�� [1]���w�肷��� �� glUniform1i�A[4]���w�肷��� �� glUniform4i ���R�[������� ��
+	*	関数説明
+	*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1i, glUniform2i, glUniform3i, glUniform4i と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+	*					　		（GetUniformLocationで取得した返り値）
+	*	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → ivec4）
+	*							 ※ 要約すると [1]を指定すれば → glUniform1i、[4]を指定すれば → glUniform4i がコールされる ※
 	*					----------------------------------------------------------
-	*					���L�����ɂ��ẮA�����up_scalar�v�Ŏw�肵���������u�f�[�^1�v����l�߂ē��͂���
-	*					�i�g�p���Ȃ��������o�Ă���Ǝv���邪�A���̈����ɂ́u0�v���w�肷�邱�Ɓj
-	*	�@p_param1		�F[I/ ]�@�]������f�[�^ 1�i�V�F�[�_�[���ϐ��� X�x�N�g�������ɊY���j
-	*	�@p_param2		�F[I/ ]�@�]������f�[�^ 2�i�V�F�[�_�[���ϐ��� Y�x�N�g�������ɊY���j
-	*	�@p_param3		�F[I/ ]�@�]������f�[�^ 3�i�V�F�[�_�[���ϐ��� Z�x�N�g�������ɊY���j
-	*	�@p_param4		�F[I/ ]�@�]������f�[�^ 4�i�V�F�[�_�[���ϐ��� W�x�N�g�������ɊY���j
-	*	�߂�l
-	*	�@�Ȃ�
+	*					下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
+	*					（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
+	*	　p_param1		：[I/ ]　転送するデータ 1（シェーダー内変数の Xベクトル成分に該当）
+	*	　p_param2		：[I/ ]　転送するデータ 2（シェーダー内変数の Yベクトル成分に該当）
+	*	　p_param3		：[I/ ]　転送するデータ 3（シェーダー内変数の Zベクトル成分に該当）
+	*	　p_param4		：[I/ ]　転送するデータ 4（シェーダー内変数の Wベクトル成分に該当）
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void UniformXi(const GLint p_index, const GLint p_scalar, const GLint p_param1, const GLint p_param2, const GLint p_param3, const GLint p_param4);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Uniform�ϐ��փf�[�^�𑗐M�i�֘A�t���j���܂��B�i�ق� glUniform1fv, glUniform2fv, glUniform3fv, glUniform4fv �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@p_index		�F[I/ ]�@Uniform�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
-	*					�@		�iGetUniformLocation�Ŏ擾�����Ԃ�l�j
-	*	�@p_scalar		�F[I/ ]�@�]������f�[�^�̌��i�V�F�[�_�[���ϐ��̃x�N�g�������Ɠ���������́@��)[4] �� vec4�j
-	*							 �� �v�񂷂�� [1]���w�肷��� �� glUniform1fv�A[4]���w�肷��� �� glUniform4fv ���R�[������� ��
+	*	関数説明
+	*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1fv, glUniform2fv, glUniform3fv, glUniform4fv と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+	*					　		（GetUniformLocationで取得した返り値）
+	*	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → vec4）
+	*							 ※ 要約すると [1]を指定すれば → glUniform1fv、[4]を指定すれば → glUniform4fv がコールされる ※
 	*					----------------------------------------------------------
-	*	�@p_count		�F[I/ ]�@�]������f�[�^�̔z�񐔁i�up_scalar�v�����Őݒ肵���f�[�^�̌������Z�b�g���邩�@��)[4] �� vec? Example[4]�j
-	*	�@value			�F[I/ ]�@�]������f�[�^�̐擪�|�C���^
-	*	�߂�l
-	*	�@�Ȃ�
+	*	　p_count		：[I/ ]　転送するデータの配列数（「p_scalar」引数で設定したデータの個数を何セット送るか　例)[4] → vec? Example[4]）
+	*	　value			：[I/ ]　転送するデータの先頭ポインタ
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void UniformXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLfloat *p_value);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Uniform�ϐ��փf�[�^�𑗐M�i�֘A�t���j���܂��B�i�ق� glUniform1iv, glUniform2iv, glUniform3iv, glUniform4iv �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@p_index		�F[I/ ]�@Uniform�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
-	*					�@		�iGetUniformLocation�Ŏ擾�����Ԃ�l�j
-	*	�@p_scalar		�F[I/ ]�@�]������f�[�^�̌��i�V�F�[�_�[���ϐ��̃x�N�g�������Ɠ���������́@��)[4] �� ivec4�j
-	*							 �� �v�񂷂�� [1]���w�肷��� �� glUniform1iv�A[4]���w�肷��� �� glUniform4iv ���R�[������� ��
+	*	関数説明
+	*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1iv, glUniform2iv, glUniform3iv, glUniform4iv と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+	*					　		（GetUniformLocationで取得した返り値）
+	*	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → ivec4）
+	*							 ※ 要約すると [1]を指定すれば → glUniform1iv、[4]を指定すれば → glUniform4iv がコールされる ※
 	*					----------------------------------------------------------
-	*	�@p_count		�F[I/ ]�@�]������f�[�^�̔z�񐔁i�up_scalar�v�����Őݒ肵���f�[�^�̌������Z�b�g���邩�@��)[4] �� ivec? Example[4]�j
-	*	�@value			�F[I/ ]�@�]������f�[�^�̐擪�|�C���^
-	*	�߂�l
-	*	�@�Ȃ�
+	*	　p_count		：[I/ ]　転送するデータの配列数（「p_scalar」引数で設定したデータの個数を何セット送るか　例)[4] → ivec? Example[4]）
+	*	　value			：[I/ ]　転送するデータの先頭ポインタ
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void UniformXiv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLint *p_value);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Uniform�ϐ��փf�[�^�𑗐M�i�֘A�t���j���܂��B�i�ق� glUniformMatrix2fv, glUniformMatrix3fv, glUniformMatrix4fv �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@p_index		�F[I/ ]�@Uniform�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
-	*					�@		�iGetUniformLocation�Ŏ擾�����Ԃ�l�j
-	*	�@p_scalar		�F[I/ ]�@�]������s��̃T�C�Y�i�H�~�H �� [�H]�̕����j�i�V�F�[�_�[���ϐ��̃x�N�g�������Ɠ���������́@��)[4] �� mat4�j
-	*							 �� �v�񂷂�� [2]���w�肷��� �� glUniformMatrix2fv�A[4]���w�肷��� �� glUniformMatrix4fv ���R�[������� ��
+	*	関数説明
+	*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniformMatrix2fv, glUniformMatrix3fv, glUniformMatrix4fv と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+	*					　		（GetUniformLocationで取得した返り値）
+	*	　p_scalar		：[I/ ]　転送する行列のサイズ（？×？ の [？]の部分）（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → mat4）
+	*							 ※ 要約すると [2]を指定すれば → glUniformMatrix2fv、[4]を指定すれば → glUniformMatrix4fv がコールされる ※
 	*					----------------------------------------------------------
-	*	�@p_count		�F[I/ ]�@�]������̍s��̔z�񐔁i�up_scalar�v�����Őݒ肵���s��̃T�C�Y�����Z�b�g���邩�@��)[4] �� mat? Example[4]�j
-	*	�@p_transpose	�F[I/ ]�@���_�f�[�^��]�u���ăV�F�[�_�[�ɓn���ꍇ�́uGL_TRUE�v���w��A
-	*								 ���͂��̂܂܂ɒ��_�V�F�[�_�[�ɓn���ꍇ�́uGL_FALSE�v���w��
-	*	�@value			�F[I/ ]�@�]������f�[�^�̐擪�|�C���^
-	*	�߂�l
-	*	�@�Ȃ�
+	*	　p_count		：[I/ ]　転送するの行列の配列数（「p_scalar」引数で設定した行列のサイズを何セット送るか　例)[4] → mat? Example[4]）
+	*	　p_transpose	：[I/ ]　頂点データを転置してシェーダーに渡す場合は「GL_TRUE」を指定、
+	*								 入力そのままに頂点シェーダーに渡す場合は「GL_FALSE」を指定
+	*	　value			：[I/ ]　転送するデータの先頭ポインタ
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void UniformMatrixXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLboolean p_transpose, const GLfloat *p_value);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�V�F�[�_�[�v���O�����̗��p���J�n����i�ق� glUseProgram �Ɠ����ł��j
-	*	�@�G���[����Ǘ����ꌳ�����ė��֐��̌����}���Ă��܂��B
-	*	����
-	*	�@�Ȃ�
-	*	�߂�l
-	*	�@�Ȃ�
+	*	関数説明
+	*	　シェーダープログラムの利用を開始する（ほぼ glUseProgram と同じです）
+	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　なし
 	*-------------------------------------------------------------------------------*/
 	void UseProgram(void);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�v���O�����I�u�W�F�N�g���擾����
-	*	����
-	*	�@�Ȃ�
-	*	�߂�l
-	*	�@�V�F�[�_�[�̃v���O�����I�u�W�F�N�g
+	*	関数説明
+	*	　プログラムオブジェクトを取得する
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　シェーダーのプログラムオブジェクト
 	*-------------------------------------------------------------------------------*/
 	inline GLint GetProgramObject(void)
 	{
@@ -259,16 +259,16 @@ public:
 	}
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Attribute�ϐ��̃��P�[�V�������擾����
-	*	�@�{�֐��͊��ɐ����������P�[�V�������擾���邽�߂̊֐��ł��B
+	*	関数説明
+	*	　Attribute変数のロケーションを取得する
+	*	　本関数は既に生成したロケーションを取得するための関数です。
 	*
-	*	�@�V�K��Attribute�ϐ��̃��P�[�V�����𐶐��������ꍇ�́A�uGetAttribLocation�v�֐��𗘗p���Ă��������B
-	*	����
-	*	�@p_index		�F[I/ ]�@Attribute�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
-	*						�@		�iGetAttribLocation�Ŏ擾�����Ԃ�l�j
-	*	�߂�l
-	*	�@Attribute�ϐ��̃��P�[�V����
+	*	　新規でAttribute変数のロケーションを生成したい場合は、「GetAttribLocation」関数を利用してください。
+	*	引数
+	*	　p_index		：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
+	*						　		（GetAttribLocationで取得した返り値）
+	*	戻り値
+	*	　Attribute変数のロケーション
 	*-------------------------------------------------------------------------------*/
 	inline GLint GetAttribLocationOriginal(GLint p_index)
 	{
@@ -276,16 +276,16 @@ public:
 	}
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@Uniform�ϐ��̃��P�[�V�������擾����
-	*	�@�{�֐��͊��ɐ����������P�[�V�������擾���邽�߂̊֐��ł��B
+	*	関数説明
+	*	　Uniform変数のロケーションを取得する
+	*	　本関数は既に生成したロケーションを取得するための関数です。
 	*
-	*	�@�V�K��Uniform�ϐ��̃��P�[�V�����𐶐��������ꍇ�́A�uGetUniformLocation�v�֐��𗘗p���Ă��������B
-	*	����
-	*	�@p_index		�F[I/ ]�@Uniform�ϐ��̃��P�[�V�������Ăяo�����߂̃C���f�b�N�X�l
-	*						�@		�iGetUniformLocation�Ŏ擾�����Ԃ�l�j
-	*	�߂�l
-	*	�@Attribute�ϐ��̃��P�[�V����
+	*	　新規でUniform変数のロケーションを生成したい場合は、「GetUniformLocation」関数を利用してください。
+	*	引数
+	*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
+	*						　		（GetUniformLocationで取得した返り値）
+	*	戻り値
+	*	　Attribute変数のロケーション
 	*-------------------------------------------------------------------------------*/
 	inline GLint GetUniformLocationOriginal(GLint p_index)
 	{
@@ -295,61 +295,61 @@ public:
 private:
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�V�F�[�_�[�I�u�W�F�N�g�̍쐬���s��
-	*	����
-	*	�@p_file_name		�F[I/ ]�@�V�F�[�_�[�̃t�@�C����
-	*	�@gl_xxxx_shader	�F[I/ ]�@�쐬����V�F�[�_�[�I�u�W�F�N�g�̎��
-	*								�iGL_GEOMETRY_SHADER or GL_FRAGMENT_SHADER or GL_VERTEX_SHADER�j
-	*	�߂�l
-	*	�@�V�F�[�_�[�I�u�W�F�N�g
+	*	関数説明
+	*	　シェーダーオブジェクトの作成を行う
+	*	引数
+	*	　p_file_name		：[I/ ]　シェーダーのファイル名
+	*	　gl_xxxx_shader	：[I/ ]　作成するシェーダーオブジェクトの種類
+	*								（GL_GEOMETRY_SHADER or GL_FRAGMENT_SHADER or GL_VERTEX_SHADER）
+	*	戻り値
+	*	　シェーダーオブジェクト
 	*-------------------------------------------------------------------------------*/
 	GLuint CreateShader(const char* p_file_name, const GLuint p_gl_xxxx_shader);
 
 	/*-------------------------------------------------------------------------------
-	*	�֐�����
-	*	�@�V�F�[�_�[�t�@�C���̓ǂݍ��݂��s��
-	*	����
-	*	�@p_file_name		�F[I/ ]�@�V�F�[�_�[�̃t�@�C����
+	*	関数説明
+	*	　シェーダーファイルの読み込みを行う
+	*	引数
+	*	　p_file_name		：[I/ ]　シェーダーのファイル名
 	*
-	*	��[Shader]�t�H���_�ȍ~�̃t�@�C���p�X����͂��Ă�������
-	*	�@�f�B���N�g�����܂����Ƃ��́u\\�v�ŋ�؂��Ă��������B�i��uxxx\\xxx.vert�v)
+	*	※[Shader]フォルダ以降のファイルパスを入力してください
+	*	　ディレクトリをまたぐときは「\\」で区切ってください。（例「xxx\\xxx.vert」)
 	*
-	*	�߂�l
-	*	�@�V�F�[�_�[�\�[�X�ւ̐擪�|�C���^
+	*	戻り値
+	*	　シェーダーソースへの先頭ポインタ
 	*-------------------------------------------------------------------------------*/
 	char* ShaderFileLoad(const char* p_file_name);
 
 	///////////////////////////////
-	//�\���̒�`
+	//構造体定義
 
-	//�A�g���r���[�g�ϐ��Ǘ��p�̍\����
+	//アトリビュート変数管理用の構造体
 	typedef struct
 	{
-		char *Name;				//�ϐ���
-		GLint Location;			//���P�[�V����
+		char *Name;				//変数名
+		GLint Location;			//ロケーション
 	}AttribInfo;
 
-	//���j�t�H�[���ϐ��Ǘ��p�̍\����
+	//ユニフォーム変数管理用の構造体
 	typedef struct
 	{
-		char *Name;				//�ϐ���
-		GLint Location;			//���P�[�V����
+		char *Name;				//変数名
+		GLint Location;			//ロケーション
 	}UniformInfo;
 
 
-	//�ϐ���`
-	GLuint m_ProgramObject;					//�v���O�����I�u�W�F�N�g
-	char *m_vertex_file_name;				//�o�[�e�b�N�X�V�F�[�_�[�t�@�C����
-	char *m_fragment_file_name;				//�t���O�����g�V�F�[�_�[�t�@�C����
-	char *m_geometry_file_name;				//�t���O�����g�V�F�[�_�[�t�@�C����
-	char *m_tess_control_file_name;			//�e�b�Z���[�V�����R���g���[���V�F�[�_�[�̃I�u�W�F�N�g��
-	char *m_tess_evaluation_file_name;		//�e�b�Z���[�V�����]���V�F�[�_�[�̃I�u�W�F�N�g��
-	char *m_AllShaderFileName;				//�S�V�F�[�_�[�̃t�@�C�������܂Ƃ߂�����
+	//変数定義
+	GLuint m_ProgramObject;					//プログラムオブジェクト
+	char *m_vertex_file_name;				//バーテックスシェーダーファイル名
+	char *m_fragment_file_name;				//フラグメントシェーダーファイル名
+	char *m_geometry_file_name;				//フラグメントシェーダーファイル名
+	char *m_tess_control_file_name;			//テッセレーションコントロールシェーダーのオブジェクト名
+	char *m_tess_evaluation_file_name;		//テッセレーション評価シェーダーのオブジェクト名
+	char *m_AllShaderFileName;				//全シェーダーのファイル名をまとめたもの
 
-	AttribInfo m_AttribInfo[ATTRIB_INFO_MAX];			//�A�g���r���[�g�ϐ��Ǘ��p�̕ϐ�
-	int m_AttribInfoIndex;								//�A�g���r���[�g�ϐ��Ǘ��p�̃C���f�b�N�X�l
-	UniformInfo m_UniformInfo[UNIFORM_INFO_MAX];		//���j�t�H�[���ϐ��Ǘ��p�̕ϐ�
-	int m_UniformInfoIndex;								//���j�t�H�[���ϐ��Ǘ��p�̃C���f�b�N�X�l
+	AttribInfo m_AttribInfo[ATTRIB_INFO_MAX];			//アトリビュート変数管理用の変数
+	int m_AttribInfoIndex;								//アトリビュート変数管理用のインデックス値
+	UniformInfo m_UniformInfo[UNIFORM_INFO_MAX];		//ユニフォーム変数管理用の変数
+	int m_UniformInfoIndex;								//ユニフォーム変数管理用のインデックス値
 };
 #endif

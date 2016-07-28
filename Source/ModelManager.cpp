@@ -1,23 +1,23 @@
-#include "ModelManager.h"
+ï»¿#include "ModelManager.h"
 
 /////////////////////////////////////////////
-//static•Ï”‚ÌŽÀ‘Ì‚ð’è‹`
+//staticå¤‰æ•°ã®å®Ÿä½“ã‚’å®šç¾©
 
-ModelManager::Vertex ModelManager::m_PiercedCube;					//ŒŠ‚ ‚«ƒLƒ…[ƒu—p‚Ì’¸“_ƒf[ƒ^
-ModelManager::Vertex_index ModelManager::m_PiercedCube_index;		//ŒŠ‚ ‚«ƒLƒ…[ƒu—p‚Ì’¸“_ƒf[ƒ^iƒCƒ“ƒfƒbƒNƒX”Åj
+ModelManager::Vertex ModelManager::m_PiercedCube;					//ç©´ã‚ãã‚­ãƒ¥ãƒ¼ãƒ–ç”¨ã®é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
+ModelManager::Vertex_index ModelManager::m_PiercedCube_index;		//ç©´ã‚ãã‚­ãƒ¥ãƒ¼ãƒ–ç”¨ã®é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ï¼ˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç‰ˆï¼‰
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 ModelManager::ModelManager()
 {
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	memset(&m_PiercedCube, 0, sizeof(m_PiercedCube));
 	memset(&m_PiercedCube_index, 0, sizeof(m_PiercedCube_index));
 }
 
-//ƒfƒXƒgƒ‰ƒNƒ^
+//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 ModelManager::~ModelManager()
 {
-	//ƒƒ‚ƒŠ‰ð•ú
+	//ãƒ¡ãƒ¢ãƒªè§£æ”¾
 	if (NULL != m_PiercedCube.vertex)
 	{
 		free(m_PiercedCube.vertex);
@@ -33,20 +33,20 @@ ModelManager::~ModelManager()
 
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@ŒŠ‚ ‚«ƒLƒ…[ƒu‚ðŽæ“¾‚·‚é
-*	@i[glDrawArrays]‚Æ‚µ‚Ä“o˜^‚·‚éƒ‚ƒfƒ‹ƒf[ƒ^j
-*	ˆø”
-*	@p_ModelData		F[ /O]@ƒ‚ƒfƒ‹ƒf[ƒ^î•ñ
-*	@p_vbo				F[I/ ]@ƒ‚ƒfƒ‹ƒf[ƒ^‚ðVBO‚Æ‚µ‚Ä“o˜^/Žg—p‚·‚éê‡‚Íutruev‚»‚¤‚Å‚È‚¢ê‡‚Íufalsev‚ðŽw’è
-*						@		 VBO‚Æ‚µ‚ÄŽg—p‚·‚éê‡AuglBufferDatav‚Åƒf[ƒ^‚ð“o˜^‚·‚é‚µ‚Ä‚©‚çuglDrawArraysv‚·‚éB
-*								 “o˜^‚·‚éƒf[ƒ^‚Í[size]‚ÉuBufferData.sizev‚ðA[data]‚ÉuBufferData.datav‚ðŽw’è‚·‚ê‚Î—Ç‚¢				 
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜Ž
+*	ã€€ç©´ã‚ãã‚­ãƒ¥ãƒ¼ãƒ–ã‚’å–å¾—ã™ã‚‹
+*	ã€€ï¼ˆ[glDrawArrays]ã¨ã—ã¦ç™»éŒ²ã™ã‚‹ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ï¼‰
+*	å¼•æ•°
+*	ã€€p_ModelData		ï¼š[ /O]ã€€ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿æƒ…å ±
+*	ã€€p_vbo				ï¼š[I/ ]ã€€ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’VBOã¨ã—ã¦ç™»éŒ²/ä½¿ç”¨ã™ã‚‹å ´åˆã¯ã€Œtrueã€ãã†ã§ãªã„å ´åˆã¯ã€Œfalseã€ã‚’æŒ‡å®š
+*						ã€€		 VBOã¨ã—ã¦ä½¿ç”¨ã™ã‚‹å ´åˆã€ã€ŒglBufferDataã€ã§ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²ã™ã‚‹ã—ã¦ã‹ã‚‰ã€ŒglDrawArraysã€ã™ã‚‹ã€‚
+*								 ç™»éŒ²ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã¯[size]ã«ã€ŒBufferData.sizeã€ã‚’ã€[data]ã«ã€ŒBufferData.dataã€ã‚’æŒ‡å®šã™ã‚Œã°è‰¯ã„				 
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void ModelManager::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
 {
-	// ’¸“_ƒf[ƒ^
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
 	Vec3_bColor3 vertex[] =
 	{
 		// v0
@@ -79,15 +79,15 @@ void ModelManager::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
 		{ { 10.0f, 10.0f, -10.0f }, { 250, 0, 0 } },
 	};
 
-	//ˆê“x‚à“Ç‚Ýž‚ñ‚¾‚±‚Æ‚ª‚È‚¢ê‡
+	//ä¸€åº¦ã‚‚èª­ã¿è¾¼ã‚“ã ã“ã¨ãŒãªã„å ´åˆ
 	if (NULL == m_PiercedCube.vertex)
 	{
-		//ƒƒ‚ƒŠ‚ðŠm•Û‚µ‚ÄƒRƒs[‚·‚é
+		//ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã—ã¦ã‚³ãƒ”ãƒ¼ã™ã‚‹
 		m_PiercedCube.vertex = (GLvoid*)calloc(sizeof(vertex), sizeof(byte));
 		memmove(m_PiercedCube.vertex, vertex, sizeof(vertex));
 	}
 
-	//ƒ‚ƒfƒ‹ƒf[ƒ^Ý’èi’¸“_î•ñj
+	//ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿è¨­å®šï¼ˆé ‚ç‚¹æƒ…å ±ï¼‰
 	p_ModelData->Vertex.size = sizeof(vertex[0].Vector) / sizeof(vertex[0].Vector.x);
 	p_ModelData->Vertex.type = GL_FLOAT;
 	p_ModelData->Vertex.normalized = GL_FALSE;
@@ -101,7 +101,7 @@ void ModelManager::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
 		p_ModelData->Vertex.pointer = m_PiercedCube.vertex;
 	}
 
-	//ƒ‚ƒfƒ‹ƒf[ƒ^Ý’èiƒJƒ‰[î•ñj
+	//ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿è¨­å®šï¼ˆã‚«ãƒ©ãƒ¼æƒ…å ±ï¼‰
 	p_ModelData->Color.size = sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r);
 	p_ModelData->Color.type = GL_UNSIGNED_BYTE;
 	p_ModelData->Color.normalized = GL_TRUE;
@@ -115,31 +115,31 @@ void ModelManager::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
 		p_ModelData->Color.pointer = (GLvoid*)((byte*)m_PiercedCube.vertex + sizeof(vertex[0].Vector));
 	}
 
-	//ƒoƒbƒtƒ@[ƒf[ƒ^Ý’è
+	//ãƒãƒƒãƒ•ã‚¡ãƒ¼ãƒ‡ãƒ¼ã‚¿è¨­å®š
 	p_ModelData->BufferData.size = sizeof(vertex);
 	p_ModelData->BufferData.data = m_PiercedCube.vertex;
 
-	//•`‰æî•ñÝ’è
+	//æç”»æƒ…å ±è¨­å®š
 	p_ModelData->DrawArrays.mode = GL_TRIANGLE_STRIP;
 	p_ModelData->DrawArrays.first = 0;
 	p_ModelData->DrawArrays.count = sizeof(vertex) / sizeof(vertex[0]);
 }
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@ŒŠ‚ ‚«ƒLƒ…[ƒu‚ðŽæ“¾‚·‚éiƒCƒ“ƒfƒbƒNƒX”Åj
-*	@i[glDrawElements]—pƒpƒ‰ƒ[ƒ^î•ñj
-*	ˆø”
-*	@p_ModelData		F[ /O]@ƒ‚ƒfƒ‹ƒf[ƒ^î•ñ
-*	@p_vbo				F[I/ ]@ƒ‚ƒfƒ‹ƒf[ƒ^‚ðVBO‚Æ‚µ‚Ä“o˜^/Žg—p‚·‚éê‡‚Íutruev‚»‚¤‚Å‚È‚¢ê‡‚Íufalsev‚ðŽw’è
-*						@		 VBO‚Æ‚µ‚ÄŽg—p‚·‚éê‡AuglBufferDatav‚Åƒf[ƒ^‚ð“o˜^‚·‚é‚µ‚Ä‚©‚çuglDrawElementsv‚·‚éB
-*								 “o˜^‚·‚éƒf[ƒ^‚Í[size]‚ÉuBufferData.sizev‚ðA[data]‚ÉuBufferData.datav‚ðŽw’è‚·‚ê‚Î—Ç‚¢
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜Ž
+*	ã€€ç©´ã‚ãã‚­ãƒ¥ãƒ¼ãƒ–ã‚’å–å¾—ã™ã‚‹ï¼ˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç‰ˆï¼‰
+*	ã€€ï¼ˆ[glDrawElements]ç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æƒ…å ±ï¼‰
+*	å¼•æ•°
+*	ã€€p_ModelData		ï¼š[ /O]ã€€ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿æƒ…å ±
+*	ã€€p_vbo				ï¼š[I/ ]ã€€ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’VBOã¨ã—ã¦ç™»éŒ²/ä½¿ç”¨ã™ã‚‹å ´åˆã¯ã€Œtrueã€ãã†ã§ãªã„å ´åˆã¯ã€Œfalseã€ã‚’æŒ‡å®š
+*						ã€€		 VBOã¨ã—ã¦ä½¿ç”¨ã™ã‚‹å ´åˆã€ã€ŒglBufferDataã€ã§ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²ã™ã‚‹ã—ã¦ã‹ã‚‰ã€ŒglDrawElementsã€ã™ã‚‹ã€‚
+*								 ç™»éŒ²ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã¯[size]ã«ã€ŒBufferData.sizeã€ã‚’ã€[data]ã«ã€ŒBufferData.dataã€ã‚’æŒ‡å®šã™ã‚Œã°è‰¯ã„
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void ModelManager::GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p_vbo)
 {
-	// ’¸“_ƒf[ƒ^
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
 	Vec3_bColor3 vertex[] =
 	{
 		// v0
@@ -160,24 +160,24 @@ void ModelManager::GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p
 		{ { 10.0f, -10.0f, -10.0f }, { 0, 250, 0 } },
 	};
 
-	// ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ‡ãƒ¼ã‚¿
 	GLubyte index[] =
 	{
 	// v0  1  2  3  4  5  6  7  8  9  10 11 12 13
 		0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 1, 3, 7, 5,
 	};
 
-	//ˆê“x‚à“Ç‚Ýž‚ñ‚¾‚±‚Æ‚ª‚È‚¢ê‡
+	//ä¸€åº¦ã‚‚èª­ã¿è¾¼ã‚“ã ã“ã¨ãŒãªã„å ´åˆ
 	if (NULL == m_PiercedCube_index.vertex)
 	{
-		//ƒƒ‚ƒŠ‚ðŠm•Û‚µ‚ÄƒRƒs[‚·‚é
+		//ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã—ã¦ã‚³ãƒ”ãƒ¼ã™ã‚‹
 		m_PiercedCube_index.vertex = (GLvoid*)calloc(sizeof(vertex), sizeof(byte));
 		m_PiercedCube_index.index = (GLvoid*)calloc(sizeof(index), sizeof(byte));
 		memmove(m_PiercedCube_index.vertex, vertex, sizeof(vertex));
 		memmove(m_PiercedCube_index.index, index, sizeof(index));
 	}
 
-	//ƒ‚ƒfƒ‹ƒf[ƒ^Ý’èi’¸“_î•ñj
+	//ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿è¨­å®šï¼ˆé ‚ç‚¹æƒ…å ±ï¼‰
 	p_ModelData->Vertex.size = sizeof(vertex[0].Vector) / sizeof(vertex[0].Vector.x);
 	p_ModelData->Vertex.type = GL_FLOAT;
 	p_ModelData->Vertex.normalized = GL_FALSE;
@@ -191,7 +191,7 @@ void ModelManager::GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p
 		p_ModelData->Vertex.pointer = m_PiercedCube_index.vertex;
 	}
 
-	//ƒ‚ƒfƒ‹ƒf[ƒ^Ý’èiƒJƒ‰[î•ñj
+	//ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿è¨­å®šï¼ˆã‚«ãƒ©ãƒ¼æƒ…å ±ï¼‰
 	p_ModelData->Color.size = sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r);
 	p_ModelData->Color.type = GL_UNSIGNED_BYTE;
 	p_ModelData->Color.normalized = GL_TRUE;
@@ -205,11 +205,11 @@ void ModelManager::GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p
 		p_ModelData->Color.pointer = (GLvoid*)((byte*)m_PiercedCube_index.vertex + sizeof(vertex[0].Vector));
 	}
 
-	//ƒoƒbƒtƒ@[ƒf[ƒ^Ý’è
+	//ãƒãƒƒãƒ•ã‚¡ãƒ¼ãƒ‡ãƒ¼ã‚¿è¨­å®š
 	p_ModelData->BufferData.size = sizeof(vertex);
 	p_ModelData->BufferData.data = m_PiercedCube_index.vertex;
 
-	//•`‰æî•ñÝ’è
+	//æç”»æƒ…å ±è¨­å®š
 	p_ModelData->DrawElements.mode = GL_TRIANGLE_STRIP;
 	p_ModelData->DrawElements.count = sizeof(index) / sizeof(index[0]);
 	p_ModelData->DrawElements.type = GL_UNSIGNED_BYTE;

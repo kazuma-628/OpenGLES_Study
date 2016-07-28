@@ -1,13 +1,13 @@
-#ifndef COMMON_H
+﻿#ifndef COMMON_H
 #define COMMON_H
 
-//Visual Studio�Łufopen,strcat,strcpy�v�Ȃǂ̊֐����g�p���邱�Ƃɂ��G���[/���[�j���O���o���Ȃ��悤�ɂ���
+//Visual Studioで「fopen,strcat,strcpy」などの関数を使用することによるエラー/ワーニングを出さないようにする
 #define _CRT_SECURE_NOWARNINGS
 #pragma warning(disable:4996)
 
 ////////////////////////////////////
-// ��`�ς݂̃w�b�_�[�t�@�C���ǂݍ���
-//�i�قƂ�ǂ̃t�@�C���ŕK�v�ɂȂ�͂��Ȃ̂ňꊇ��`�j
+// 定義済みのヘッダーファイル読み込み
+//（ほとんどのファイルで必要になるはずなので一括定義）
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,28 +20,28 @@
 
 
 ////////////////////////////////////////
-// Define�x�N�g���\����
+// Defineベクトル構造体
 
-//�f�o�b�O���b�Z�[�W�o�͗p�}�N���i���[�U�[�����ڎg�p���邱�Ƃ͂���܂���j
-//�G���[�E���[�j���O���b�Z�[�W���o�͂������ꍇ�́uERROR_MESSAGE�v���́uWARNING_MESSAGE�v���g�p���Ă��������B
-#define DEBUG_PRINT(Level, String, ...)		printf("\n������ " Level " �������@\n�t�@�C���F%s�@\n�s���F%d�@�֐����F%s�@\n" String "\n", __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);
+//デバッグメッセージ出力用マクロ（ユーザーが直接使用することはありません）
+//エラー・ワーニングメッセージを出力したい場合は「ERROR_MESSAGE」又は「WARNING_MESSAGE」を使用してください。
+#define DEBUG_PRINT(Level, String, ...)		printf("\n■■■ " Level " ■■■　\nファイル：%s　\n行数：%d　関数名：%s　\n" String "\n", __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);
 
-//���s�s�\�ȃG���[�����������ꍇ�̃��b�Z�[�W�o�͗p��`
-#define ERROR_MESSAGE(String, ...)			DEBUG_PRINT("�G���[", String, __VA_ARGS__);	error_message_func();
+//続行不可能なエラーが発生した場合のメッセージ出力用定義
+#define ERROR_MESSAGE(String, ...)			DEBUG_PRINT("エラー", String, __VA_ARGS__);	error_message_func();
 
-//���s�s�\�ł͂Ȃ����A�C�����K�v�ȉ\��������ꍇ�̃��b�Z�[�W�o�͗p��`
-#define WARNING_MESSAGE(String, ...)		DEBUG_PRINT("���[�j���O", String, __VA_ARGS__);
+//続行不可能ではないが、修正が必要な可能性がある場合のメッセージ出力用定義
+#define WARNING_MESSAGE(String, ...)		DEBUG_PRINT("ワーニング", String, __VA_ARGS__);
 
-//���s�s�\�ȃG���[�̉\���͂��邪�A�f�o�b�O���͈ꎞ�I�ɃG���[�ɂȂ�\��������ꍇ�̃��b�Z�[�W�o�͒�`
-//�����͂��̃v���O���������삵�Ȃ��Ȃǂ̃G���[�m�F���̂݃R�����g���O���Č��Ă��������B�Ȃɂ������邩������܂���B
+//続行不可能なエラーの可能性はあるが、デバッグ中は一時的にエラーになる可能性がある場合のメッセージ出力定義
+//動くはずのプログラムが動作しないなどのエラー確認時のみコメントを外して見てください。なにか見つかるかもしれません。
 #define ERROR_MESSAGE_SUB(String, ...)	//ERROR_PRINT(String, __VA_ARGS__);	error_message_func();
 
-#define WINDOW_WIDTH				1024			//�E�B���h�E�T�C�Y�i���j
-#define WINDOW_HEIGHT				768				//�E�B���h�E�T�C�Y�i�����j
-#define GL_GET_ERROR()				GL_NO_ERROR	//glGetError()	//gl�֘A�̃G���[���擾�������ꍇ�̓R�����g�̕��Ɠ���ւ���
+#define WINDOW_WIDTH				1024			//ウィンドウサイズ（幅）
+#define WINDOW_HEIGHT				768				//ウィンドウサイズ（高さ）
+#define GL_GET_ERROR()				GL_NO_ERROR	//glGetError()	//gl関連のエラーを取得したい場合はコメントの文と入れ替える
 
 ////////////////////////////////////
-// �x�N�g���\����
+// ベクトル構造体
 
 typedef struct
 {
@@ -86,7 +86,7 @@ typedef struct
 }iVec4;
 
 ////////////////////////////////////
-// �x�N�g���\����
+// ベクトル構造体
 typedef struct
 {
 	GLfloat m[2][2];
@@ -103,7 +103,7 @@ typedef struct
 }Mat4;
 
 ////////////////////////////////////
-// �J���[�x�N�g���\����
+// カラーベクトル構造体
 
 typedef struct
 {
@@ -148,7 +148,7 @@ typedef struct
 }bColor4;
 
 ////////////////////////////////////
-// �U�C�Y�\����
+// ザイズ構造体
 typedef struct
 {
 	GLsizei  Width;
@@ -157,50 +157,50 @@ typedef struct
 
 ////////////////////////////////////
 
-// �\����
+// 構造体
 typedef struct
 {
-	Mat4 ModelViewMatrix;		//���f���r���[�}�g���N�X�i�匳�̃}�g���N�X�f�[�^�j
-	Mat4 ProjectionMatrix;		//�v���W�F�N�V�����}�g���N�X�i�匳�̃}�g���N�X�f�[�^�j
-	GLfloat NearClip;			//�v���W�F�N�V�����}�g���N�X�������Ɏg�p����Near�l�i�匳�̃}�g���N�X�f�[�^�j
-	GLfloat FarClip;			//�v���W�F�N�V�����}�g���N�X�������Ɏg�p����Far�l�i�匳�̃}�g���N�X�f�[�^�j
-	Size WindowSize;			//�E�B���h�E�̑S�̃T�C�Y
-	GLfloat Aspect;				//�A�X�y�N�g��i�� �� �����j�i���̑傫����[?]�Ƃ������A�c�̑傫����[? * Aspect]�ƂȂ�j
-	Vec3 TranslateAmount;		//�����ʒu�iX,Y,Z�j����̈ړ���
-	Vec3 RotateAmount;			//�����ʒu�iX,Y,Z�j����̉�]��
+	Mat4 ModelViewMatrix;		//モデルビューマトリクス（大元のマトリクスデータ）
+	Mat4 ProjectionMatrix;		//プロジェクションマトリクス（大元のマトリクスデータ）
+	GLfloat NearClip;			//プロジェクションマトリクス生成時に使用したNear値（大元のマトリクスデータ）
+	GLfloat FarClip;			//プロジェクションマトリクス生成時に使用したFar値（大元のマトリクスデータ）
+	Size WindowSize;			//ウィンドウの全体サイズ
+	GLfloat Aspect;				//アスペクト比（幅 ÷ 高さ）（横の大きさを[?]とした時、縦の大きさは[? * Aspect]となる）
+	Vec3 TranslateAmount;		//初期位置（X,Y,Z）からの移動量
+	Vec3 RotateAmount;			//初期位置（X,Y,Z）からの回転量
 }GlobalData;
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�{�֐��͊O�����烆�[�U�[���g�����Ƃ͂���܂���B
-*	�@�G���[���b�Z�[�W��\���������ꍇ�́A�uERROR_MESSAGE�v�}�N�����g�p���Ă��Ă��������B
+*	関数説明
+*	　本関数は外部からユーザーが使うことはありません。
+*	　エラーメッセージを表示したい場合は、「ERROR_MESSAGE」マクロを使用してしてください。
 *
-*	�@���s�s�\�ȃG���[�����������ꍇ�A���b�Z�[�W�{�b�N�X��\�����āA���Ń��Z�b�g����֐��ł��B
-*	����
-*	�@�Ȃ�
-*	�߂�l
-*	�@�Ȃ�
+*	　続行不可能なエラーが発生した場合、メッセージボックスを表示して、自滅リセットする関数です。
+*	引数
+*	　なし
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 
 inline void error_message_func(void)
 {
-	char* ErrorMessage = "���s�s�\�ȃG���[���������܂����B\n" \
-						 "���̓R�}���h�v�����v�g���m�F���Ă��������B\n\n" \
-						 "�֐��̌Ăяo���������������ꍇ�́A\n" \
-						 "[error_message_func]�֐��̎��Ń��Z�b�g��L���ɂ��Ă��������B\n\n" \
-						 "OK�������ƃv���O�������I�� ���� �f�o�b�O���܂��B";
+	char* ErrorMessage = "続行不可能なエラーが発生しました。\n" \
+						 "情報はコマンドプロンプトを確認してください。\n\n" \
+						 "関数の呼び出し履歴を見たい場合は、\n" \
+						 "[error_message_func]関数の自滅リセットを有効にしてください。\n\n" \
+						 "OKを押すとプログラムを終了 又は デバッグします。";
 
-	//���b�Z�[�W�{�b�N�X�\��
+	//メッセージボックス表示
 	MessageBox(NULL, ErrorMessage, "Error Message", MB_OK | MB_ICONSTOP);
 
-	//�f�o�b�N�ŌĂяo��������������悤�Ɏ��Ń��Z�b�g������i�L���ɂ���ꍇ�̓R�����g���O���j
-	//�G���[������������u���f�i�f�o�b�O�̒�~����Ȃ��j�v���āA
-	//���j���[�o�[�́u�E�B���h�E�v���u�f�o�b�O�v���u�Ăяo�������v�Ŋ֐��R�[������������܂��B	
+	//デバックで呼び出し履歴が分かるように自滅リセットさせる（有効にする場合はコメントを外す）
+	//エラーが発生したら「中断（デバッグの停止じゃない）」して、
+	//メニューバーの「ウィンドウ」→「デバッグ」→「呼び出し履歴」で関数コール順序が見れます。	
 //	typedef char(*ResetFunc)(char);
 //	ResetFunc test = (ResetFunc)0xFF;
 //	test(0);
 
-	//�v���O�������I������
+	//プログラムを終了する
 	exit(EXIT_FAILURE);
 }
 

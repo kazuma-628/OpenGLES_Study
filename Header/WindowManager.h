@@ -1,63 +1,63 @@
-#ifndef WINDOW_MANAGER_H
+ï»¿#ifndef WINDOW_MANAGER_H
 #define WINDOW_MANAGER_H
 
-//include’è‹`
+//includeå®šç¾©
 #include "Common.h"
 
 class WindowManager
 {
 
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	WindowManager();
 
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~WindowManager();
 
 	/*-------------------------------------------------------------------------------
-	*	ŠÖ”à–¾
-	*	@ƒEƒBƒ“ƒhƒE‚ðì¬‚·‚é
-	*	@¦ ƒEƒBƒ“ƒhƒE‚ð•¡”¶¬‚·‚é‚±‚Æ‚É‚Í‚Ü‚¾‘Î‰ž‚µ‚Ä‚¢‚È‚¢‚Ì‚Å’ˆÓ ¦
-	*	ˆø”
-	*	@p_Width	F[I/ ]@ƒEƒBƒ“ƒhƒE‚Ì•
-	*	@p_Height	F[I/ ]@ƒEƒBƒ“ƒhƒE‚Ì‚‚³
-	*	@p_Title	F[I/ ]@ƒEƒBƒ“ƒhƒE‚Ì–¼‘OiƒEƒBƒ“ƒhƒE¶ã‚âƒ^ƒXƒNƒo[‚É•\Ž¦‚³‚ê‚éj
-	*	–ß‚è’l
-	*	@‚È‚µ
+	*	é–¢æ•°èª¬æ˜Ž
+	*	ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ä½œæˆã™ã‚‹
+	*	ã€€â€» ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¤‡æ•°ç”Ÿæˆã™ã‚‹ã“ã¨ã«ã¯ã¾ã å¯¾å¿œã—ã¦ã„ãªã„ã®ã§æ³¨æ„ â€»
+	*	å¼•æ•°
+	*	ã€€p_Width	ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®å¹…
+	*	ã€€p_Height	ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®é«˜ã•
+	*	ã€€p_Title	ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®åå‰ï¼ˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å·¦ä¸Šã‚„ã‚¿ã‚¹ã‚¯ãƒãƒ¼ã«è¡¨ç¤ºã•ã‚Œã‚‹ï¼‰
+	*	æˆ»ã‚Šå€¤
+	*	ã€€ãªã—
 	*-------------------------------------------------------------------------------*/
 	void CreateNewWindow(const int p_Width, const int p_Height, const char* p_Title);
 
 	/*-------------------------------------------------------------------------------
-	*	ŠÖ”à–¾
-	*	@ƒEƒBƒ“ƒhƒE‚É•`‰æ‚·‚éiƒtƒƒ“ƒgƒoƒbƒtƒ@ / ƒoƒbƒNƒoƒbƒtƒ@ ‹¤’Êj
-	*	ˆø”
-	*	@‚È‚µ
-	*	–ß‚è’l
-	*	@‚È‚µ
+	*	é–¢æ•°èª¬æ˜Ž
+	*	ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«æç”»ã™ã‚‹ï¼ˆãƒ•ãƒ­ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡ / ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ å…±é€šï¼‰
+	*	å¼•æ•°
+	*	ã€€ãªã—
+	*	æˆ»ã‚Šå€¤
+	*	ã€€ãªã—
 	*-------------------------------------------------------------------------------*/
 	void DrawingOnWindow(void);
 
 	/*-------------------------------------------------------------------------------
-	*	ŠÖ”à–¾
-	*	@ƒEƒBƒ“ƒhƒEƒTƒCƒY‚ª•Ï‰»‚µ‚½Žž‚ÉƒR[ƒ‹ƒoƒbƒN‚³‚ê‚éŠÖ”
-	*	ˆø”
-	*	@p_window	F[I/ ]@ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-	*	@p_Width	F[I/ ]@ƒEƒBƒ“ƒhƒE‚Ì•
-	*	@p_Height	F[I/ ]@ƒEƒBƒ“ƒhƒE‚Ì‚‚³
-	*	@Ú×‚Í‰º‹LURLŽQÆ‚Ì‚±‚Æ
-	*	@[http://www.glfw.org/docs/latest/group__window.html]‚Ì[GLFWmousebuttonfun]ŠÖ”
-	*	–ß‚è’l
-	*	@‚È‚µ
+	*	é–¢æ•°èª¬æ˜Ž
+	*	ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºãŒå¤‰åŒ–ã—ãŸæ™‚ã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã•ã‚Œã‚‹é–¢æ•°
+	*	å¼•æ•°
+	*	ã€€p_window	ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+	*	ã€€p_Width	ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®å¹…
+	*	ã€€p_Height	ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®é«˜ã•
+	*	ã€€è©³ç´°ã¯ä¸‹è¨˜URLå‚ç…§ã®ã“ã¨
+	*	ã€€[http://www.glfw.org/docs/latest/group__window.html]ã®[GLFWmousebuttonfun]é–¢æ•°
+	*	æˆ»ã‚Šå€¤
+	*	ã€€ãªã—
 	*-------------------------------------------------------------------------------*/
 	static void WindowSizeCallback(GLFWwindow* p_window, int p_Width, int p_Height);
 
 	/*-------------------------------------------------------------------------------
-	*	ŠÖ”à–¾
-	*	@ì¬‚µ‚½ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹‚ðŽæ“¾‚·‚é
-	*	ˆø”
-	*	@‚È‚µ
-	*	–ß‚è’l
-	*	@ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	*	é–¢æ•°èª¬æ˜Ž
+	*	ã€€ä½œæˆã—ãŸã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«ã‚’å–å¾—ã™ã‚‹
+	*	å¼•æ•°
+	*	ã€€ãªã—
+	*	æˆ»ã‚Šå€¤
+	*	ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
 	*-------------------------------------------------------------------------------*/
 	inline GLFWwindow* const GetWindow()
 	{
@@ -65,12 +65,12 @@ public:
 	}
 
 	/*-------------------------------------------------------------------------------
-	*	ŠÖ”à–¾
-	*	@ì¬‚µ‚½ƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY‚ðŽæ“¾‚·‚é
-	*	ˆø”
-	*	@‚È‚µ
-	*	–ß‚è’l
-	*	@ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	*	é–¢æ•°èª¬æ˜Ž
+	*	ã€€ä½œæˆã—ãŸã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºã‚’å–å¾—ã™ã‚‹
+	*	å¼•æ•°
+	*	ã€€ãªã—
+	*	æˆ»ã‚Šå€¤
+	*	ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
 	*-------------------------------------------------------------------------------*/
 	inline Size GetWindowSize()
 	{
@@ -78,13 +78,13 @@ public:
 	}
 
 	/*-------------------------------------------------------------------------------
-	*	ŠÖ”à–¾
-	*	@ì¬‚µ‚½ƒEƒBƒ“ƒhƒE‚ªI—¹‚³‚ê‚½‚©i•Â‚¶‚ç‚ê‚½‚©j‚ðŽæ“¾‚·‚é
-	*	ˆø”
-	*	@‚È‚µ
-	*	–ß‚è’l
-	*	@•Â‚¶‚ç‚ê‚Ä‚¢‚éFGL_TRUE
-	*	@•Â‚¶‚ç‚ê‚Ä‚¢‚È‚¢FGL_FALSE
+	*	é–¢æ•°èª¬æ˜Ž
+	*	ã€€ä½œæˆã—ãŸã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒçµ‚äº†ã•ã‚ŒãŸã‹ï¼ˆé–‰ã˜ã‚‰ã‚ŒãŸã‹ï¼‰ã‚’å–å¾—ã™ã‚‹
+	*	å¼•æ•°
+	*	ã€€ãªã—
+	*	æˆ»ã‚Šå€¤
+	*	ã€€é–‰ã˜ã‚‰ã‚Œã¦ã„ã‚‹ï¼šGL_TRUE
+	*	ã€€é–‰ã˜ã‚‰ã‚Œã¦ã„ãªã„ï¼šGL_FALSE
 	*-------------------------------------------------------------------------------*/
 	inline int GetWindowShouldClose()
 	{
@@ -93,7 +93,7 @@ public:
 
 private:
 
-	GLFWwindow* m_window;		//¶¬‚µ‚½ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-	static Size m_WindowSize;	//¶¬‚µ‚½ƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒYi•,‚‚³j
+	GLFWwindow* m_window;		//ç”Ÿæˆã—ãŸã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+	static Size m_WindowSize;	//ç”Ÿæˆã—ãŸã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºï¼ˆå¹…,é«˜ã•ï¼‰
 };
 #endif

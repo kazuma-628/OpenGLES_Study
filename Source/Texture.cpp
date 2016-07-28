@@ -1,100 +1,100 @@
-#include "Texture.h"
+ï»¿#include "Texture.h"
 #include <locale.h>
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 Texture::Texture()
 {
 
 }
 
-//ƒfƒXƒgƒ‰ƒNƒ^
+//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 Texture::~Texture()
 {
 
 }
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@‰æ‘œƒtƒ@ƒCƒ‹‚©‚çƒeƒNƒXƒ`ƒƒƒf[ƒ^‚Ì“Ç‚İ‚İ‚ğs‚¢‚Ü‚·
-*	ˆø”
-*	@p_FileName	F[I/ ]@“Ç‚İ‚İ‚ğs‚¤Šg’£q•t‚«‚Ì‰æ‘œƒtƒ@ƒCƒ‹–¼
-*							 [Resource]ƒtƒHƒ‹ƒ_ˆÈ~‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B
-*							 ‚Ü‚½AƒfƒBƒŒƒNƒgƒŠ‚ğ‚Ü‚½‚®‚Æ‚«‚Íu/v‚Å‹æØ‚Á‚Ä‚­‚¾‚³‚¢i—áuxxx/xxx.vertvj
-*	@p_PixelFotmat	F[I/ ]@‰æ‘œƒtƒ@ƒCƒ‹‚ÌƒtƒH[ƒ}ƒbƒg
-*							 [PIXELFORMAT_24BIT_RGB] or [PIXELFORMAT_32BIT_RGBA] ‚Åw’èiÚ×‚Í’è‹`•”•ª‚ÌƒRƒƒ“ƒgQÆj
-*	@p_TextureData	F[ /O]@ƒeƒNƒXƒ`ƒƒƒf[ƒ^
-*							 [TextureData]\‘¢‘Ì‚Ì[data]•Ï”‚Í•s—v‚É‚È‚Á‚½“_‚Å•K‚¸[free]‚Åƒƒ‚ƒŠ‰ğ•ú‚µ‚Ä‚­‚¾‚³‚¢B
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜
+*	ã€€ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿ã‚’è¡Œã„ã¾ã™
+*	å¼•æ•°
+*	ã€€p_FileName	ï¼š[I/ ]ã€€èª­ã¿è¾¼ã¿ã‚’è¡Œã†æ‹¡å¼µå­ä»˜ãã®ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«å
+*							 [Resource]ãƒ•ã‚©ãƒ«ãƒ€ä»¥é™ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚
+*							 ã¾ãŸã€ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ã¾ãŸãã¨ãã¯ã€Œ/ã€ã§åŒºåˆ‡ã£ã¦ãã ã•ã„ï¼ˆä¾‹ã€Œxxx/xxx.vertã€ï¼‰
+*	ã€€p_PixelFotmat	ï¼š[I/ ]ã€€ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+*							 [PIXELFORMAT_24BIT_RGB] or [PIXELFORMAT_32BIT_RGBA] ã§æŒ‡å®šï¼ˆè©³ç´°ã¯å®šç¾©éƒ¨åˆ†ã®ã‚³ãƒ¡ãƒ³ãƒˆå‚ç…§ï¼‰
+*	ã€€p_TextureData	ï¼š[ /O]ã€€ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‡ãƒ¼ã‚¿
+*							 [TextureData]æ§‹é€ ä½“ã®[data]å¤‰æ•°ã¯ä¸è¦ã«ãªã£ãŸæ™‚ç‚¹ã§å¿…ãš[free]ã§ãƒ¡ãƒ¢ãƒªè§£æ”¾ã—ã¦ãã ã•ã„ã€‚
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void Texture::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureData *p_TextureData)
 {
-	printf("ƒeƒNƒXƒ`ƒƒu%sv‚Ì“Ç‚İ‚İ‚ğŠJn‚µ‚Ü‚·...", p_FileName);
+	printf("ãƒ†ã‚¯ã‚¹ãƒãƒ£ã€Œ%sã€ã®èª­ã¿è¾¼ã¿ã‚’é–‹å§‹ã—ã¾ã™...", p_FileName);
 
-	//ˆø”ƒ`ƒFƒbƒN
+	//å¼•æ•°ãƒã‚§ãƒƒã‚¯
 	if (NULL == p_FileName || NULL == p_TextureData)
 	{
-		printf("¸”s\n");
-		ERROR_MESSAGE("ƒeƒNƒXƒ`ƒƒƒf[ƒ^‚Ì“Ç‚İ‚İ ˆø”ƒGƒ‰[\n" \
+		printf("å¤±æ•—\n");
+		ERROR_MESSAGE("ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿ å¼•æ•°ã‚¨ãƒ©ãƒ¼\n" \
 			"p_FileName = %s, p_TextureData = %x\n" \
 			, p_FileName, (unsigned int)p_TextureData);
 		return;
 	}
 
 	//////////////////////////////////////////
-	// ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹‚Ö‚ÌƒpƒXiƒƒCƒh•¶šj‚ğì¬
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒ‘ã‚¹ï¼ˆãƒ¯ã‚¤ãƒ‰æ–‡å­—ï¼‰ã‚’ä½œæˆ
 
-	char *texture_dir_file_name = NULL;			//ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹‚Ö‚ÌƒpƒXiƒ}ƒ‹ƒ`ƒoƒCƒg•¶šj
-	wchar_t *w_texture_dir_file_name = NULL;	//ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹‚Ö‚ÌƒpƒXiƒƒCƒh•¶šj
-	int StrLength = 0;		//“Ç‚İ‚ŞƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼‚Ì’·‚³iƒoƒCƒg”j
+	char *texture_dir_file_name = NULL;			//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒ‘ã‚¹ï¼ˆãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—ï¼‰
+	wchar_t *w_texture_dir_file_name = NULL;	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒ‘ã‚¹ï¼ˆãƒ¯ã‚¤ãƒ‰æ–‡å­—ï¼‰
+	int StrLength = 0;		//èª­ã¿è¾¼ã‚€ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«åã®é•·ã•ï¼ˆãƒã‚¤ãƒˆæ•°ï¼‰
 
-							// •¶š—ñ‚Ì’·‚³‚ğæ“¾‚µ‚Äƒƒ‚ƒŠŠm•ÛiI’[‚ğ–¾Šm‚É‚·‚é‚½‚ß +1 ‚·‚éB[\0]‚Æ‚È‚éj
+							// æ–‡å­—åˆ—ã®é•·ã•ã‚’å–å¾—ã—ã¦ãƒ¡ãƒ¢ãƒªç¢ºä¿ï¼ˆçµ‚ç«¯ã‚’æ˜ç¢ºã«ã™ã‚‹ãŸã‚ +1 ã™ã‚‹ã€‚[\0]ã¨ãªã‚‹ï¼‰
 	StrLength = strlen(TEXTURE_FILE_DIR) + strlen(p_FileName);
 	texture_dir_file_name = (char*)calloc(StrLength + 1, sizeof(char));
 
-	//ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹‚Ö‚ÌƒpƒX‚ğ¶¬‚·‚éiƒ}ƒ‹ƒ`ƒoƒCƒg•¶šj
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ãƒ‘ã‚¹ã‚’ç”Ÿæˆã™ã‚‹ï¼ˆãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—ï¼‰
 	sprintf(texture_dir_file_name, "%s%s", TEXTURE_FILE_DIR, p_FileName);
 
-	//ƒƒP[ƒ‹‚ğ“ú–{‚Éİ’è
+	//ãƒ­ã‚±ãƒ¼ãƒ«ã‚’æ—¥æœ¬ã«è¨­å®š
 	setlocale(LC_CTYPE, "jpn");
 
-	//ƒ}ƒ‹ƒ`ƒoƒCƒg•¶š‚Ì•¶š”‚ğæ“¾‚µ‚ÄAƒƒCƒh•¶š‚É•ÏŠ·‚µ‚½ê‡‚ÌƒoƒCƒg”‚ğZo‚·‚é
+	//ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—ã®æ–‡å­—æ•°ã‚’å–å¾—ã—ã¦ã€ãƒ¯ã‚¤ãƒ‰æ–‡å­—ã«å¤‰æ›ã—ãŸå ´åˆã®ãƒã‚¤ãƒˆæ•°ã‚’ç®—å‡ºã™ã‚‹
 	StrLength = _mbstrlen(texture_dir_file_name) * 2;
 
-	// •¶š—ñ‚Ì’·‚³‚ğæ“¾‚µ‚Äƒƒ‚ƒŠŠm•ÛiI’[‚ğ–¾Šm‚É‚·‚é‚½‚ß +2(ƒƒCƒh•¶š‚È‚Ì‚Å) ‚·‚éB[\0]‚Æ‚È‚éj
+	// æ–‡å­—åˆ—ã®é•·ã•ã‚’å–å¾—ã—ã¦ãƒ¡ãƒ¢ãƒªç¢ºä¿ï¼ˆçµ‚ç«¯ã‚’æ˜ç¢ºã«ã™ã‚‹ãŸã‚ +2(ãƒ¯ã‚¤ãƒ‰æ–‡å­—ãªã®ã§) ã™ã‚‹ã€‚[\0]ã¨ãªã‚‹ï¼‰
 	w_texture_dir_file_name = (wchar_t*)calloc(StrLength + 2, sizeof(char));
 
-	//ƒ}ƒ‹ƒ`ƒoƒCƒg•¶š—ñ ¨ ƒƒCƒh•¶š—ñ‚É•ÏŠ·ŠÜ‚Ş
+	//ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—åˆ— â†’ ãƒ¯ã‚¤ãƒ‰æ–‡å­—åˆ—ã«å¤‰æ›å«ã‚€
 	mbstowcs(w_texture_dir_file_name, texture_dir_file_name, _mbstrlen(texture_dir_file_name));
 
 	//////////////////////////////////////////
-	// [GDI+]‚ğg—p‚µ‚ÄƒeƒNƒXƒ`ƒƒ‚ğ“Ç‚İ‚İ
+	// [GDI+]ã‚’ä½¿ç”¨ã—ã¦ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’èª­ã¿è¾¼ã¿
 
-	//GDI+‚Ì‰Šú‰»
+	//GDI+ã®åˆæœŸåŒ–
 	ULONG_PTR token;
 	Gdiplus::GdiplusStartupInput input;
 	Gdiplus::GdiplusStartup(&token, &input, NULL);
 
-	//ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	Gdiplus::Bitmap* Texture = new Gdiplus::Bitmap(w_texture_dir_file_name);
 
-	//ƒeƒNƒXƒ`ƒƒ‚ğ“Ç‚İ‚ñ‚¾‚Ì‚Åƒtƒ@ƒCƒ‹ƒpƒX‚ğ•Û‘¶‚µ‚Ä‚¢‚½ƒƒ‚ƒŠ‚ğŠJ•ú‚·‚é
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’èª­ã¿è¾¼ã‚“ã ã®ã§ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’ä¿å­˜ã—ã¦ã„ãŸãƒ¡ãƒ¢ãƒªã‚’é–‹æ”¾ã™ã‚‹
 	free(texture_dir_file_name);
 	free(w_texture_dir_file_name);
 
-	//ƒeƒNƒXƒ`ƒƒƒf[ƒ^“Ç‚İ‚İ
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 	Gdiplus::BitmapData BitmapData;
 	if (0 != Texture->LockBits(0, Gdiplus::ImageLockModeRead, p_PixelFotmat, &BitmapData))
 	{
-		printf("¸”s\n");
-		ERROR_MESSAGE("ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½B\n"\
-			"uResourcevƒtƒHƒ‹ƒ_‚ÉŠi”[‚³‚ê‚Ä‚¢‚Ü‚·‚©H\n"\
-			"ƒtƒ@ƒCƒ‹–¼‚ªŠÔˆá‚Á‚Ä‚¢‚Ü‚¹‚ñ‚©H");
+		printf("å¤±æ•—\n");
+		ERROR_MESSAGE("ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸã€‚\n"\
+			"ã€ŒResourceã€ãƒ•ã‚©ãƒ«ãƒ€ã«æ ¼ç´ã•ã‚Œã¦ã„ã¾ã™ã‹ï¼Ÿ\n"\
+			"ãƒ•ã‚¡ã‚¤ãƒ«åãŒé–“é•ã£ã¦ã„ã¾ã›ã‚“ã‹ï¼Ÿ");
 		return;
 	}
 
 	/////////////////////////////////////////////////
-	// •Ô‹p‚·‚éî•ñ‚Ìİ’è
+	// è¿”å´ã™ã‚‹æƒ…å ±ã®è¨­å®š
 	switch (p_PixelFotmat)
 	{
 	case PIXELFORMAT_24BIT_RGB:
@@ -107,8 +107,8 @@ void Texture::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelF
 		p_TextureData->format = GL_RGBA;
 		break;
 	default:
-		printf("¸”s\n");
-		ERROR_MESSAGE("ƒsƒNƒZƒ‹ƒtƒH[ƒ}ƒbƒg‚Ìˆø”‚ª•s³‚Å‚·B\n"\
+		printf("å¤±æ•—\n");
+		ERROR_MESSAGE("ãƒ”ã‚¯ã‚»ãƒ«ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®å¼•æ•°ãŒä¸æ­£ã§ã™ã€‚\n"\
 			"p_PixelFotmat = %d", p_PixelFotmat);
 		return;
 	}
@@ -119,37 +119,37 @@ void Texture::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelF
 	p_TextureData->type = GL_UNSIGNED_BYTE;
 	p_TextureData->data = (GLvoid*)calloc(BitmapData.Height * BitmapData.Stride, sizeof(byte));
 
-	//ƒ[ƒh‚µ‚½ƒeƒNƒXƒ`ƒƒ‚ÍuBGRv‚ÅŠi”[‚³‚ê‚Ä‚¢‚é‚Ì‚ÅuRGBv‚É•ÏŠ·‚µ‚Â‚ÂƒRƒs[‚·‚é
+	//ãƒ­ãƒ¼ãƒ‰ã—ãŸãƒ†ã‚¯ã‚¹ãƒãƒ£ã¯ã€ŒBGRã€ã§æ ¼ç´ã•ã‚Œã¦ã„ã‚‹ã®ã§ã€ŒRGBã€ã«å¤‰æ›ã—ã¤ã¤ã‚³ãƒ”ãƒ¼ã™ã‚‹
 	TextureDataBRGtoRGB(p_PixelFotmat, &BitmapData, p_TextureData);
 
-	//“Ç‚İ‚ñ‚¾ƒeƒNƒXƒ`ƒƒî•ñ/ƒf[ƒ^‚ğ”jŠü‚·‚é
+	//èª­ã¿è¾¼ã‚“ã ãƒ†ã‚¯ã‚¹ãƒãƒ£æƒ…å ±/ãƒ‡ãƒ¼ã‚¿ã‚’ç ´æ£„ã™ã‚‹
 	Texture->UnlockBits(&BitmapData);
 	delete Texture;
 
-	//GDI+‚ÌI—¹
+	//GDI+ã®çµ‚äº†
 	Gdiplus::GdiplusShutdown(token);
 
-	printf("Š®—¹\n");
+	printf("å®Œäº†\n");
 }
 
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@Fî•ñuBGR(A)v‚ğuRGB(A)v‚É•ÏŠ·‚·‚é
-*	ˆø”
-*	@p_PixelFotmat	F[I/ ]@‰æ‘œƒtƒ@ƒCƒ‹‚ÌƒtƒH[ƒ}ƒbƒg
-*							 PIXELFORMAT_24BIT_RGB or PIXELFORMAT_32BIT_RGBA ‚Åw’èiÚ×‚Í’è‹`•”•ª‚ÌƒRƒƒ“ƒgQÆj
-*	@p_BitmapData	F[I/ ]@•ÏŠ·Œ³‚ÌƒeƒNƒXƒ`ƒƒƒf[ƒ^iGdiplus::Bitmap ƒNƒ‰ƒX‚Ì LockBitsŠÖ”‚Å“Ç‚İ‚ñ‚¾‚µ‚½ƒf[ƒ^j
-*	@p_TextureData	F[ /O]@•ÏŠ·æ‚ÌƒeƒNƒXƒ`ƒƒƒf[ƒ^@
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜
+*	ã€€è‰²æƒ…å ±ã€ŒBGR(A)ã€ã‚’ã€ŒRGB(A)ã€ã«å¤‰æ›ã™ã‚‹
+*	å¼•æ•°
+*	ã€€p_PixelFotmat	ï¼š[I/ ]ã€€ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+*							 PIXELFORMAT_24BIT_RGB or PIXELFORMAT_32BIT_RGBA ã§æŒ‡å®šï¼ˆè©³ç´°ã¯å®šç¾©éƒ¨åˆ†ã®ã‚³ãƒ¡ãƒ³ãƒˆå‚ç…§ï¼‰
+*	ã€€p_BitmapData	ï¼š[I/ ]ã€€å¤‰æ›å…ƒã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‡ãƒ¼ã‚¿ï¼ˆGdiplus::Bitmap ã‚¯ãƒ©ã‚¹ã® LockBitsé–¢æ•°ã§èª­ã¿è¾¼ã‚“ã ã—ãŸãƒ‡ãƒ¼ã‚¿ï¼‰
+*	ã€€p_TextureData	ï¼š[ /O]ã€€å¤‰æ›å…ˆã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‡ãƒ¼ã‚¿ã€€
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void Texture::TextureDataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData)
 {
-	//1F•ª‚Ìî•ñ‚ÌƒoƒCƒg”
+	//1è‰²åˆ†ã®æƒ…å ±ã®ãƒã‚¤ãƒˆæ•°
 	int ColorByte = 0;
 
-	//‰æ‘œ‚ÌƒtƒH[ƒ}ƒbƒg‚©‚ç1F•ª‚Ìî•ñ‚ÌƒoƒCƒg”‚ğŒˆ’è
+	//ç”»åƒã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‹ã‚‰1è‰²åˆ†ã®æƒ…å ±ã®ãƒã‚¤ãƒˆæ•°ã‚’æ±ºå®š
 	if (PIXELFORMAT_24BIT_RGB == p_PixelFotmat)
 	{
 		ColorByte = 3;
@@ -159,23 +159,23 @@ void Texture::TextureDataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::Bitmap
 		ColorByte = 4;
 	}
 
-	//‚‚³ƒsƒNƒZƒ‹•ªŒJ‚è•Ô‚·
+	//é«˜ã•ãƒ”ã‚¯ã‚»ãƒ«åˆ†ç¹°ã‚Šè¿”ã™
 	for (unsigned int Height = 0; Height < p_BitmapData->Height; Height++)
 	{
-		//•ƒsƒNƒZƒ‹ ~ ƒJƒ‰[F•ªŒJ‚è•Ô‚·i••ª‚Ì•ÏŠ·—Ê‚Æ‚È‚éj
+		//å¹…ãƒ”ã‚¯ã‚»ãƒ« Ã— ã‚«ãƒ©ãƒ¼è‰²åˆ†ç¹°ã‚Šè¿”ã™ï¼ˆå¹…åˆ†ã®å¤‰æ›é‡ã¨ãªã‚‹ï¼‰
 		for (unsigned int Width = 0; Width < p_BitmapData->Width * ColorByte; Width = Width + ColorByte)
 		{
-			//•ÏŠ·‚·‚é1‰æ‘f‚Ìæ“ªˆÊ’u‚ğZo‚·‚é
-			//i‰æ‘œ‚Í4 ƒoƒCƒg‹«ŠE‚ğˆÓ¯‚µ‚ÄŠi”[‚³‚ê‚Ä‚¢‚é‚Ì‚Å‚»‚ê‚àl—¶‚·‚éj
+			//å¤‰æ›ã™ã‚‹1ç”»ç´ ã®å…ˆé ­ä½ç½®ã‚’ç®—å‡ºã™ã‚‹
+			//ï¼ˆç”»åƒã¯4 ãƒã‚¤ãƒˆå¢ƒç•Œã‚’æ„è­˜ã—ã¦æ ¼ç´ã•ã‚Œã¦ã„ã‚‹ã®ã§ãã‚Œã‚‚è€ƒæ…®ã™ã‚‹ï¼‰
 			unsigned int DataPos = (Height * p_BitmapData->Stride) + Width;
 
-			//R¬•ª‚ğƒRƒs[
+			//Ræˆåˆ†ã‚’ã‚³ãƒ”ãƒ¼
 			memmove((byte*)p_TextureData->data + DataPos, (byte*)p_BitmapData->Scan0 + DataPos + 2, sizeof(byte));
 
-			//G¬•ª‚ğˆê“I‚É•Û‘¶
+			//Gæˆåˆ†ã‚’ä¸€æ™‚çš„ã«ä¿å­˜
 			memmove((byte*)p_TextureData->data + DataPos + 1, (byte*)p_BitmapData->Scan0 + DataPos + 1, sizeof(byte));
 
-			//B¬•ª‚ğˆê“I‚É•Û‘¶
+			//Bæˆåˆ†ã‚’ä¸€æ™‚çš„ã«ä¿å­˜
 			memmove((byte*)p_TextureData->data + DataPos + 2, (byte*)p_BitmapData->Scan0 + DataPos, sizeof(byte));
 		}
 	}

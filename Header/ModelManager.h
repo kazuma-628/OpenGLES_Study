@@ -1,13 +1,13 @@
-#ifndef MODEL_MANAGER_H
+ï»¿#ifndef MODEL_MANAGER_H
 #define MODEL_MANAGER_H
 
-//include’è‹`
+//includeå®šç¾©
 #include "Common.h"
 
 ////////////////////////////////////
-// ƒ‚ƒfƒ‹ƒf[ƒ^î•ñ\‘¢‘Ì
+// ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿æƒ…å ±æ§‹é€ ä½“
 
-//’¸“_ƒpƒ‰ƒ[ƒ^î•ñi[VertexAttribPointer]—pj
+//é ‚ç‚¹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æƒ…å ±ï¼ˆ[VertexAttribPointer]ç”¨ï¼‰
 typedef struct
 {
 	GLint size;
@@ -17,7 +17,7 @@ typedef struct
 	GLvoid *pointer;
 }VertexAttribPointerInfo;
 
-//[glDrawArrays]—pƒpƒ‰ƒ[ƒ^î•ñ
+//[glDrawArrays]ç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æƒ…å ±
 typedef struct
 {
 	GLenum mode;
@@ -25,7 +25,7 @@ typedef struct
 	GLsizei count;
 }DrawArraysInfo;
 
-//[glDrawElements]—pƒpƒ‰ƒ[ƒ^î•ñ
+//[glDrawElements]ç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æƒ…å ±
 typedef struct
 {
 	GLenum mode;
@@ -34,109 +34,109 @@ typedef struct
 	const void *indices;
 }DrawElementsInfo;
 
-//ƒoƒbƒtƒ@[ƒf[ƒ^—piglBufferData“™jƒpƒ‰ƒ[ƒ^î•ñ
+//ãƒãƒƒãƒ•ã‚¡ãƒ¼ãƒ‡ãƒ¼ã‚¿ç”¨ï¼ˆglBufferDataç­‰ï¼‰ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æƒ…å ±
 typedef struct
 {
-	GLsizei size;		//‘S’¸“_‚ÌƒTƒCƒYibytej
-	GLvoid *data;		//‘S’¸“_‚ªŠi”[‚³‚ê‚½æ“ªƒAƒhƒŒƒX
+	GLsizei size;		//å…¨é ‚ç‚¹ã®ã‚µã‚¤ã‚ºï¼ˆbyteï¼‰
+	GLvoid *data;		//å…¨é ‚ç‚¹ãŒæ ¼ç´ã•ã‚ŒãŸå…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
 }BufferDataInfo;
 
-//ƒ‚ƒfƒ‹ƒf[ƒ^î•ñ
+//ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿æƒ…å ±
 typedef struct
 {
-	VertexAttribPointerInfo Vertex;		//’¸“_î•ñ
-	VertexAttribPointerInfo Color;		//ƒJƒ‰[î•ñ
-	DrawArraysInfo DrawArrays;			//•`‰æî•ñ
-	BufferDataInfo BufferData;			//ƒoƒbƒtƒ@[î•ñ
+	VertexAttribPointerInfo Vertex;		//é ‚ç‚¹æƒ…å ±
+	VertexAttribPointerInfo Color;		//ã‚«ãƒ©ãƒ¼æƒ…å ±
+	DrawArraysInfo DrawArrays;			//æç”»æƒ…å ±
+	BufferDataInfo BufferData;			//ãƒãƒƒãƒ•ã‚¡ãƒ¼æƒ…å ±
 }ModelDataInfo;
 
-//ƒ‚ƒfƒ‹ƒf[ƒ^iƒCƒ“ƒfƒbƒNƒXg—p”Åjî•ñ
+//ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ï¼ˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä½¿ç”¨ç‰ˆï¼‰æƒ…å ±
 typedef struct
 {
-	VertexAttribPointerInfo Vertex;		//’¸“_î•ñ
-	VertexAttribPointerInfo Color;		//ƒJƒ‰[î•ñ
-	DrawElementsInfo DrawElements;		//•`‰æî•ñ
-	BufferDataInfo BufferData;			//ƒoƒbƒtƒ@[î•ñ
+	VertexAttribPointerInfo Vertex;		//é ‚ç‚¹æƒ…å ±
+	VertexAttribPointerInfo Color;		//ã‚«ãƒ©ãƒ¼æƒ…å ±
+	DrawElementsInfo DrawElements;		//æç”»æƒ…å ±
+	BufferDataInfo BufferData;			//ãƒãƒƒãƒ•ã‚¡ãƒ¼æƒ…å ±
 }ModelDataInfo_index;
 
 class ModelManager
 {
 
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	ModelManager();
 
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~ModelManager();
 
 	/*-------------------------------------------------------------------------------
-	*	ŠÖ”à–¾
-	*	@ŒŠ‚ ‚«ƒLƒ…[ƒu‚ğæ“¾‚·‚é
-	*	@i[glDrawArrays]‚Æ‚µ‚Ä“o˜^‚·‚éƒ‚ƒfƒ‹ƒf[ƒ^j
-	*	ˆø”
-	*	@p_ModelData		F[ /O]@ƒ‚ƒfƒ‹ƒf[ƒ^î•ñ
-	*	@p_vbo				F[I/ ]@ƒ‚ƒfƒ‹ƒf[ƒ^‚ğVBO‚Æ‚µ‚Ä“o˜^/g—p‚·‚éê‡‚Íutruev‚»‚¤‚Å‚È‚¢ê‡‚Íufalsev‚ğw’è
-	*						@		 VBO‚Æ‚µ‚Äg—p‚·‚éê‡AuglBufferDatav‚Åƒf[ƒ^‚ğ“o˜^‚·‚é‚µ‚Ä‚©‚çuglDrawArraysv‚·‚éB
-	*								 “o˜^‚·‚éƒf[ƒ^‚Í[size]‚ÉuBufferData.sizev‚ğA[data]‚ÉuBufferData.datav‚ğw’è‚·‚ê‚Î—Ç‚¢
-	*	–ß‚è’l
-	*	@‚È‚µ
+	*	é–¢æ•°èª¬æ˜
+	*	ã€€ç©´ã‚ãã‚­ãƒ¥ãƒ¼ãƒ–ã‚’å–å¾—ã™ã‚‹
+	*	ã€€ï¼ˆ[glDrawArrays]ã¨ã—ã¦ç™»éŒ²ã™ã‚‹ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ï¼‰
+	*	å¼•æ•°
+	*	ã€€p_ModelData		ï¼š[ /O]ã€€ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿æƒ…å ±
+	*	ã€€p_vbo				ï¼š[I/ ]ã€€ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’VBOã¨ã—ã¦ç™»éŒ²/ä½¿ç”¨ã™ã‚‹å ´åˆã¯ã€Œtrueã€ãã†ã§ãªã„å ´åˆã¯ã€Œfalseã€ã‚’æŒ‡å®š
+	*						ã€€		 VBOã¨ã—ã¦ä½¿ç”¨ã™ã‚‹å ´åˆã€ã€ŒglBufferDataã€ã§ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²ã™ã‚‹ã—ã¦ã‹ã‚‰ã€ŒglDrawArraysã€ã™ã‚‹ã€‚
+	*								 ç™»éŒ²ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã¯[size]ã«ã€ŒBufferData.sizeã€ã‚’ã€[data]ã«ã€ŒBufferData.dataã€ã‚’æŒ‡å®šã™ã‚Œã°è‰¯ã„
+	*	æˆ»ã‚Šå€¤
+	*	ã€€ãªã—
 	*-------------------------------------------------------------------------------*/
 	static void GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo);
 
 	/*-------------------------------------------------------------------------------
-	*	ŠÖ”à–¾
-	*	@ŒŠ‚ ‚«ƒLƒ…[ƒu‚ğæ“¾‚·‚éiƒCƒ“ƒfƒbƒNƒX”Åj
-	*	@i[glDrawElements]—pƒpƒ‰ƒ[ƒ^î•ñj
-	*	ˆø”
-	*	@p_ModelData		F[ /O]@ƒ‚ƒfƒ‹ƒf[ƒ^î•ñ
-	*	@p_vbo				F[I/ ]@ƒ‚ƒfƒ‹ƒf[ƒ^‚ğVBO‚Æ‚µ‚Ä“o˜^/g—p‚·‚éê‡‚Íutruev‚»‚¤‚Å‚È‚¢ê‡‚Íufalsev‚ğw’è
-	*						@		 VBO‚Æ‚µ‚Äg—p‚·‚éê‡AuglBufferDatav‚Åƒf[ƒ^‚ğ“o˜^‚·‚é‚µ‚Ä‚©‚çuglDrawElementsv‚·‚éB
-	*								 “o˜^‚·‚éƒf[ƒ^‚Í[size]‚ÉuBufferData.sizev‚ğA[data]‚ÉuBufferData.datav‚ğw’è‚·‚ê‚Î—Ç‚¢
-	*	–ß‚è’l
-	*	@‚È‚µ
+	*	é–¢æ•°èª¬æ˜
+	*	ã€€ç©´ã‚ãã‚­ãƒ¥ãƒ¼ãƒ–ã‚’å–å¾—ã™ã‚‹ï¼ˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç‰ˆï¼‰
+	*	ã€€ï¼ˆ[glDrawElements]ç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æƒ…å ±ï¼‰
+	*	å¼•æ•°
+	*	ã€€p_ModelData		ï¼š[ /O]ã€€ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿æƒ…å ±
+	*	ã€€p_vbo				ï¼š[I/ ]ã€€ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’VBOã¨ã—ã¦ç™»éŒ²/ä½¿ç”¨ã™ã‚‹å ´åˆã¯ã€Œtrueã€ãã†ã§ãªã„å ´åˆã¯ã€Œfalseã€ã‚’æŒ‡å®š
+	*						ã€€		 VBOã¨ã—ã¦ä½¿ç”¨ã™ã‚‹å ´åˆã€ã€ŒglBufferDataã€ã§ãƒ‡ãƒ¼ã‚¿ã‚’ç™»éŒ²ã™ã‚‹ã—ã¦ã‹ã‚‰ã€ŒglDrawElementsã€ã™ã‚‹ã€‚
+	*								 ç™»éŒ²ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã¯[size]ã«ã€ŒBufferData.sizeã€ã‚’ã€[data]ã«ã€ŒBufferData.dataã€ã‚’æŒ‡å®šã™ã‚Œã°è‰¯ã„
+	*	æˆ»ã‚Šå€¤
+	*	ã€€ãªã—
 	*-------------------------------------------------------------------------------*/
 	static void GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p_vbo);
 
 private:
 
 	///////////////////////////////
-	// \‘¢‘Ì’è‹`
+	// æ§‹é€ ä½“å®šç¾©
 
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	typedef struct
 	{
 		Vec2 Vector;
 		bColor3 Color;
 	}Vec2_bColor3;
 
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	typedef struct
 	{
 		Vec2 Vector;
 		bColor4 Color;
 	}Vec2_bColor4;
 
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	typedef struct
 	{
 		Vec3 Vector;
 		bColor3 Color;
 	}Vec3_bColor3;
 
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	typedef struct
 	{
 		Vec3 Vector;
 		bColor4 Color;
 	}Vec3_bColor4;
 
-	// ’¸“_ƒ|ƒCƒ“ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒã‚¤ãƒ³ã‚¿æ§‹é€ ä½“
 	typedef struct
 	{
 		GLvoid *vertex;
 	}Vertex;
 
-	// ’¸“_ƒ|ƒCƒ“ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒã‚¤ãƒ³ã‚¿æ§‹é€ ä½“
 	typedef struct
 	{
 		GLvoid *vertex;
@@ -144,10 +144,10 @@ private:
 	}Vertex_index;
 
 	///////////////////////////////
-	// •Ï”
+	// å¤‰æ•°
 
-	static Vertex		m_PiercedCube;				//ŒŠ‚ ‚«ƒLƒ…[ƒu—p‚Ì’¸“_ƒf[ƒ^
-	static Vertex_index	m_PiercedCube_index;		//ŒŠ‚ ‚«ƒLƒ…[ƒu—p‚Ì’¸“_ƒf[ƒ^iƒCƒ“ƒfƒbƒNƒX”Åj
+	static Vertex		m_PiercedCube;				//ç©´ã‚ãã‚­ãƒ¥ãƒ¼ãƒ–ç”¨ã®é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
+	static Vertex_index	m_PiercedCube_index;		//ç©´ã‚ãã‚­ãƒ¥ãƒ¼ãƒ–ç”¨ã®é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ï¼ˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç‰ˆï¼‰
 };
 
 #endif

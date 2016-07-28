@@ -1,57 +1,57 @@
-#include "WindowManager.h"
+﻿#include "WindowManager.h"
 
 /////////////////////////////////////////////
-//static�ϐ��̎��̂��`
+//static変数の実体を定義
 
-Size WindowManager::m_WindowSize;			//�}�E�X�{�^���̏��
+Size WindowManager::m_WindowSize;			//マウスボタンの情報
 
-//�R���X�g���N�^
+//コンストラクタ
 WindowManager::WindowManager()
 {
 	m_window = NULL;
 	memset(&m_WindowSize, 0, sizeof(m_WindowSize));
 }
 
-//�f�X�g���N�^
+//デストラクタ
 WindowManager::~WindowManager()
 {
 	glfwDestroyWindow(m_window);
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�E�B���h�E���쐬����
-*	�@�� �E�B���h�E�𕡐��������邱�Ƃɂ͂܂��Ή����Ă��Ȃ��̂Œ��� ��
-*	����
-*	�@p_Width	�F[I/ ]�@�E�B���h�E�̕�
-*	�@p_Height	�F[I/ ]�@�E�B���h�E�̍���
-*	�@p_Title	�F[I/ ]�@�E�B���h�E�̖��O�i�E�B���h�E�����^�X�N�o�[�ɕ\�������j
-*	�߂�l
-*	�@�Ȃ�
+*	関数説明
+*	　ウィンドウを作成する
+*	　※ ウィンドウを複数生成することにはまだ対応していないので注意 ※
+*	引数
+*	　p_Width	：[I/ ]　ウィンドウの幅
+*	　p_Height	：[I/ ]　ウィンドウの高さ
+*	　p_Title	：[I/ ]　ウィンドウの名前（ウィンドウ左上やタスクバーに表示される）
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const char* p_Title)
 {
 
 	//////////////////////////////////////////////////////
-	//	GLFW������
+	//	GLFW初期化
 
-	// GLFW�������ƃG���[�`�F�b�N
-	printf("GLFW�̏��������J�n���܂�... ");
+	// GLFW初期化とエラーチェック
+	printf("GLFWの初期化を開始します... ");
 	if (GL_TRUE != glfwInit())
 	{
-		ERROR_MESSAGE("GLFW�̏������Ɏ��s���܂���");
+		ERROR_MESSAGE("GLFWの初期化に失敗しました");
 	}
 	else
 	{
-		printf("����\n");
+		printf("完了\n");
 	}
 
-	//�v���O�����I�����̏�����o�^����iGLFW�̏I������������j
+	//プログラム終了時の処理を登録する（GLFWの終了処理をする）
 	atexit(glfwTerminate);
 
-	//OpenGL�̃o�[�W�����y�уv���t�@�C���w��
-	//OpenGLES3.0���w�肵�����Ƃ��낾���ANSIGHT�i�f�o�b�J�c�[���j���g�p���邽�߂ɁAGLES3.0�ɑΉ�����GL4.3���w�肷��
-	//�o�[�W��������ύX�������Ƃ��́uglfwWindowHint�v�Ō�������΂킩��Ǝv���܂��B
+	//OpenGLのバージョン及びプロファイル指定
+	//OpenGLES3.0を指定したいところだが、NSIGHT（デバッカツール）を使用するために、GLES3.0に対応するGL4.3を指定する
+	//バージョン等を変更したいときは「glfwWindowHint」で検索すればわかると思います。
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -59,73 +59,73 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 
 
 	//////////////////////////////////////////////////////
-	//	�E�B���h�E����
+	//	ウィンドウ生成
 
-	//�����ŃE�B���h�E�T�C�Y���w�肵�Ă��܂��B�T�C�Y��ύX�������ꍇ��Define�l��ύX���Ă��������B
-	printf("�E�B���h�E�i%d �~ %d�j�̐������J�n���܂�... ", p_Width, p_Height);
+	//ここでウィンドウサイズも指定しています。サイズを変更したい場合はDefine値を変更してください。
+	printf("ウィンドウ（%d × %d）の生成を開始します... ", p_Width, p_Height);
 	GLFWwindow *const window = glfwCreateWindow(p_Width, p_Height, p_Title, NULL, NULL);
 
-	//�E�B���h�E�������ł��Ă��邩�`�F�b�N
+	//ウィンドウが生成できているかチェック
 	if (NULL == window)
 	{
-		printf("���s\n");
-		ERROR_MESSAGE("�E�B���h�E�����Ɏ��s���܂����B\n"\
-					  "�O���t�B�b�N��OpenGLES�ɑΉ����Ă��Ȃ��\��������܂��B\n"\
-					  "�O���t�B�b�N�h���C�o���ŐV�ɂ��Ă݂Ă��������B\n"\
-					  "����ł��_���ȏꍇ�́A�c�O�Ȃ��炨�g���̊��ł͎g�p���邱�Ƃ��ł��܂���B\n"\
-					  "�ݒ�ł́AOpenGLES3.0�ɑΉ�����OpenGL4.3��ݒ肵�Ă��܂��B\n"\
-					  "���g���̊����Ή����Ă��邩�l�b�g�ȂǂŒ��ׂĂ݂Ă��������B");
+		printf("失敗\n");
+		ERROR_MESSAGE("ウィンドウ生成に失敗しました。\n"\
+					  "グラフィックがOpenGLESに対応していない可能性があります。\n"\
+					  "グラフィックドライバを最新にしてみてください。\n"\
+					  "それでもダメな場合は、残念ながらお使いの環境では使用することができません。\n"\
+					  "設定では、OpenGLES3.0に対応するOpenGL4.3を設定しています。\n"\
+					  "お使いの環境が対応しているかネットなどで調べてみてください。");
 	}
 	else
 	{
-		printf("����\n");
+		printf("完了\n");
 	}
 
-	// �쐬�����E�B���h�E��OpenGL�̏����Ώۂɂ���
+	// 作成したウィンドウをOpenGLの処理対象にする
 	glfwMakeContextCurrent(window);
 
-	// �J���[�o�b�t�@�̓���ւ��^�C�~���O�i�ʏ��1����́j
+	// カラーバッファの入れ替えタイミング（通常は1を入力）
 	glfwSwapInterval(1);
 
 	//////////////////////////////////////////////////////
-	//	�E�B���h�E�T�C�Y���ω��������p�̃R�[���o�b�N��o�^
+	//	ウィンドウサイズが変化した時用のコールバックを登録
 
 	glfwSetWindowSizeCallback(window, WindowManager::WindowSizeCallback);
 
 	//////////////////////////////////////////////////////
-	//	GLEW������
+	//	GLEW初期化
 
-	// GLEW������������
-	printf("GLEW�̏��������J�n���܂�... ");
+	// GLEWを初期化する
+	printf("GLEWの初期化を開始します... ");
 	glewExperimental = GL_TRUE;
 	if (GLEW_OK != glewInit())
 	{
-		printf("���s\n");
-		ERROR_MESSAGE("GLEW�̏������Ɏ��s���܂����B");
+		printf("失敗\n");
+		ERROR_MESSAGE("GLEWの初期化に失敗しました。");
 	}
 	else
 	{
-		printf("����\n");
+		printf("完了\n");
 	}
 
 	//////////////////////////////////////////////////////
-	//	������������ۑ�
+	//	生成した情報を保存
 
-	//���������E�B���h�E�n���h����ۑ�
+	//生成したウィンドウハンドルを保存
 	m_window = window;
 
-	//�����������̃E�B���h�E�̕�������ۑ�
+	//生成した時のウィンドウの幅高さを保存
 	m_WindowSize.Width = p_Width;
 	m_WindowSize.Height = p_Height;
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�E�B���h�E�ɕ`�悷��i�t�����g�o�b�t�@ / �o�b�N�o�b�t�@ ���ʁj
-*	����
-*	�@�Ȃ�
-*	�߂�l
-*	�@�Ȃ�
+*	関数説明
+*	　ウィンドウに描画する（フロントバッファ / バックバッファ 共通）
+*	引数
+*	　なし
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void WindowManager::DrawingOnWindow(void)
 {
@@ -133,20 +133,20 @@ void WindowManager::DrawingOnWindow(void)
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�E�B���h�E�T�C�Y���ω��������ɃR�[���o�b�N�����֐�
-*	����
-*	�@p_window	�F[I/ ]�@�E�B���h�E�n���h��
-*	�@p_Width	�F[I/ ]�@�E�B���h�E�̕�
-*	�@p_Height	�F[I/ ]�@�E�B���h�E�̍���
-*	�@�ڍׂ͉��LURL�Q�Ƃ̂���
-*	�@[http://www.glfw.org/docs/latest/group__window.html]��[GLFWmousebuttonfun]�֐�
-*	�߂�l
-*	�@�Ȃ�
+*	関数説明
+*	　ウィンドウサイズが変化した時にコールバックされる関数
+*	引数
+*	　p_window	：[I/ ]　ウィンドウハンドル
+*	　p_Width	：[I/ ]　ウィンドウの幅
+*	　p_Height	：[I/ ]　ウィンドウの高さ
+*	　詳細は下記URL参照のこと
+*	　[http://www.glfw.org/docs/latest/group__window.html]の[GLFWmousebuttonfun]関数
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void WindowManager::WindowSizeCallback(GLFWwindow* p_window, int p_Width, int p_Height)
 {
-	//�����������̃E�B���h�E�̕�������ۑ�
+	//生成した時のウィンドウの幅高さを保存
 	m_WindowSize.Width = p_Width;
 	m_WindowSize.Height = p_Height;
 }

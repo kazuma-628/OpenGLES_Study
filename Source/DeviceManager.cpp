@@ -1,18 +1,18 @@
-#include "DeviceManager.h"
+ï»¿#include "DeviceManager.h"
 
 /////////////////////////////////////////////
-//static•Ï”‚ÌÀ‘Ì‚ğ’è‹`
+//staticå¤‰æ•°ã®å®Ÿä½“ã‚’å®šç¾©
 
-MouseInfo DeviceManager::m_MouseInfo;		//ƒ}ƒEƒXƒ{ƒ^ƒ“‚Ìî•ñ	
-KeyInfo DeviceManager::m_KeyInfo;			//ƒL[iƒL[ƒ{[ƒhj‚Ìî•ñ
-Vec2 DeviceManager::m_RightClickPos;		//ƒ}ƒEƒX‚ª‰EƒNƒŠƒbƒN‚³‚ê‚½‚ÌƒJ[ƒ\ƒ‹À•W
-Vec2 DeviceManager::m_LeftClickPos;			//ƒ}ƒEƒX‚ª¶ƒNƒŠƒbƒN‚³‚ê‚½‚ÌƒJ[ƒ\ƒ‹À•W
-Vec2 DeviceManager::m_MiddleClickPos;		//ƒ}ƒEƒX‚ª’†‰›ƒNƒŠƒbƒN‚³‚ê‚½‚ÌƒJ[ƒ\ƒ‹À•W
+MouseInfo DeviceManager::m_MouseInfo;		//ãƒã‚¦ã‚¹ãƒœã‚¿ãƒ³ã®æƒ…å ±	
+KeyInfo DeviceManager::m_KeyInfo;			//ã‚­ãƒ¼ï¼ˆã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ï¼‰ã®æƒ…å ±
+Vec2 DeviceManager::m_RightClickPos;		//ãƒã‚¦ã‚¹ãŒå³ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸæ™‚ã®ã‚«ãƒ¼ã‚½ãƒ«åº§æ¨™
+Vec2 DeviceManager::m_LeftClickPos;			//ãƒã‚¦ã‚¹ãŒå·¦ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸæ™‚ã®ã‚«ãƒ¼ã‚½ãƒ«åº§æ¨™
+Vec2 DeviceManager::m_MiddleClickPos;		//ãƒã‚¦ã‚¹ãŒä¸­å¤®ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸæ™‚ã®ã‚«ãƒ¼ã‚½ãƒ«åº§æ¨™
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 DeviceManager::DeviceManager()
 {
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	m_window = NULL;
 	memset(&m_RightClickPos, 0, sizeof(m_RightClickPos));
 	memset(&m_LeftClickPos, 0, sizeof(m_LeftClickPos));
@@ -22,143 +22,143 @@ DeviceManager::DeviceManager()
 	memset(&m_KeyInfo, 0, sizeof(m_KeyInfo));
 }
 
-//ƒfƒXƒgƒ‰ƒNƒ^
+//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 DeviceManager::~DeviceManager()
 {
 
 }
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@KeyŠÇ—ƒ}ƒl[ƒWƒƒ[‚ğ‰Šú‰»‚·‚é
-*	@/¦ ƒEƒBƒ“ƒhƒE‚ğ•¡”¶¬‚µ‚ÄA‚»‚ê‚¼‚êKeyŠÇ—‚·‚é‚±‚Æ‚Í‚Ü‚¾‘Î‰‚µ‚Ä‚¢‚È‚¢‚Ì‚Å’ˆÓ ¦
-*	ˆø”
-*	@p_window	F[I/ ]@ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜
+*	ã€€Keyç®¡ç†ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚’åˆæœŸåŒ–ã™ã‚‹
+*	ã€€/â€» ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¤‡æ•°ç”Ÿæˆã—ã¦ã€ãã‚Œãã‚ŒKeyç®¡ç†ã™ã‚‹ã“ã¨ã¯ã¾ã å¯¾å¿œã—ã¦ã„ãªã„ã®ã§æ³¨æ„ â€»
+*	å¼•æ•°
+*	ã€€p_window	ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void DeviceManager::Initialize(GLFWwindow* const p_window)
 {
-	//ƒEƒBƒ“ƒhƒEî•ñ‚ğ•Û‘¶
+	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æƒ…å ±ã‚’ä¿å­˜
 	m_window = p_window;
 
-	//ƒ}ƒEƒXƒ{ƒ^ƒ“‚ª•Ï‰»‚µ‚½—p‚ÌƒR[ƒ‹ƒoƒbƒN‚ğ“o˜^
+	//ãƒã‚¦ã‚¹ãƒœã‚¿ãƒ³ãŒå¤‰åŒ–ã—ãŸæ™‚ç”¨ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’ç™»éŒ²
 	glfwSetMouseButtonCallback(m_window, DeviceManager::MouseButtonCallback);
 
-	//ƒ}ƒEƒXÀ•W‚ª•Ï‰»‚µ‚½—p‚ÌƒR[ƒ‹ƒoƒbƒN‚ğ“o˜^
+	//ãƒã‚¦ã‚¹åº§æ¨™ãŒå¤‰åŒ–ã—ãŸæ™‚ç”¨ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’ç™»éŒ²
 	glfwSetCursorPosCallback(p_window, DeviceManager::CursorPosCallback);
 
-	//ƒ}ƒEƒXƒzƒC[ƒ‹‚ª•Ï‰»‚µ‚½—p‚ÌƒR[ƒ‹ƒoƒbƒN‚ğ“o˜^
+	//ãƒã‚¦ã‚¹ãƒ›ã‚¤ãƒ¼ãƒ«ãŒå¤‰åŒ–ã—ãŸæ™‚ç”¨ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’ç™»éŒ²
 	glfwSetScrollCallback(m_window, DeviceManager::ScrollCallback);
 
-	//ƒL[iƒL[ƒ{[ƒhj‚ª•Ï‰»‚µ‚½—p‚ÌƒR[ƒ‹ƒoƒbƒN
+	//ã‚­ãƒ¼ï¼ˆã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ï¼‰ãŒå¤‰åŒ–ã—ãŸæ™‚ç”¨ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
 	glfwSetKeyCallback(m_window, DeviceManager::KeyCallback);
 }
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@ƒ}ƒEƒXƒ{ƒ^ƒ“‚ª•Ï‰»‚µ‚½‚ÉƒR[ƒ‹ƒoƒbƒN‚³‚ê‚éŠÖ”
-*	ˆø”
-*	@p_window	F[I/ ]@ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-*	@p_button	F[I/ ]@‚Ç‚Ìƒ{ƒ^ƒ“‚ª•Ï‰»‚µ‚½‚©
-*	@p_action	F[I/ ]@‰Ÿ‚³‚ê‚½iGLFW_PRESSj or —£‚³‚ê‚½iGLFW_RELEASEj
-*	@p_mods	F[I/ ]@‚æ‚­‚í‚©‚ç‚È‚¢
-*	@Ú×‚Í‰º‹LQÆ‚Ì‚±‚Æ
-*	@[http://www.glfw.org/docs/latest/group__input.html]‚Ì[GLFWmousebuttonfun]ŠÖ”
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜
+*	ã€€ãƒã‚¦ã‚¹ãƒœã‚¿ãƒ³ãŒå¤‰åŒ–ã—ãŸæ™‚ã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã•ã‚Œã‚‹é–¢æ•°
+*	å¼•æ•°
+*	ã€€p_window	ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+*	ã€€p_button	ï¼š[I/ ]ã€€ã©ã®ãƒœã‚¿ãƒ³ãŒå¤‰åŒ–ã—ãŸã‹
+*	ã€€p_action	ï¼š[I/ ]ã€€æŠ¼ã•ã‚ŒãŸï¼ˆGLFW_PRESSï¼‰ or é›¢ã•ã‚ŒãŸï¼ˆGLFW_RELEASEï¼‰
+*	ã€€p_mods	ï¼š[I/ ]ã€€ã‚ˆãã‚ã‹ã‚‰ãªã„
+*	ã€€è©³ç´°ã¯ä¸‹è¨˜å‚ç…§ã®ã“ã¨
+*	ã€€[http://www.glfw.org/docs/latest/group__input.html]ã®[GLFWmousebuttonfun]é–¢æ•°
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int p_action, int p_mods)
 {
-	//À•W‚ğæ“¾—p‚Ìˆê•Ï”
+	//åº§æ¨™ã‚’å–å¾—ç”¨ã®ä¸€æ™‚å¤‰æ•°
 	double PosX = 0.0;
 	double PosY = 0.0;
 
-	//ƒJ[ƒ\ƒ‹‚ÌÀ•W‚ğæ“¾‚µ‚Ü‚·iƒEƒBƒ“ƒhƒEŒn‚ÌÀ•W‚ª“ü‚è‚Ü‚·j
+	//ã‚«ãƒ¼ã‚½ãƒ«ã®åº§æ¨™ã‚’å–å¾—ã—ã¾ã™ï¼ˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ç³»ã®åº§æ¨™ãŒå…¥ã‚Šã¾ã™ï¼‰
 	glfwGetCursorPos(p_window, &PosX, &PosY);
 
-	//À•WŠÇ——p‚Ì•Ï”éŒ¾
-	//@À•Wæ“¾API‚Ìˆø”‚ª[double]‚Ìˆ×A–³‘Ê‚¾‚ªd•û‚È‚­‚±‚Ì‚æ‚¤‚È‹´“n‚µ‚ğ‚µ‚Ä‚¢‚é
-	//@i‚±‚Ì‚æ‚¤‚É‚µ‚È‚¢‚ÆAƒRƒ“ƒpƒCƒ‰‚Åƒ[ƒjƒ“ƒO‚ªo‚é‚Ì‚Åj
+	//åº§æ¨™ç®¡ç†ç”¨ã®å¤‰æ•°å®£è¨€
+	//ã€€åº§æ¨™å–å¾—APIã®å¼•æ•°ãŒ[double]ã®ç‚ºã€ç„¡é§„ã ãŒä»•æ–¹ãªãã“ã®ã‚ˆã†ãªæ©‹æ¸¡ã—ã‚’ã—ã¦ã„ã‚‹
+	//ã€€ï¼ˆã“ã®ã‚ˆã†ã«ã—ãªã„ã¨ã€ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã§ãƒ¯ãƒ¼ãƒ‹ãƒ³ã‚°ãŒå‡ºã‚‹ã®ã§ï¼‰
 	Vec2 Pos;
 	Pos.x = (GLfloat)PosX;
 	Pos.y = (GLfloat)PosY;
 
-	//‰EƒNƒŠƒbƒN‚ÉŠÖ‚·‚éˆ—
+	//å³ã‚¯ãƒªãƒƒã‚¯ã«é–¢ã™ã‚‹å‡¦ç†
 	if (GLFW_MOUSE_BUTTON_RIGHT == p_button)
 	{
-		//‰Ÿ‚³‚ê‚½ê‡
+		//æŠ¼ã•ã‚ŒãŸå ´åˆ
 		if (GLFW_PRESS == p_action)
 		{
-			printf("‰EƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½\n");
+			printf("å³ã‚¯ãƒªãƒƒã‚¯ãŒæŠ¼ã•ã‚Œã¾ã—ãŸ\n");
 
-			//[StateChange]‚É‚ÍAƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚é‚Æutruev‚ğİ’è
+			//[StateChange]ã«ã¯ã€ã‚¯ãƒªãƒƒã‚¯ã•ã‚Œã¦ã„ã‚‹ã¨ã€Œtrueã€ã‚’è¨­å®š
 			m_MouseInfo.Right.StateChange = true;
 
-			//[StateKeep]‚É‚ÍAƒNƒŠƒbƒN‚·‚é‚½‚Ñ‚Éutruev‚Æufalsev‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦‚é
+			//[StateKeep]ã«ã¯ã€ã‚¯ãƒªãƒƒã‚¯ã™ã‚‹ãŸã³ã«ã€Œtrueã€ã¨ã€Œfalseã€ã‚’äº¤äº’ã«åˆ‡ã‚Šæ›¿ãˆã‚‹
 			m_MouseInfo.Right.StateKeep = !m_MouseInfo.Right.StateKeep;
 
-			//[PushCount]‚É‚ÍAƒNƒŠƒbƒN‚·‚é‚½‚Ñ‚É’l‚ğ‰ÁZ‚µ‚Ä‚¢‚­
+			//[PushCount]ã«ã¯ã€ã‚¯ãƒªãƒƒã‚¯ã™ã‚‹ãŸã³ã«å€¤ã‚’åŠ ç®—ã—ã¦ã„ã
 			m_MouseInfo.Right.PushCount++;
 
-			//‰Ÿ‚³‚ê‚½‚ÌÀ•W‚ğ‹L‰¯
+			//æŠ¼ã•ã‚ŒãŸæ™‚ã®åº§æ¨™ã‚’è¨˜æ†¶
 			m_RightClickPos.x = Pos.x;
 			m_RightClickPos.y = Pos.y;
 		}
-		//—£‚³‚ê‚½ê‡
+		//é›¢ã•ã‚ŒãŸå ´åˆ
 		else if (GLFW_RELEASE == p_action)
 		{
-			//[StateChange]‚É‚ÍAƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚È‚¢‚Æufalsev‚ğİ’è
+			//[StateChange]ã«ã¯ã€ã‚¯ãƒªãƒƒã‚¯ã•ã‚Œã¦ã„ãªã„ã¨ã€Œfalseã€ã‚’è¨­å®š
 			m_MouseInfo.Right.StateChange = false;
 
-			//•Û‚µ‚Ä‚¢‚½À•W‚ğ‰Šú‰»
+			//ä¿æŒã—ã¦ã„ãŸåº§æ¨™ã‚’åˆæœŸåŒ–
 			memset(&m_MouseInfo.Right.ClickDiffPos, 0, sizeof(m_MouseInfo.Right.ClickDiffPos));
 			memset(&m_RightClickPos, 0, sizeof(m_RightClickPos));
 		}
 	}
 
-	//¶ƒNƒŠƒbƒN‚ÉŠÖ‚·‚éˆ—
+	//å·¦ã‚¯ãƒªãƒƒã‚¯ã«é–¢ã™ã‚‹å‡¦ç†
 	else if (GLFW_MOUSE_BUTTON_LEFT == p_button)
 	{
-		//‰Ÿ‚³‚ê‚½ê‡
+		//æŠ¼ã•ã‚ŒãŸå ´åˆ
 		if (GLFW_PRESS == p_action)
 		{
-			printf("¶ƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½\n");
+			printf("å·¦ã‚¯ãƒªãƒƒã‚¯ãŒæŠ¼ã•ã‚Œã¾ã—ãŸ\n");
 
-			//[StateChange]‚É‚ÍAƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚é‚Æutruev‚ğİ’è
+			//[StateChange]ã«ã¯ã€ã‚¯ãƒªãƒƒã‚¯ã•ã‚Œã¦ã„ã‚‹ã¨ã€Œtrueã€ã‚’è¨­å®š
 			m_MouseInfo.Left.StateChange = true;
 
-			//[StateKeep]‚É‚ÍAƒNƒŠƒbƒN‚·‚é‚½‚Ñ‚Éutruev‚Æufalsev‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦‚é
+			//[StateKeep]ã«ã¯ã€ã‚¯ãƒªãƒƒã‚¯ã™ã‚‹ãŸã³ã«ã€Œtrueã€ã¨ã€Œfalseã€ã‚’äº¤äº’ã«åˆ‡ã‚Šæ›¿ãˆã‚‹
 			m_MouseInfo.Left.StateKeep = !m_MouseInfo.Left.StateKeep;
 
-			//[PushCount]‚É‚ÍAƒNƒŠƒbƒN‚·‚é‚½‚Ñ‚É’l‚ğ‰ÁZ‚µ‚Ä‚¢‚­
+			//[PushCount]ã«ã¯ã€ã‚¯ãƒªãƒƒã‚¯ã™ã‚‹ãŸã³ã«å€¤ã‚’åŠ ç®—ã—ã¦ã„ã
 			m_MouseInfo.Left.PushCount++;
 
-			//‰Ÿ‚³‚ê‚½‚ÌÀ•W‚ğ‹L‰¯
+			//æŠ¼ã•ã‚ŒãŸæ™‚ã®åº§æ¨™ã‚’è¨˜æ†¶
 			m_LeftClickPos.x = Pos.x;
 			m_LeftClickPos.y = Pos.y;
 		}
-		//—£‚³‚ê‚½ê‡
+		//é›¢ã•ã‚ŒãŸå ´åˆ
 		else if (GLFW_RELEASE == p_action)
 		{
-			//[StateChange]‚É‚ÍAƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚È‚¢‚Æufalsev‚ğİ’è
+			//[StateChange]ã«ã¯ã€ã‚¯ãƒªãƒƒã‚¯ã•ã‚Œã¦ã„ãªã„ã¨ã€Œfalseã€ã‚’è¨­å®š
 			m_MouseInfo.Left.StateChange = false;
 
-			//•Û‚µ‚Ä‚¢‚½À•W‚ğ‰Šú‰»
+			//ä¿æŒã—ã¦ã„ãŸåº§æ¨™ã‚’åˆæœŸåŒ–
 			memset(&m_MouseInfo.Left.ClickDiffPos, 0, sizeof(m_MouseInfo.Left.ClickDiffPos));
 			memset(&m_LeftClickPos, 0, sizeof(m_LeftClickPos));
 		}
 	}
 
-	//^‚ñ’†ƒNƒŠƒbƒN‚ÉŠÖ‚·‚éˆ—i’†g‚ÍğŒ®‚Ì‚İ‚Å–¢À‘•j
+	//çœŸã‚“ä¸­ã‚¯ãƒªãƒƒã‚¯ã«é–¢ã™ã‚‹å‡¦ç†ï¼ˆä¸­èº«ã¯æ¡ä»¶å¼ã®ã¿ã§æœªå®Ÿè£…ï¼‰
 	else if (GLFW_MOUSE_BUTTON_MIDDLE == p_button)
 	{
-		//‰Ÿ‚³‚ê‚½ê‡
+		//æŠ¼ã•ã‚ŒãŸå ´åˆ
 		if (GLFW_PRESS == p_action)
 		{
-			printf("^‚ñ’†ƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½\n");
+			printf("çœŸã‚“ä¸­ã‚¯ãƒªãƒƒã‚¯ãŒæŠ¼ã•ã‚Œã¾ã—ãŸ\n");
 		}
-		//—£‚³‚ê‚½ê‡
+		//é›¢ã•ã‚ŒãŸå ´åˆ
 		else if (GLFW_RELEASE == p_action)
 		{
 			
@@ -167,99 +167,99 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 }
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ª“®‚¢‚½‚ÉƒR[ƒ‹ƒoƒbƒN‚³‚ê‚éŠÖ”
-*	@i‚½‚¾‚µ“Á’è‚Ìƒ}ƒEƒXƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚éÅ’†‚Ì‚İ—LŒø‚É‚µ‚Ä‚ ‚é
-*@@@@‚Ì‚ÅAƒ^ƒCƒ~ƒ“ƒO‚Í‰E‹LŠÖ”QÆ@DeviceManager::MouseButtonCallbackj
-*	ˆø”
-*	@p_window	F[I/ ]@ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-*	@p_xpos	F[I/ ]@X À•W
-*	@p_xpos	F[I/ ]@Y À•W
-*	@Ú×‚Í‰º‹LURLQÆ‚Ì‚±‚Æ
-*	@[http://www.glfw.org/docs/latest/group__input.html]‚Ì[GLFWcursorposfun]ŠÖ”
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜
+*	ã€€ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ãŒå‹•ã„ãŸæ™‚ã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã•ã‚Œã‚‹é–¢æ•°
+*	ã€€ï¼ˆãŸã ã—ç‰¹å®šã®ãƒã‚¦ã‚¹ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹æœ€ä¸­ã®ã¿æœ‰åŠ¹ã«ã—ã¦ã‚ã‚‹
+*ã€€ã€€ã€€ã€€ã®ã§ã€ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã¯å³è¨˜é–¢æ•°å‚ç…§ã€€DeviceManager::MouseButtonCallbackï¼‰
+*	å¼•æ•°
+*	ã€€p_window	ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+*	ã€€p_xpos	ï¼š[I/ ]ã€€X åº§æ¨™
+*	ã€€p_xpos	ï¼š[I/ ]ã€€Y åº§æ¨™
+*	ã€€è©³ç´°ã¯ä¸‹è¨˜URLå‚ç…§ã®ã“ã¨
+*	ã€€[http://www.glfw.org/docs/latest/group__input.html]ã®[GLFWcursorposfun]é–¢æ•°
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void DeviceManager::CursorPosCallback(GLFWwindow* p_window, double p_xpos, double p_ypos)
 {
-	//À•W—p‚Ì•Ï”éŒ¾
-	//@ƒR[ƒ‹ƒoƒbƒN—pAPI‚Ìˆø”‚ª[double]‚Ìˆ×A–³‘Ê‚¾‚ªd•û‚È‚­‚±‚Ì‚æ‚¤‚È‹´“n‚µ‚ğ‚µ‚Ä‚¢‚é
-	//@i‚±‚Ì‚æ‚¤‚É‚µ‚È‚¢‚ÆAƒRƒ“ƒpƒCƒ‰‚Åƒ[ƒjƒ“ƒO‚ªo‚é‚Ì‚Åj
+	//åº§æ¨™ç”¨ã®å¤‰æ•°å®£è¨€
+	//ã€€ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ç”¨APIã®å¼•æ•°ãŒ[double]ã®ç‚ºã€ç„¡é§„ã ãŒä»•æ–¹ãªãã“ã®ã‚ˆã†ãªæ©‹æ¸¡ã—ã‚’ã—ã¦ã„ã‚‹
+	//ã€€ï¼ˆã“ã®ã‚ˆã†ã«ã—ãªã„ã¨ã€ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã§ãƒ¯ãƒ¼ãƒ‹ãƒ³ã‚°ãŒå‡ºã‚‹ã®ã§ï¼‰
 	Vec2 Pos;
 	Pos.x = (GLfloat)p_xpos;
 	Pos.y = (GLfloat)p_ypos;
 
-	//À•W‚ğƒRƒs[‚µ‚Ä•Û‘¶
+	//åº§æ¨™ã‚’ã‚³ãƒ”ãƒ¼ã—ã¦ä¿å­˜
 	m_MouseInfo.Position = Pos;
 
-	//‰EƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚Ä‚¢‚éê‡
+	//å³ã‚¯ãƒªãƒƒã‚¯ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹å ´åˆ
 	if (true == m_MouseInfo.Right.StateChange)
 	{
-		//ƒNƒŠƒbƒN‚³‚ê‚½‚©‚ç‚Ì·•ª‚ğXV
+		//ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸæ™‚ã‹ã‚‰ã®å·®åˆ†ã‚’æ›´æ–°
 		m_MouseInfo.Right.ClickDiffPos.x = Pos.x - m_RightClickPos.x;
 		m_MouseInfo.Right.ClickDiffPos.y = Pos.y - m_RightClickPos.y;
 	}
 
-	//¶ƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚Ä‚¢‚éê‡
+	//å·¦ã‚¯ãƒªãƒƒã‚¯ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹å ´åˆ
 	if (true == m_MouseInfo.Left.StateChange)
 	{
-		//ƒNƒŠƒbƒN‚³‚ê‚½‚©‚ç‚Ì·•ª‚ğXV
+		//ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸæ™‚ã‹ã‚‰ã®å·®åˆ†ã‚’æ›´æ–°
 		m_MouseInfo.Left.ClickDiffPos.x = Pos.x - m_LeftClickPos.x;
 		m_MouseInfo.Left.ClickDiffPos.y = Pos.y - m_LeftClickPos.y;
 	}
 
 	/////////////////////////////////////////////
-	//	ƒfƒoƒbƒO—p
+	//	ãƒ‡ãƒãƒƒã‚°ç”¨
 
 	//	printf("Right.ClickDiffPos.x = %f, Right.ClickDiffPos.y = %f\n", m_MouseInfo.Right.ClickDiffPos.x, m_MouseInfo.Right.ClickDiffPos.y);
 	//	printf("Left.ClickDiffPos.x = %f, Left.ClickDiffPos.y = %f\n", m_MouseInfo.Left.ClickDiffPos.x, m_MouseInfo.Left.ClickDiffPos.y);
 }
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@ƒ}ƒEƒXƒzƒC[ƒ‹‚ª•Ï‰»‚µ‚½‚ÉƒR[ƒ‹ƒoƒbƒN‚³‚ê‚éŠÖ”
-*	ˆø”
-*	@p_window	F[I/ ]@ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-*	@p_xoffset	F[I/ ]@ƒXƒNƒ[ƒ‹‚ÌX²ƒIƒtƒZƒbƒg
-*	@p_yoffset	F[I/ ]@ƒXƒNƒ[ƒ‹‚ÌY²ƒIƒtƒZƒbƒg
-*	@Ú×‚Í‰º‹LURLQÆ‚Ì‚±‚Æ
-*	@[http://www.glfw.org/docs/latest/group__input.html]‚Ì[GLFWscrollfun]ŠÖ”
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜
+*	ã€€ãƒã‚¦ã‚¹ãƒ›ã‚¤ãƒ¼ãƒ«ãŒå¤‰åŒ–ã—ãŸæ™‚ã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã•ã‚Œã‚‹é–¢æ•°
+*	å¼•æ•°
+*	ã€€p_window	ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+*	ã€€p_xoffset	ï¼š[I/ ]ã€€ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã®Xè»¸ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+*	ã€€p_yoffset	ï¼š[I/ ]ã€€ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã®Yè»¸ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+*	ã€€è©³ç´°ã¯ä¸‹è¨˜URLå‚ç…§ã®ã“ã¨
+*	ã€€[http://www.glfw.org/docs/latest/group__input.html]ã®[GLFWscrollfun]é–¢æ•°
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void DeviceManager::ScrollCallback(GLFWwindow* p_window, double p_xoffset, double p_yoffset)
 {
 
-	//‚Ğ‚Æ‚Ü‚¸ƒXƒNƒ[ƒ‹ã‰º‚µ‚©g‚í‚È‚¢—\’è‚È‚Ì‚Åup_yoffsetv‚Ì‚İæ“¾
+	//ã²ã¨ã¾ãšã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ä¸Šä¸‹ã—ã‹ä½¿ã‚ãªã„äºˆå®šãªã®ã§ã€Œp_yoffsetã€ã®ã¿å–å¾—
 	m_MouseInfo.ScrollAmount.y += (GLfloat)p_yoffset;
 
 	/////////////////////////////////////////////
-	//	ƒfƒoƒbƒO—p
+	//	ãƒ‡ãƒãƒƒã‚°ç”¨
 
 //	printf("p_yoffset = %f\n", m_MouseInfo.ScrollAmount.y);
 }
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@ƒL[iƒL[ƒ{[ƒhj‚ª•Ï‰»‚µ‚½‚ÉƒR[ƒ‹ƒoƒbƒN‚³‚ê‚éŠÖ”
-*	ˆø”
-*	@p_window		F[I/ ]@ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-*	@p_key			F[I/ ]@ƒL[ƒ{[ƒh‚ÌƒL[î•ñi['A']‚Æ‚©['5']‚Æ‚©j
-*	@p_scancode	F[I/ ]@‚æ‚­‚í‚©‚ç‚È‚¢iƒVƒXƒeƒ€ŒÅ—L‚Ì‚Ç‚¤‚½‚ç‚±‚¤‚½‚çj
-*	@p_action		F[I/ ]@‰Ÿ‚³‚ê‚½iGLFW_PRESSj or —£‚³‚ê‚½iGLFW_RELEASEj
-*	@p_mods		F[I/ ]@Shift‚âCtrl‚È‚Ç‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ì”»’fi’è‹`–¼‚ÍURLQÆj
-*	@Ú×‚Í‰º‹LURLQÆ‚Ì‚±‚Æ
-*	@[http://www.glfw.org/docs/latest/group__input.html]‚Ì[GLFWkeyfun]ŠÖ”
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜
+*	ã€€ã‚­ãƒ¼ï¼ˆã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ï¼‰ãŒå¤‰åŒ–ã—ãŸæ™‚ã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã•ã‚Œã‚‹é–¢æ•°
+*	å¼•æ•°
+*	ã€€p_window		ï¼š[I/ ]ã€€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+*	ã€€p_key			ï¼š[I/ ]ã€€ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã®ã‚­ãƒ¼æƒ…å ±ï¼ˆ['A']ã¨ã‹['5']ã¨ã‹ï¼‰
+*	ã€€p_scancode	ï¼š[I/ ]ã€€ã‚ˆãã‚ã‹ã‚‰ãªã„ï¼ˆã‚·ã‚¹ãƒ†ãƒ å›ºæœ‰ã®ã©ã†ãŸã‚‰ã“ã†ãŸã‚‰ï¼‰
+*	ã€€p_action		ï¼š[I/ ]ã€€æŠ¼ã•ã‚ŒãŸï¼ˆGLFW_PRESSï¼‰ or é›¢ã•ã‚ŒãŸï¼ˆGLFW_RELEASEï¼‰
+*	ã€€p_mods		ï¼š[I/ ]ã€€Shiftã‚„Ctrlãªã©ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã®åˆ¤æ–­ï¼ˆå®šç¾©åã¯URLå‚ç…§ï¼‰
+*	ã€€è©³ç´°ã¯ä¸‹è¨˜URLå‚ç…§ã®ã“ã¨
+*	ã€€[http://www.glfw.org/docs/latest/group__input.html]ã®[GLFWkeyfun]é–¢æ•°
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode, int p_action, int p_mods)
 {
 
-	//ƒL[‚Ìî•ñ‚ÆŠi”[‚·‚é•Ï”‚ğ‚Ü‚Æ‚ß‚ÄŠÇ—‚·‚é
+	//ã‚­ãƒ¼ã®æƒ…å ±ã¨æ ¼ç´ã™ã‚‹å¤‰æ•°ã‚’ã¾ã¨ã‚ã¦ç®¡ç†ã™ã‚‹
 	KeyInfoSummary KeySummary[] =
 	{
-		//ƒAƒ‹ƒtƒ@ƒxƒbƒgi26ŒÂj
+		//ã‚¢ãƒ«ãƒ•ã‚¡ãƒ™ãƒƒãƒˆï¼ˆ26å€‹ï¼‰
 		{ "A", GLFW_KEY_A, &m_KeyInfo.StateChange.Key_A, &m_KeyInfo.StateKeep.Key_A, &m_KeyInfo.PushCount.Key_A },
 		{ "B", GLFW_KEY_B, &m_KeyInfo.StateChange.Key_B, &m_KeyInfo.StateKeep.Key_B, &m_KeyInfo.PushCount.Key_B },
 		{ "C", GLFW_KEY_C, &m_KeyInfo.StateChange.Key_C, &m_KeyInfo.StateKeep.Key_C, &m_KeyInfo.PushCount.Key_C },
@@ -287,7 +287,7 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 		{ "Y", GLFW_KEY_Y, &m_KeyInfo.StateChange.Key_Y, &m_KeyInfo.StateKeep.Key_Y, &m_KeyInfo.PushCount.Key_Y },
 		{ "Z", GLFW_KEY_Z, &m_KeyInfo.StateChange.Key_Z, &m_KeyInfo.StateKeep.Key_Z, &m_KeyInfo.PushCount.Key_Z },
 
-		//”šAƒeƒ“ƒL[”ši20ŒÂj
+		//æ•°å­—ã€ãƒ†ãƒ³ã‚­ãƒ¼æ•°å­—ï¼ˆ20å€‹ï¼‰
 		{ "0", GLFW_KEY_0,    &m_KeyInfo.StateChange.Key_0, &m_KeyInfo.StateKeep.Key_0, &m_KeyInfo.PushCount.Key_0 },
 		{ "0", GLFW_KEY_KP_0, &m_KeyInfo.StateChange.Key_0, &m_KeyInfo.StateKeep.Key_0, &m_KeyInfo.PushCount.Key_0 },
 		{ "1", GLFW_KEY_1,    &m_KeyInfo.StateChange.Key_1, &m_KeyInfo.StateKeep.Key_1, &m_KeyInfo.PushCount.Key_1 },
@@ -309,7 +309,7 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 		{ "9", GLFW_KEY_9,    &m_KeyInfo.StateChange.Key_9, &m_KeyInfo.StateKeep.Key_9, &m_KeyInfo.PushCount.Key_9 },
 		{ "9", GLFW_KEY_KP_9, &m_KeyInfo.StateChange.Key_9, &m_KeyInfo.StateKeep.Key_9, &m_KeyInfo.PushCount.Key_9 },
 
-		//‹L†‚È‚Ç(16ŒÂj
+		//è¨˜å·ãªã©(16å€‹ï¼‰
 		{ "/", GLFW_KEY_KP_DIVIDE,        &m_KeyInfo.StateChange.Key_DIVIDE,   &m_KeyInfo.StateKeep.Key_DIVIDE,   &m_KeyInfo.PushCount.Key_DIVIDE   },
 		{ "*", GLFW_KEY_KP_MULTIPLY,      &m_KeyInfo.StateChange.Key_MULTIPLY, &m_KeyInfo.StateKeep.Key_MULTIPLY, &m_KeyInfo.PushCount.Key_MULTIPLY },
 		{ "-", GLFW_KEY_KP_SUBTRACT,      &m_KeyInfo.StateChange.Key_SUBTRACT, &m_KeyInfo.StateKeep.Key_SUBTRACT, &m_KeyInfo.PushCount.Key_SUBTRACT },
@@ -320,34 +320,34 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 		{ "Ctrl", GLFW_KEY_RIGHT_CONTROL, &m_KeyInfo.StateChange.Key_CONTROL,  &m_KeyInfo.StateKeep.Key_CONTROL,  &m_KeyInfo.PushCount.Key_CONTROL  },
 		{ "Alt", GLFW_KEY_LEFT_ALT,       &m_KeyInfo.StateChange.Key_ALT,      &m_KeyInfo.StateKeep.Key_ALT,      &m_KeyInfo.PushCount.Key_ALT      },
 		{ "Alt", GLFW_KEY_RIGHT_ALT,      &m_KeyInfo.StateChange.Key_ALT,      &m_KeyInfo.StateKeep.Key_ALT,      &m_KeyInfo.PushCount.Key_ALT      },
-		{ " (ƒXƒy[ƒX)", GLFW_KEY_SPACE,  &m_KeyInfo.StateChange.Key_SPACE,    &m_KeyInfo.StateKeep.Key_SPACE,    &m_KeyInfo.PushCount.Key_SPACE    },
-		{ "¨", GLFW_KEY_RIGHT,           &m_KeyInfo.StateChange.Key_RIGHT,    &m_KeyInfo.StateKeep.Key_RIGHT,    &m_KeyInfo.PushCount.Key_RIGHT    },
-		{ "©", GLFW_KEY_LEFT,            &m_KeyInfo.StateChange.Key_LEFT,     &m_KeyInfo.StateKeep.Key_LEFT,     &m_KeyInfo.PushCount.Key_LEFT     },
-		{ "«", GLFW_KEY_DOWN,            &m_KeyInfo.StateChange.Key_DOWN,     &m_KeyInfo.StateKeep.Key_DOWN,     &m_KeyInfo.PushCount.Key_DOWN     },
-		{ "ª", GLFW_KEY_UP,              &m_KeyInfo.StateChange.Key_UP,       &m_KeyInfo.StateKeep.Key_UP,       &m_KeyInfo.PushCount.Key_UP       },
+		{ " (ã‚¹ãƒšãƒ¼ã‚¹)", GLFW_KEY_SPACE,  &m_KeyInfo.StateChange.Key_SPACE,    &m_KeyInfo.StateKeep.Key_SPACE,    &m_KeyInfo.PushCount.Key_SPACE    },
+		{ "â†’", GLFW_KEY_RIGHT,           &m_KeyInfo.StateChange.Key_RIGHT,    &m_KeyInfo.StateKeep.Key_RIGHT,    &m_KeyInfo.PushCount.Key_RIGHT    },
+		{ "â†", GLFW_KEY_LEFT,            &m_KeyInfo.StateChange.Key_LEFT,     &m_KeyInfo.StateKeep.Key_LEFT,     &m_KeyInfo.PushCount.Key_LEFT     },
+		{ "â†“", GLFW_KEY_DOWN,            &m_KeyInfo.StateChange.Key_DOWN,     &m_KeyInfo.StateKeep.Key_DOWN,     &m_KeyInfo.PushCount.Key_DOWN     },
+		{ "â†‘", GLFW_KEY_UP,              &m_KeyInfo.StateChange.Key_UP,       &m_KeyInfo.StateKeep.Key_UP,       &m_KeyInfo.PushCount.Key_UP       },
 	};
 	
-	//‰Ÿ‚³‚ê‚½ or —£‚³‚ê‚Îê‡‚Ì‚İî•ñXVi‰Ÿ‚µ‘±‚¯‚Ì‚ÍƒXƒ‹[‚·‚éj
+	//æŠ¼ã•ã‚ŒãŸ or é›¢ã•ã‚Œã°å ´åˆã®ã¿æƒ…å ±æ›´æ–°ï¼ˆæŠ¼ã—ç¶šã‘ã®æ™‚ã¯ã‚¹ãƒ«ãƒ¼ã™ã‚‹ï¼‰
 	if (GLFW_PRESS == p_action || GLFW_RELEASE == p_action)
 	{
-		//ŠeƒL[iƒL[ƒ{[ƒhj‚Ìî•ñ•ªƒ‹[ƒv‚·‚é
+		//å„ã‚­ãƒ¼ï¼ˆã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ï¼‰ã®æƒ…å ±åˆ†ãƒ«ãƒ¼ãƒ—ã™ã‚‹
 		for (int index = 0; (sizeof(KeySummary) / sizeof(KeySummary[0])) > index; index++)
 		{
-			//ŠY“–‚·‚éƒL[‚ª‚ ‚ê‚Î
+			//è©²å½“ã™ã‚‹ã‚­ãƒ¼ãŒã‚ã‚Œã°
 			if (KeySummary[index].KeyDefine == p_key)
 			{
-				//[StateChange]‚É‚ÍA‰Ÿ‚³‚ê‚Ä‚¢‚é‚Æutruev or ‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢‚Æufalsev‚ğİ’è
+				//[StateChange]ã«ã¯ã€æŠ¼ã•ã‚Œã¦ã„ã‚‹ã¨ã€Œtrueã€ or æŠ¼ã•ã‚Œã¦ã„ãªã„ã¨ã€Œfalseã€ã‚’è¨­å®š
 				*KeySummary[index].StateChange = p_action == GLFW_PRESS ? true : false;
 
-				//‰Ÿ‚³‚ê‚½ê‡
+				//æŠ¼ã•ã‚ŒãŸå ´åˆ
 				if (GLFW_PRESS == p_action)
 				{
-					printf("[%s]ƒL[‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½\n", KeySummary[index].KeyChar);
+					printf("[%s]ã‚­ãƒ¼ãŒæŠ¼ã•ã‚Œã¾ã—ãŸ\n", KeySummary[index].KeyChar);
 
-					//[StateKeep]‚É‚ÍA‰Ÿ‚·‚½‚Ñ‚Éutruev‚Æufalsev‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦‚é
+					//[StateKeep]ã«ã¯ã€æŠ¼ã™ãŸã³ã«ã€Œtrueã€ã¨ã€Œfalseã€ã‚’äº¤äº’ã«åˆ‡ã‚Šæ›¿ãˆã‚‹
 					*KeySummary[index].StateKeep = !*KeySummary[index].StateKeep;
 
-					//[PushCount]‚É‚ÍA‰Ÿ‚·‚½‚Ñ‚É’l‚ğ‰ÁZ‚µ‚Ä‚¢‚­
+					//[PushCount]ã«ã¯ã€æŠ¼ã™ãŸã³ã«å€¤ã‚’åŠ ç®—ã—ã¦ã„ã
 					*KeySummary[index].PushCount++;
 				}
 				break;

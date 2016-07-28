@@ -1,15 +1,15 @@
-#version 320 es
+ï»¿#version 320 es
 
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 100) out;
 
-//’¸“_ƒVƒF[ƒ_‚©‚ç‚Ì•Ï”
+//é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ã‹ã‚‰ã®å¤‰æ•°
 in lowp vec4 vary_color[];
 
-//ƒtƒ‰ƒOƒƒ“ƒgƒVƒF[ƒ_‚Ö‚Ì•Ï”
+//ãƒ•ãƒ©ã‚°ãƒ¡ãƒ³ãƒˆã‚·ã‚§ãƒ¼ãƒ€ã¸ã®å¤‰æ•°
 out lowp vec4 f_vary_color;
 
-//À•W•ÏŠ·ƒ}ƒgƒŠƒNƒXiƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒ}ƒgƒŠƒNƒX ~ ƒ‚ƒfƒ‹ƒrƒ…[ƒ}ƒgƒŠƒbƒNƒXj
+//åº§æ¨™å¤‰æ›ãƒãƒˆãƒªã‚¯ã‚¹ï¼ˆãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒˆãƒªã‚¯ã‚¹ Ã— ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼ãƒãƒˆãƒªãƒƒã‚¯ã‚¹ï¼‰
 uniform mediump mat4 ProjModel_matrix;
 
 void main()

@@ -1,100 +1,100 @@
-#include "MainDraw.h"
+ï»¿#include "MainDraw.h"
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 MainDraw::MainDraw()
 {
-	//MainƒVƒF[ƒ_[ŠÇ——p‚ÌƒIƒuƒWƒFƒNƒg¶¬
+	//Mainã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ç®¡ç†ç”¨ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆ
 	m_MainShader = new ShaderManager;
 
-	//•Ï”‰Šú‰»
+	//å¤‰æ•°åˆæœŸåŒ–
 	m_attr_pos = -1;
 	m_attr_color = -1;
 	m_ProjModel_matrix = 0;
 
 }
 
-//ƒfƒXƒgƒ‰ƒNƒ^
+//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 MainDraw::~MainDraw()
 {
-	//MainƒVƒF[ƒ_[ŠÇ——p‚ÌƒIƒuƒWƒFƒNƒg”jŠü
+	//Mainã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ç®¡ç†ç”¨ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç ´æ£„
 	delete m_MainShader;
 }
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@ƒƒCƒ“•`‰æ‚Ì€”õ‚ð‚·‚é
-*	ˆø”
-*	@‚È‚µ
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜Ž
+*	ã€€ãƒ¡ã‚¤ãƒ³æç”»ã®æº–å‚™ã‚’ã™ã‚‹
+*	å¼•æ•°
+*	ã€€ãªã—
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void MainDraw::Prepare()
 {
-	//ƒVƒF[ƒ_[‚Ì“Ç‚Ýž‚Ý‚ðs‚¤
-	//uShadervƒtƒHƒ‹ƒ_‚ÉŠi”[‚³‚ê‚Ä‚¢‚é•K—v‚ª‚ ‚è‚Ü‚·B
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®èª­ã¿è¾¼ã¿ã‚’è¡Œã†
+	//ã€ŒShaderã€ãƒ•ã‚©ãƒ«ãƒ€ã«æ ¼ç´ã•ã‚Œã¦ã„ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
 	m_MainShader->CreateShaderProgram("Main/Main.vert", "Main/Main.frag", "Main/Main.geom", NULL, NULL, NULL);
 
-	//ƒVƒF[ƒ_[“à‚ÅŽg—p‚·‚é•Ï”‚ðŽæ“¾‚µ‚Ü‚·i’¸“_ƒf[ƒ^j
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å†…ã§ä½¿ç”¨ã™ã‚‹å¤‰æ•°ã‚’å–å¾—ã—ã¾ã™ï¼ˆé ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ï¼‰
 	m_attr_pos = m_MainShader->GetAttribLocation("attr_pos");
 
-	//ƒVƒF[ƒ_[“à‚ÅŽg—p‚·‚é•Ï”‚ðŽæ“¾‚µ‚Ü‚·iƒJƒ‰[ƒf[ƒ^j
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å†…ã§ä½¿ç”¨ã™ã‚‹å¤‰æ•°ã‚’å–å¾—ã—ã¾ã™ï¼ˆã‚«ãƒ©ãƒ¼ãƒ‡ãƒ¼ã‚¿ï¼‰
 	m_attr_color = m_MainShader->GetAttribLocation("attr_color");
 
-	//ƒVƒF[ƒ_[“à‚ÅŽg—p‚·‚é•Ï”‚ðŽæ“¾‚µ‚Ü‚·iÀ•W•ÏŠ·ƒ}ƒgƒŠƒNƒXiƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒ}ƒgƒŠƒNƒX ~ ƒ‚ƒfƒ‹ƒrƒ…[ƒ}ƒgƒŠƒbƒNƒXjj
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å†…ã§ä½¿ç”¨ã™ã‚‹å¤‰æ•°ã‚’å–å¾—ã—ã¾ã™ï¼ˆåº§æ¨™å¤‰æ›ãƒžãƒˆãƒªã‚¯ã‚¹ï¼ˆãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ãƒžãƒˆãƒªã‚¯ã‚¹ Ã— ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼ãƒžãƒˆãƒªãƒƒã‚¯ã‚¹ï¼‰ï¼‰
 	m_ProjModel_matrix = m_MainShader->GetUniformLocation("ProjModel_matrix");
 
 }
 
 /*-------------------------------------------------------------------------------
-*	ŠÖ”à–¾
-*	@ƒƒCƒ“•`‰æ‚ðŠJŽn‚·‚é
-*	ˆø”
-*	@p_Global				F[I/O]@ƒOƒ[ƒoƒ‹ƒf[ƒ^
-*	–ß‚è’l
-*	@‚È‚µ
+*	é–¢æ•°èª¬æ˜Ž
+*	ã€€ãƒ¡ã‚¤ãƒ³æç”»ã‚’é–‹å§‹ã™ã‚‹
+*	å¼•æ•°
+*	ã€€p_Global				ï¼š[I/O]ã€€ã‚°ãƒ­ãƒ¼ãƒãƒ«ãƒ‡ãƒ¼ã‚¿
+*	æˆ»ã‚Šå€¤
+*	ã€€ãªã—
 *-------------------------------------------------------------------------------*/
 void MainDraw::Drawing(GlobalData *p_Global)
 {
-	// ƒVƒF[ƒ_[ƒvƒƒOƒ‰ƒ€‚Ì—˜—p‚ðŠJŽn‚·‚é
+	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®åˆ©ç”¨ã‚’é–‹å§‹ã™ã‚‹
 	m_MainShader->UseProgram();
 
-	//À•W•ÏŠ·ƒ}ƒgƒŠƒNƒXiƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒ}ƒgƒŠƒNƒX ~ ƒ‚ƒfƒ‹ƒrƒ…[ƒ}ƒgƒŠƒbƒNƒXj
+	//åº§æ¨™å¤‰æ›ãƒžãƒˆãƒªã‚¯ã‚¹ï¼ˆãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ãƒžãƒˆãƒªã‚¯ã‚¹ Ã— ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼ãƒžãƒˆãƒªãƒƒã‚¯ã‚¹ï¼‰
 	Matrix ProjModel;
 	ProjModel = p_Global->ProjectionMatrix * p_Global->ModelViewMatrix;
 
-	//ƒVƒF[ƒ_[‚Ì•Ï”‚ð—LŒø‰»
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®å¤‰æ•°ã‚’æœ‰åŠ¹åŒ–
 	m_MainShader->EnableVertexAttribArray(m_attr_pos);
 	m_MainShader->EnableVertexAttribArray(m_attr_color);
 
-	//ƒLƒ…[ƒuŒ`ó‚Ìƒ‚ƒfƒ‹ƒf[ƒ^‚ðŽæ“¾‚·‚é
+	//ã‚­ãƒ¥ãƒ¼ãƒ–å½¢çŠ¶ã®ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
 	ModelDataInfo PiercedCube;
 	ModelManager::GetPiercedCube(&PiercedCube, false);
 
-	//ƒLƒ…[ƒuŒ`ó‚Ìƒ‚ƒfƒ‹ƒf[ƒ^‚ðŽæ“¾‚·‚éiƒCƒ“ƒfƒbƒNƒX”Åj
+	//ã‚­ãƒ¥ãƒ¼ãƒ–å½¢çŠ¶ã®ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹ï¼ˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç‰ˆï¼‰
 	ModelDataInfo_index PiercedCube_index;
 	ModelManager::GetPiercedCube_index(&PiercedCube_index, false);
 
-	//k“xƒeƒXƒg‚ð—LŒø
+	//éœ‡åº¦ãƒ†ã‚¹ãƒˆã‚’æœ‰åŠ¹
 	glEnable(GL_DEPTH_TEST);
 
-	//”wŒiFŽw’è
+	//èƒŒæ™¯è‰²æŒ‡å®š
 	glClearColor(0.0f, 0.0f, 0.9f, 1.0f);
 
-	//F‰Šú‰»
+	//è‰²åˆæœŸåŒ–
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//ƒrƒ…[ƒ|[ƒg‚ðÝ’è‚·‚é
+	//ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã‚’è¨­å®šã™ã‚‹
 	glViewport(0, 0, p_Global->WindowSize.Width, p_Global->WindowSize.Height);
 
-	//•Ï”‚ð“]‘—
+	//å¤‰æ•°ã‚’è»¢é€
 	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, ProjModel.GetMatrixFloat());
 
-	// [glDrawArrays]‚ðŽg—p‚µ‚½•`‰æiˆê”ÔƒI[ƒ\ƒhƒbƒNƒXi‰•à“Ij‚È•`‰æ•û–@j
+	// [glDrawArrays]ã‚’ä½¿ç”¨ã—ãŸæç”»ï¼ˆä¸€ç•ªã‚ªãƒ¼ã‚½ãƒ‰ãƒƒã‚¯ã‚¹ï¼ˆåˆæ­©çš„ï¼‰ãªæç”»æ–¹æ³•ï¼‰
 	m_MainShader->VertexAttribPointer(m_attr_pos, PiercedCube.Vertex.size, PiercedCube.Vertex.type, PiercedCube.Vertex.normalized, PiercedCube.Vertex.stride, PiercedCube.Vertex.pointer);
 	m_MainShader->VertexAttribPointer(m_attr_color, PiercedCube.Color.size, PiercedCube.Color.type, PiercedCube.Color.normalized, PiercedCube.Color.stride, PiercedCube.Color.pointer);
 	glDrawArrays(PiercedCube.DrawArrays.mode, PiercedCube.DrawArrays.first, PiercedCube.DrawArrays.count);
 
-	// [glDrawElements]‚ðŽg—p‚µ‚½•`‰æiƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ðŽg—p‚·‚éê‡j
+	// [glDrawElements]ã‚’ä½¿ç”¨ã—ãŸæç”»ï¼ˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆï¼‰
 //	m_MainShader->VertexAttribPointer(m_attr_pos, PiercedCube_index.Vertex.size, PiercedCube_index.Vertex.type, PiercedCube_index.Vertex.normalized, PiercedCube_index.Vertex.stride, PiercedCube_index.Vertex.pointer);
 //	m_MainShader->VertexAttribPointer(m_attr_color, PiercedCube_index.Color.size, PiercedCube_index.Color.type, PiercedCube_index.Color.normalized, PiercedCube_index.Color.stride, PiercedCube_index.Color.pointer);
 //	glDrawElements(PiercedCube_index.DrawElements.mode, PiercedCube_index.DrawElements.count, PiercedCube_index.DrawElements.type, PiercedCube_index.DrawElements.indices);

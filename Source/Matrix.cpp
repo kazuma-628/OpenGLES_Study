@@ -1,34 +1,34 @@
-#include "Matrix.h"
+﻿#include "Matrix.h"
 
-//�R���X�g���N�^
+//コンストラクタ
 Matrix::Matrix()
 {
-	//�P�ʍs��𐶐�����i����������j
+	//単位行列を生成する（初期化する）
 	Identity();
 }
 Matrix::Matrix(const Mat4 &p_matrix)
 {
-	//�w�肳�ꂽ�}�g���N�X��ݒ肷��
+	//指定されたマトリクスを設定する
 	memmove(&this->m_val, &p_matrix, sizeof(this->m_val));
 }
 
-//�f�X�g���N�^
+//デストラクタ
 Matrix::~Matrix()
 {
 	
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@���Z�q�̃I�[�o�[���[�h��`
+*	関数説明
+*	　演算子のオーバーロード定義
 *-------------------------------------------------------------------------------*/
 
-//�}�g���N�X���m�̏�Z
+//マトリクス同士の乗算
 Matrix operator*(const Matrix &p_left, const Matrix &p_right)
 {
 	Matrix t_matrix;
 
-	//�s��̏�Z�iOpenGL�͍s�x�N�g���ł͂Ȃ���x�N�g���Ȃ��Ƃɒ��ӁA��Z�͈�ʓI�ȍs��̏�Z�ƈႤ�j
+	//行列の乗算（OpenGLは行ベクトルではなく列ベクトルなことに注意、乗算は一般的な行列の乗算と違う）
 	for (int i = 0; i < 4; i++)
 	{
 		t_matrix.m_val.m[i][0] = p_left.m_val.m[0][0] * p_right.m_val.m[i][0] + p_left.m_val.m[1][0] * p_right.m_val.m[i][1]
@@ -44,7 +44,7 @@ Matrix operator*(const Matrix &p_left, const Matrix &p_right)
 	return t_matrix;
 }
 
-//�}�g���N�X���m�̏�Z
+//マトリクス同士の乗算
 Matrix operator*(const Matrix &p_left, const Mat4 &p_right)
 {
 	Matrix t_matrix = p_right;
@@ -54,7 +54,7 @@ Matrix operator*(const Matrix &p_left, const Mat4 &p_right)
 	return t_matrix;
 }
 
-//�}�g���N�X���m�̏�Z
+//マトリクス同士の乗算
 Matrix operator*(const Mat4 &p_left, const Matrix &p_right)
 {
 	Matrix t_matrix = p_left;
@@ -64,7 +64,7 @@ Matrix operator*(const Mat4 &p_left, const Matrix &p_right)
 	return t_matrix;
 }
 
-//�}�g���N�X���m�̏�Z
+//マトリクス同士の乗算
 Matrix operator*(const Mat4 &p_left, const Mat4 &p_right)
 {
 	Matrix t_matrix;
@@ -76,32 +76,32 @@ Matrix operator*(const Mat4 &p_left, const Mat4 &p_right)
 	return t_matrix;
 }
 
-//�}�g���N�X�̑��
+//マトリクスの代入
 void Matrix::operator=(const Mat4 &p_matrix)
 {
 	memmove(&this->m_val, &p_matrix, sizeof(this->m_val));
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�P�ʍs��𐶐�����
-*	����
-*	�@�Ȃ�
-*	�߂�l
-*	�@�Ȃ�
+*	関数説明
+*	　単位行列を生成する
+*	引数
+*	　なし
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void Matrix::Identity()
 {	
-	//�Q�l�p�̃���
-	//[��][  ][  ][  ]
-	//[  ][��][  ][  ]
-	//[  ][  ][��][  ]
-	//[  ][  ][  ][��]
+	//参考用のメモ
+	//[●][  ][  ][  ]
+	//[  ][●][  ][  ]
+	//[  ][  ][●][  ]
+	//[  ][  ][  ][●]
 
-	//�s�񏉊���
+	//行列初期化
 	memset(&m_val, 0, sizeof(m_val));
 
-	//�P�ʍs��ݒ肷��
+	//単位行列設定する
 	m_val.m[0][0] = 1.0f;
 	m_val.m[1][1] = 1.0f;
 	m_val.m[2][2] = 1.0f;
@@ -110,26 +110,26 @@ void Matrix::Identity()
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�ړ��s���K�p����
-*	����
-*	�@p_x	�F[I/ ]�@X ���W�̈ړ���
-*	�@p_y	�F[I/ ]�@Y ���W�̈ړ���
-*	�@p_z	�F[I/ ]�@Z ���W�̈ړ���
-*	�߂�l
-*	�@�Ȃ�
+*	関数説明
+*	　移動行列を適用する
+*	引数
+*	　p_x	：[I/ ]　X 座標の移動量
+*	　p_y	：[I/ ]　Y 座標の移動量
+*	　p_z	：[I/ ]　Z 座標の移動量
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void Matrix::Translate(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 {
-	//�Q�l�p�̃���
+	//参考用のメモ
 	//[  ][  ][  ][  ]
 	//[  ][  ][  ][  ]
 	//[  ][  ][  ][  ]
-	//[��][��][��][  ]
+	//[●][●][●][  ]
 
 	Matrix t_matrix;
 
-	//�ړ��s���K�p
+	//移動行列を適用
 	t_matrix.m_val.m[3][0] = p_x;
 	t_matrix.m_val.m[3][1] = p_y;
 	t_matrix.m_val.m[3][2] = p_z;
@@ -138,26 +138,26 @@ void Matrix::Translate(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�g��/�k���s���K������
-*	����
-*	�@p_x	�F[I/ ]�@X ���W�̔{��
-*	�@p_y	�F[I/ ]�@Y ���W�̔{��
-*	�@p_z	�F[I/ ]�@Z ���W�̔{��
-*	�߂�l
-*	�@�Ȃ�
+*	関数説明
+*	　拡大/縮小行列を適応する
+*	引数
+*	　p_x	：[I/ ]　X 座標の倍率
+*	　p_y	：[I/ ]　Y 座標の倍率
+*	　p_z	：[I/ ]　Z 座標の倍率
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void Matrix::Scale(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 {
-	//�Q�l�p�̃���
-	//[��][  ][  ][  ]
-	//[  ][��][  ][  ]
-	//[  ][  ][��][  ]
+	//参考用のメモ
+	//[●][  ][  ][  ]
+	//[  ][●][  ][  ]
+	//[  ][  ][●][  ]
 	//[  ][  ][  ][  ]
 
 	Matrix t_matrix;
 
-	//�g��k���s���K�p
+	//拡大縮小行列を適用
 	t_matrix.m_val.m[0][0] = p_x;
 	t_matrix.m_val.m[1][1] = p_y;
 	t_matrix.m_val.m[2][2] = p_z;
@@ -166,28 +166,28 @@ void Matrix::Scale(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@��]�s���K������
-*	����
-*	�@p_rotate	�F[I/ ]�@��]�p�x�i360�x�n�j
-*	�@���L�A��]���ƂȂ鐳�K�����ꂽ�e�����x�N�g����ݒ肷��
-*	�@p_x		�F[I/ ]�@��]�� X �����i��FX ���������Ɍ�������ꍇ�� 1.0 ���w��A���̑� 0.0�j
-*	�@p_y		�F[I/ ]�@��]�� Y �����i��FY ���������Ɍ�������ꍇ�� 1.0 ���w��A���̑� 0.0�j
-*	�@p_z		�F[I/ ]�@��]�� Z �����i��FZ ���������Ɍ�������ꍇ�� 1.0 ���w��A���̑� 0.0�j
-*	�߂�l
-*	�@�Ȃ�
+*	関数説明
+*	　回転行列を適応する
+*	引数
+*	　p_rotate	：[I/ ]　回転角度（360度系）
+*	　下記、回転軸となる正規化された各方向ベクトルを設定する
+*	　p_x		：[I/ ]　回転軸 X 成分（例：X 成分だけに効かせる場合は 1.0 を指定、その他 0.0）
+*	　p_y		：[I/ ]　回転軸 Y 成分（例：Y 成分だけに効かせる場合は 1.0 を指定、その他 0.0）
+*	　p_z		：[I/ ]　回転軸 Z 成分（例：Z 成分だけに効かせる場合は 1.0 を指定、その他 0.0）
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void Matrix::Rotate(const GLfloat p_rotate, const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 {
-	//�Q�l�p�̃���
-	//[��][��][��][  ]
-	//[��][��][��][  ]
-	//[��][��][��][  ]
+	//参考用のメモ
+	//[●][●][●][  ]
+	//[●][●][●][  ]
+	//[●][●][●][  ]
 	//[  ][  ][  ][  ]
 
 	Matrix t_matrix;
 
-	//��]�s���K�p
+	//回転行列を適用
 	GLfloat t_c = cosf((float)DEGREE_TO_RADIAN(p_rotate));
 	GLfloat t_s = sinf((float)DEGREE_TO_RADIAN(p_rotate));
 
@@ -207,28 +207,28 @@ void Matrix::Rotate(const GLfloat p_rotate, const GLfloat p_x, const GLfloat p_y
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@����ϊ��s���K������
-*	����
-*	�@p_eye		�F[I/ ]�@�J�����̈ʒu
-*	�@p_look	�F[I/ ]�@�J�����̒����_
-*	�@p_up		�F[I/ ]�@�J�����̏�����x�N�g��
-*				  �i��FY �������㉺�����ŁA�オ������̏ꍇ�́AY ���� 1.0�A���̑��� 0.0 ���w��j
+*	関数説明
+*	　視野変換行列を適応する
+*	引数
+*	　p_eye		：[I/ ]　カメラの位置
+*	　p_look	：[I/ ]　カメラの注視点
+*	　p_up		：[I/ ]　カメラの上向きベクトル
+*				  （例：Y 成分が上下成分で、上が上向きの場合は、Y だけ 1.0、その他は 0.0 を指定）
 *
-*	�@�}�͉��LURL�́u����ϊ��s��v���ڎQ��
-*	�@http://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20090902
-*	�߂�l
-*	�@�Ȃ�
+*	　図は下記URLの「視野変換行列」項目参照
+*	　http://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20090902
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void Matrix::LookAt(const Vec3 &p_eye, const Vec3 &p_look, const Vec3 &p_up)
 {
 	Matrix t_matrix;
 	
 	Vec3 d = { p_look.x - p_eye.x, p_look.y - p_eye.y, p_look.z - p_eye.z  };
-	//�x�N�g����[0]�̓G���[
+	//ベクトルが[0]はエラー
 	if (0 == d.x && 0 == d.y && 0 == d.z)
 	{
-		ERROR_MESSAGE("����ϊ��s�� �v�Z�G���[ �������s���ł��B\n" \
+		ERROR_MESSAGE("視野変換行列 計算エラー 引数が不正です。\n" \
 					  "p_eye.x = %f, p_eye.y = %f, p_eye.z = %f\n" \
 					  "p_look.x = %f, p_look.y = %f, p_look.z = %f\n" \
 					  "p_up.x = %f, p_up.y = %f, p_up.z = %f\n" \
@@ -240,10 +240,10 @@ void Matrix::LookAt(const Vec3 &p_eye, const Vec3 &p_look, const Vec3 &p_up)
 	Vec3 u = Math::Normalize(p_up);
 
 	Vec3 s = Math::Cross(f, u);
-	//�x�N�g����[0]�̓G���[
+	//ベクトルが[0]はエラー
 	if (0 == s.x && 0 == s.y && 0 == s.z)
 	{
-		ERROR_MESSAGE("����ϊ��s�� �v�Z�G���[ �������s���ł��B\n" \
+		ERROR_MESSAGE("視野変換行列 計算エラー 引数が不正です。\n" \
 					  "p_eye.x = %f, p_eye.y = %f, p_eye.z = %f\n" \
 					  "p_look.x = %f, p_look.y = %f, p_look.z = %f\n" \
 					  "p_up.x = %f, p_up.y = %f, p_up.z = %f\n" \
@@ -271,20 +271,20 @@ void Matrix::LookAt(const Vec3 &p_eye, const Vec3 &p_look, const Vec3 &p_up)
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@���s���e�ϊ��s���K������
-*	����
-*	�@p_left	�F[I/ ]�@�߂��̖�(p_near��)�̍����܂ł̋���
-*	�@p_right	�F[I/ ]�@�߂��̖�(p_near��)�̉E���܂ł̋���
-*	�@p_bottom	�F[I/ ]�@�߂��̖�(p_near��)�̉����܂ł̋���
-*	�@p_top		�F[I/ ]�@�߂��̖�(p_near��)�̏㑤�܂ł̋���
-*	�@p_near	�F[I/ ]�@�߂��̖ʂ܂ł̋���
-*	�@p_far		�F[I/ ]�@�����̖ʂ܂ł̋���
+*	関数説明
+*	　平行投影変換行列を適応する
+*	引数
+*	　p_left	：[I/ ]　近くの面(p_near面)の左側までの距離
+*	　p_right	：[I/ ]　近くの面(p_near面)の右側までの距離
+*	　p_bottom	：[I/ ]　近くの面(p_near面)の下側までの距離
+*	　p_top		：[I/ ]　近くの面(p_near面)の上側までの距離
+*	　p_near	：[I/ ]　近くの面までの距離
+*	　p_far		：[I/ ]　遠くの面までの距離
 *
-*	�@�}�͉��LURL�́u���s���e�ϊ��v���ڎQ��
-*	�@http://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20090829
-*	�߂�l
-*	�@�Ȃ�
+*	　図は下記URLの「平行投影変換」項目参照
+*	　http://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20090829
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void  Matrix::Orthogonal(const GLfloat p_left, const GLfloat p_right,
 						 const GLfloat p_bottom, const GLfloat p_top,
@@ -298,7 +298,7 @@ void  Matrix::Orthogonal(const GLfloat p_left, const GLfloat p_right,
 
 	if (0 == dx || 0 == dy || 0 == dz)
 	{
-		ERROR_MESSAGE("���s���e�ϊ��s�� �v�Z�G���[ �������s���ł��B\n" \
+		ERROR_MESSAGE("平行投影変換行列 計算エラー 引数が不正です。\n" \
 					  "p_left = %f, p_right = %f, p_bottom = %f p_top = %f, p_near = %f, p_far = %f\n" \
 					  , p_left, p_right, p_bottom, p_top, p_near, p_far);
 	}
@@ -314,22 +314,22 @@ void  Matrix::Orthogonal(const GLfloat p_left, const GLfloat p_right,
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�������e�ϊ��s���K������
-*	�@����ɂ���uPerspective�v�֐��ł��s����쐬���邱�Ƃ��\�ł��i�I�[�o�[���[�h���Ă���܂��j
-*	�@�������Ⴄ�̂ŁA�g���₷������p�r�ɍ��킹�Ďg�p���邱�Ɓi���ʓI�ɂ͓������Ƃ��ł��܂��j
-*	����
-*	�@p_left	�F[I/ ]�@�߂��̖�(p_near��)�̍����܂ł̋���
-*	�@p_right	�F[I/ ]�@�߂��̖�(p_near��)�̉E���܂ł̋���
-*	�@p_bottom	�F[I/ ]�@�߂��̖�(p_near��)�̉����܂ł̋���
-*	�@p_top		�F[I/ ]�@�߂��̖�(p_near��)�̏㑤�܂ł̋���
-*	�@p_near	�F[I/ ]�@�߂��̖ʂ܂ł̋���
-*	�@p_far		�F[I/ ]�@�����̖ʂ܂ł̋���
+*	関数説明
+*	　透視投影変換行列を適応する
+*	　一つ下にある「Perspective」関数でも行列を作成することが可能です（オーバーロードしてあります）
+*	　引数が違うので、使いやすい方や用途に合わせて使用すること（結果的には同じことができます）
+*	引数
+*	　p_left	：[I/ ]　近くの面(p_near面)の左側までの距離
+*	　p_right	：[I/ ]　近くの面(p_near面)の右側までの距離
+*	　p_bottom	：[I/ ]　近くの面(p_near面)の下側までの距離
+*	　p_top		：[I/ ]　近くの面(p_near面)の上側までの距離
+*	　p_near	：[I/ ]　近くの面までの距離
+*	　p_far		：[I/ ]　遠くの面までの距離
 *
-*	�@�}�͉��LURL�́u�������e�ϊ��v���ڎQ��
-*	�@http://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20090829
-*	�߂�l
-*	�@�Ȃ�
+*	　図は下記URLの「透視投影変換」項目参照
+*	　http://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20090829
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void Matrix::Perspective(const GLfloat p_left, const GLfloat p_right,
 						 const GLfloat p_bottom, const GLfloat p_top,
@@ -343,7 +343,7 @@ void Matrix::Perspective(const GLfloat p_left, const GLfloat p_right,
 
 	if (0 == dx || 0 == dy || 0 == dz)
 	{
-		ERROR_MESSAGE("�������e�ϊ��s�� �v�Z�G���[ �������s���ł��B\n" \
+		ERROR_MESSAGE("透視投影変換行列 計算エラー 引数が不正です。\n" \
 					  "p_left = %f, p_right = %f, p_bottom = %f p_top = %f, p_near = %f, p_far = %f\n" \
 					  , p_left, p_right, p_bottom, p_top, p_near, p_far);
 	}
@@ -361,18 +361,18 @@ void Matrix::Perspective(const GLfloat p_left, const GLfloat p_right,
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�������e�ϊ��s���K������
-*	�@���ɂ���uPerspective�v�֐��ł��s����쐬���邱�Ƃ��\�ł��i�I�[�o�[���[�h���Ă���܂��j
-*	�@�������Ⴄ�̂ŁA�g���₷������p�r�ɍ��킹�Ďg�p���邱�Ɓi���ʓI�ɂ͓������Ƃ��ł��܂��j
-*	����
-*	�@p_near		�F[I/ ]�@�߂��̖ʂ܂ł̋���
-*	�@p_far			�F[I/ ]�@�����̖ʂ܂ł̋���
-*	�@p_fovY_deg	�F[I/ ]�@�J������ Y�����̉�p
-*	�@p_aspect		�F[I/ ]�@�`���̉�ʂ̃A�X�y�N�g��i�� �� �����j
+*	関数説明
+*	　透視投影変換行列を適応する
+*	　一つ上にある「Perspective」関数でも行列を作成することが可能です（オーバーロードしてあります）
+*	　引数が違うので、使いやすい方や用途に合わせて使用すること（結果的には同じことができます）
+*	引数
+*	　p_near		：[I/ ]　近くの面までの距離
+*	　p_far			：[I/ ]　遠くの面までの距離
+*	　p_fovY_deg	：[I/ ]　カメラの Y方向の画角
+*	　p_aspect		：[I/ ]　描画先の画面のアスペクト比（幅 ÷ 高さ）
 *
-*	�߂�l
-*	�@�Ȃ�
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void Matrix::Perspective(const GLfloat p_near, const GLfloat p_far,
 						 const GLfloat p_fovY_degree, const GLfloat p_aspect)
@@ -391,33 +391,33 @@ void Matrix::Perspective(const GLfloat p_near, const GLfloat p_far,
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�t�s������߂�
-*	�@�Q�l�T�C�g�Fhttp://thira.plavox.info/blog/2008/06/_c.html
-*	����
-*	�@�Ȃ�
-*	�߂�l
-*	�@�t�s��
+*	関数説明
+*	　逆行列を求める
+*	　参考サイト：http://thira.plavox.info/blog/2008/06/_c.html
+*	引数
+*	　なし
+*	戻り値
+*	　逆行列
 *-------------------------------------------------------------------------------*/
 void Matrix::Inverse(void)
 {
-	//�t�s��̌��ʂ��ꎞ�I�ɕۑ�����ϐ�
-	double in_matrix[4][4];		//���͗p�̍s��
-	double out_matrix[4][4];	//�o�͗p�̍s��
+	//逆行列の結果を一時的に保存する変数
+	double in_matrix[4][4];		//入力用の行列
+	double out_matrix[4][4];	//出力用の行列
 
-	//�ꎞ�I�ȃf�[�^��~����
+	//一時的なデータを蓄える
 	double t_data; 
 
-	//�J�E���^�ϐ�
+	//カウンタ変数
 	int i = 0;
 	int j = 0;
 	int k = 0;
 
-	//�s��̔z�񎟐�
-	//���㗬�p�ł��邩���Ƃ������ƂŎc���Ă�����`�ŕ��i�͕ς��Ȃ��l
+	//行列の配列次数
+	//今後流用できるかもということで残しておく定義で普段は変えない値
 	int N = 4;
 
-	//���͗p�̍s����R�s�[����i�v�Z�ߒ��ŏ㏑�������̂Ƃ��ł�double�ɂ������̂Łj
+	//入力用の行列をコピーする（計算過程で上書きされるのとついでにdoubleにしたいので）
 	for (i = 0; i < N; i++)
 	{
 		for (j = 0; j < N; j++)
@@ -426,7 +426,7 @@ void Matrix::Inverse(void)
 		}
 	}
 
-	//�P�ʍs������
+	//単位行列を作る
 	for (i = 0; i < N; i++)
 	{
 		for (j = 0; j < N; j++)
@@ -435,7 +435,7 @@ void Matrix::Inverse(void)
 		}
 	}
 
-	//�|���o���@���g�p���ċt�s������߂�
+	//掃き出し法を使用して逆行列を求める
 	for (i = 0; i < N; i++)
 	{
 		t_data = 1 / in_matrix[i][i];
@@ -459,7 +459,7 @@ void Matrix::Inverse(void)
 		}
 	}
 
-	//�L���X�g�ϊ����Ȃ��猋�ʂ������o�ϐ��ɃR�s�[����
+	//キャスト変換しながら結果をメンバ変数にコピーする
 	for (i = 0; i < N; i++)
 	{
 		for (j = 0; j < N; j++)
@@ -470,23 +470,23 @@ void Matrix::Inverse(void)
 }
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�]�u�s������߂�
-*	����
-*	�@�Ȃ�
-*	�߂�l
-*	�@�Ȃ�
+*	関数説明
+*	　転置行列を求める
+*	引数
+*	　なし
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void Matrix::Transpose(void)
 {
 	Matrix t_matrix;
 
-	//�J�E���^�ϐ�
+	//カウンタ変数
 	int i = 0;
 	int j = 0;
 
-	//�s��̔z�񎟐�
-	//���㗬�p�ł��邩���Ƃ������ƂŎc���Ă�����`�ŕ��i�͕ς��Ȃ��l
+	//行列の配列次数
+	//今後流用できるかもということで残しておく定義で普段は変えない値
 	int N = 4;
 
 	for (i = 0; i < N; i++) {

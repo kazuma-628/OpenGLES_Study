@@ -1,12 +1,12 @@
-#version 320 es
+ï»¿#version 320 es
 
-//ƒWƒIƒƒgƒŠƒVƒF[ƒ_‚©‚ç‚Ìƒf[ƒ^
+//ã‚¸ã‚ªãƒ¡ãƒˆãƒªã‚·ã‚§ãƒ¼ãƒ€ã‹ã‚‰ã®ãƒ‡ãƒ¼ã‚¿
 in lowp vec4 f_vary_color;
 
 out mediump vec4 FragColor;
 
 void main()
 {
-	//F‚Ìİ’è
+	//è‰²ã®è¨­å®š
 	FragColor = f_vary_color;
 }

@@ -1,4 +1,4 @@
-#ifndef MAIN_H
+﻿#ifndef MAIN_H
 #define MAIN_H
 
 #include "Common.h"
@@ -8,31 +8,31 @@
 #include "ModelManager.h"
 
 //define
-#define RotateSpeedWeight		2.0f		//��]���x�̏d�݁i�l���傫���قǉ�]���x�͒x���Ȃ�j
-#define InertiaRotateWeight		0.3f		//�Đ���]�ʂ̏d�݁i�l���傫���قǑĐ��ړ��ʂ͑����Ȃ�j
-#define InertiaTranslateWeight	0.3f		//�Đ��ړ��ʂ̏d�݁i�l���������قǑĐ���]�ʂ͑����Ȃ�j
+#define RotateSpeedWeight		2.0f		//回転速度の重み（値が大きいほど回転速度は遅くなる）
+#define InertiaRotateWeight		0.3f		//惰性回転量の重み（値が大きいほど惰性移動量は多くなる）
+#define InertiaTranslateWeight	0.3f		//惰性移動量の重み（値が小さいほど惰性回転量は多くなる）
 
-//�\����
+//構造体
 typedef struct
 {
-	Vec2 OldPosition;				//�y1�C�x���g�O�z�}�E�X�̃J�[�\�����W
-	Vec2 OldScrollAmount;			//�y1�C�x���g�O�z�X�N���[���̍��v�ʁA������Ԃ�[x:0�i��[���E]�X�N���[���j][y:0�i�c[�㉺]�X�N���[���j]�ŁA
-									//�@�X�N���[�������������l���~�ρi���Z/���Z�j����Ă���
-	bool OldLeftState;				//�y1�C�x���g�O�z�}�E�X�̍��N���b�N�̏��
-	bool OldRightState;				//�y1�C�x���g�O�z�}�E�X�̉E�N���b�N�̏��
-	Vec3 InertiaTranslate;			// �Đ��ɔ���1�C�x���g���̈ړ��ʁi�t���b�N����ƃt���b�N���x�ɉ������l�����菙�X��[0]�ɂȂ�A�}�E�X�𓮂����Ȃ����[0]�j
-	Vec3 InertiaRotate;				// �Đ��ɔ���1�C�x���g���̉�]�ʁi�t���b�N����ƃt���b�N���x�ɉ������l�����菙�X��[0]�ɂȂ�A�}�E�X�𓮂����Ȃ����[0]�j
+	Vec2 OldPosition;				//【1イベント前】マウスのカーソル座標
+	Vec2 OldScrollAmount;			//【1イベント前】スクロールの合計量、初期状態は[x:0（横[左右]スクロール）][y:0（縦[上下]スクロール）]で、
+									//　スクロールした分だけ値が蓄積（加算/減算）されていく
+	bool OldLeftState;				//【1イベント前】マウスの左クリックの状態
+	bool OldRightState;				//【1イベント前】マウスの右クリックの状態
+	Vec3 InertiaTranslate;			// 惰性に伴う1イベント分の移動量（フリックするとフリック速度に応じた値が入り徐々に[0]になる、マウスを動かさなければ[0]）
+	Vec3 InertiaRotate;				// 惰性に伴う1イベント分の回転量（フリックするとフリック速度に応じた値が入り徐々に[0]になる、マウスを動かさなければ[0]）
 }TmpGlobalData;
 
 /*-------------------------------------------------------------------------------
-*	�֐�����
-*	�@�`��ɕK�v�Ȋe�����ݒ�/�X�V����
-*	����
-*	�@p_WindowManager		�F[I/ ]�@�E�B���h�E�Ǘ��I�u�W�F�N�g
-*	�@p_DeviceManager		�F[I/ ]�@�f�o�C�X�Ǘ��I�u�W�F�N�g
-*	�@p_Global				�F[ /O]�@�O���[�o���f�[�^
-*	�߂�l
-*	�@�Ȃ�
+*	関数説明
+*	　描画に必要な各種情報を設定/更新する
+*	引数
+*	　p_WindowManager		：[I/ ]　ウィンドウ管理オブジェクト
+*	　p_DeviceManager		：[I/ ]　デバイス管理オブジェクト
+*	　p_Global				：[ /O]　グローバルデータ
+*	戻り値
+*	　なし
 *-------------------------------------------------------------------------------*/
 void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_DeviceManager, GlobalData *p_Global);
 
