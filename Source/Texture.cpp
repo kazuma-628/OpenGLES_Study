@@ -1,5 +1,4 @@
 ﻿#include "Texture.h"
-#include <locale.h>
 
 //コンストラクタ
 Texture::Texture()
