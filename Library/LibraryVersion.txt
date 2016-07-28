@@ -2,3 +2,4 @@
 
 GLEW Version : 1.13.0
 GLFW Version : 3.1.2
+FreeType Version : 2.6.5
