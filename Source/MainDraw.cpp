@@ -3,10 +3,9 @@
 //コンストラクタ
 MainDraw::MainDraw()
 {
-	//Mainシェーダー管理用のオブジェクト生成
-	m_MainShader = new ShaderManager;
-
 	//変数初期化
+	m_MainShader = NULL;
+
 	m_attr_pos = -1;
 	m_attr_color = -1;
 	m_ProjModel_matrix = 0;
@@ -30,19 +29,25 @@ MainDraw::~MainDraw()
 *-------------------------------------------------------------------------------*/
 void MainDraw::Prepare()
 {
-	//シェーダーの読み込みを行う
-	//「Shader」フォルダに格納されている必要があります。
-	m_MainShader->CreateShaderProgram("Main.vert", "Main.frag", "Main.geom", NULL, NULL, NULL);
+	//データが作成されていなければ
+	if(NULL == m_MainShader)
+	{
+		//Mainシェーダー管理用のオブジェクト生成
+		m_MainShader = new ShaderManager;
 
-	//シェーダー内で使用する変数を取得します（頂点データ）
-	m_attr_pos = m_MainShader->GetAttribLocation("attr_pos");
+		//シェーダーの読み込みを行う
+		//「Shader」フォルダに格納されている必要があります。
+		m_MainShader->CreateShaderProgram("Main.vert", "Main.frag", "Main.geom", NULL, NULL, NULL);
 
-	//シェーダー内で使用する変数を取得します（カラーデータ）
-	m_attr_color = m_MainShader->GetAttribLocation("attr_color");
+		//シェーダー内で使用する変数を取得します（頂点データ）
+		m_attr_pos = m_MainShader->GetAttribLocation("attr_pos");
 
-	//シェーダー内で使用する変数を取得します（座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス））
-	m_ProjModel_matrix = m_MainShader->GetUniformLocation("ProjModel_matrix");
+		//シェーダー内で使用する変数を取得します（カラーデータ）
+		m_attr_color = m_MainShader->GetAttribLocation("attr_color");
 
+		//シェーダー内で使用する変数を取得します（座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス））
+		m_ProjModel_matrix = m_MainShader->GetUniformLocation("ProjModel_matrix");
+	}
 }
 
 /*-------------------------------------------------------------------------------
@@ -53,14 +58,14 @@ void MainDraw::Prepare()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void MainDraw::Drawing(GlobalData *p_Global)
+void MainDraw::Drawing(const GlobalData &p_Global)
 {
 	// シェーダープログラムの利用を開始する
 	m_MainShader->UseProgram();
 
 	//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
 	Matrix ProjModel;
-	ProjModel = p_Global->ProjectionMatrix * p_Global->ModelViewMatrix;
+	ProjModel = p_Global.ProjectionMatrix * p_Global.ModelViewMatrix;
 
 	//シェーダーの変数を有効化
 	m_MainShader->EnableVertexAttribArray(m_attr_pos);
@@ -84,7 +89,7 @@ void MainDraw::Drawing(GlobalData *p_Global)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//ビューポートを設定する
-	glViewport(0, 0, p_Global->WindowSize.Width, p_Global->WindowSize.Height);
+	glViewport(0, 0, p_Global.WindowSize.Width, p_Global.WindowSize.Height);
 
 	//変数を転送
 	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, ProjModel.GetMatrixFloat());

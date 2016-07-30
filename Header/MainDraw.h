@@ -38,7 +38,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Drawing(GlobalData *p_Global);
+	void Drawing(const GlobalData &p_Global);
 
 private:
 

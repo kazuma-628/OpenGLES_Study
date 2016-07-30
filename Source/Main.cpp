@@ -90,7 +90,7 @@ void main(void)
 		SetVarietyOfInformation(m_WindowManager, m_DeviceManager, &m_Global);
 
 		//メイン描画開始
-		m_MainDraw->Drawing(&m_Global);
+		m_MainDraw->Drawing(m_Global);
 
 		//描画反映処理
 		m_WindowManager->DrawingOnWindow();
