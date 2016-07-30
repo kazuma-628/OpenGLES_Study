@@ -43,9 +43,9 @@ add_executable(
 	Header/Maths.h
 
 #uShader Filev‚ğw’è‚·‚é
-	Shader/Main/Main.frag
-	Shader/Main/Main.vert
-	Shader/Main/Main.geom
+	Shader/Main.frag
+	Shader/Main.vert
+	Shader/Main.geom
 )
 
 #############################################
