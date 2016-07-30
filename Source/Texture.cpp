@@ -17,7 +17,7 @@ Texture::~Texture()
 *	　画像ファイルからテクスチャデータの読み込みを行います
 *	引数
 *	　p_FileName	：[I/ ]　読み込みを行う拡張子付きの画像ファイル名
-*							 [Resource]フォルダ以降のファイルパスを入力してください。
+*							 [Resource/Texture/]フォルダ以降のファイルパスを入力してください。
 *							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.vert」）
 *	　p_PixelFotmat	：[I/ ]　画像ファイルのフォーマット
 *							 [PIXELFORMAT_24BIT_RGB] or [PIXELFORMAT_32BIT_RGBA] で指定（詳細は定義部分のコメント参照）
@@ -87,7 +87,7 @@ void Texture::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelF
 	{
 		printf("失敗\n");
 		ERROR_MESSAGE("テクスチャファイルの読み込みに失敗しました。\n"\
-			"「Resource」フォルダに格納されていますか？\n"\
+			"「Resource/Texture/」フォルダに格納されていますか？\n"\
 			"ファイル名が間違っていませんか？");
 		return;
 	}
