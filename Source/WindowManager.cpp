@@ -31,6 +31,13 @@ WindowManager::~WindowManager()
 *-------------------------------------------------------------------------------*/
 void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const char* p_Title)
 {
+	//引数チェック
+	if (0 == p_Width || 0 == p_Height || NULL == p_Title)
+	{
+		ERROR_MESSAGE("ウィンドウを作成する 引数エラー\n" \
+			"p_Width = %d, p_Height = %d, p_Title = %x\n", p_Width, p_Height, (unsigned int)p_Title);
+		return;
+	}
 
 	//////////////////////////////////////////////////////
 	//	GLFW初期化
@@ -65,6 +72,9 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	printf("ウィンドウ（%d × %d）の生成を開始します... ", p_Width, p_Height);
 	GLFWwindow *const window = glfwCreateWindow(p_Width, p_Height, p_Title, NULL, NULL);
 
+	//ウィンドウの最低サイズを設定（[0 * 0]になると処理上 0除算などがありえるのでここでブロックしておく）
+	glfwSetWindowSizeLimits(window, 1, 1, GLFW_DONT_CARE, GLFW_DONT_CARE);
+
 	//ウィンドウが生成できているかチェック
 	if (NULL == window)
 	{
@@ -84,7 +94,7 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	// 作成したウィンドウをOpenGLの処理対象にする
 	glfwMakeContextCurrent(window);
 
-	// カラーバッファの入れ替えタイミング（通常は1を入力）
+	// カラーバッファの入れ替えタイミング（垂直同期のタイミングを待つ）
 	glfwSwapInterval(1);
 
 	//////////////////////////////////////////////////////
@@ -146,7 +156,11 @@ void WindowManager::DrawingOnWindow(void)
 *-------------------------------------------------------------------------------*/
 void WindowManager::WindowSizeCallback(GLFWwindow* p_window, int p_Width, int p_Height)
 {
-	//生成した時のウィンドウの幅高さを保存
-	m_WindowSize.Width = p_Width;
-	m_WindowSize.Height = p_Height;
+	//最小化した時は更新しない（無駄な処理が走るので...）
+	if (false == glfwGetWindowAttrib(p_window, GLFW_ICONIFIED))
+	{
+		//生成した時のウィンドウの幅高さを保存
+		m_WindowSize.Width = p_Width;
+		m_WindowSize.Height = p_Height;
+	}
 }
