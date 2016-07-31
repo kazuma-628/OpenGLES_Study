@@ -180,8 +180,6 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 	//第2引数（幅）、第3引数(高さ）のどちらかが[0]のときはもう一方の値と同じになる
 	FT_Set_Pixel_Sizes(m_ft_Face, 0, DEBUG_FONT_SIZE - 2);							//何故かピクセルを超えてラスタライズされるので、暫定処置として[-2]しておく
 
-	float testaa;
-
 	//文字数分ループして文字列を作り出す
 	for (int index = 0; L'\0' != w_String[index]; index++)
 	{
@@ -195,7 +193,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 
 		case L' ':
 			//半角空白相当を文字列の合計幅に加算
-			DebugSumWidth += DEBUG_FONT_SIZE / 2.0f;
+			DebugSumWidth += DEBUG_FONT_SIZE / 2;
 			break;
 
 		case L'\n':
