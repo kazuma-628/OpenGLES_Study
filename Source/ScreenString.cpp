@@ -147,7 +147,8 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 	va_list args;
 	va_start(args, p_String);
 
-	int te = vsprintf(AllString, p_String, args);
+	//可変長引数リストのデータを文字配列に書き込む
+	vsprintf(AllString, p_String, args);
 
 	//可変引数の取り出し処理を終了する
 	va_end(args);
@@ -360,7 +361,7 @@ void ScreenString::DebugDrawing(const GlobalData &p_Global)
 	m_StringShader->VertexAttribPointer(m_attr_tex_coord, 2, GL_FLOAT, GL_FALSE, 0, tex_coord);
 
 	//文字色を設定
-	m_StringShader->UniformXf(m_unif_char_color, 4, 1.0, 0.0, 0.0, 1.0);
+	m_StringShader->UniformXf(m_unif_char_color, 4, 1.0, 1.0, 1.0, 1.0);
 
 	//背景色を設定
 	m_StringShader->UniformXf(m_unif_back_color, 4, 0.0, 0.0, 0.0, 0.5);
@@ -376,6 +377,8 @@ void ScreenString::DebugDrawing(const GlobalData &p_Global)
 
 	//パラメータを元に戻す（普通は4バイトごと、多分）
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	//ブレンドを無効にする
+	glDisable(GL_BLEND);
 
 	//デバッグ表示を描画したので、関連する変数を初期化する
 	DebugMaxWidth = 0;
