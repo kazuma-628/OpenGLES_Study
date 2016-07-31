@@ -63,7 +63,7 @@ void Texture::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelF
 	// 文字列の長さを取得してメモリ確保（終端を明確にするため +2(ワイド文字なので) する。[\0]となる）
 	w_texture_dir_file_name = (wchar_t*)calloc(StrLength + 2, sizeof(char));
 
-	//マルチバイト文字列 → ワイド文字列に変換含む（[\0]までコピー）
+	//マルチバイト文字列 → ワイド文字列に変換（[\0]までコピー）
 	mbstowcs(w_texture_dir_file_name, texture_dir_file_name, _mbstrlen(texture_dir_file_name) + 1);
 
 	//////////////////////////////////////////
