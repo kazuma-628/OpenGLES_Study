@@ -10,13 +10,14 @@
 //（ほとんどのファイルで必要になるはずなので一括定義）
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <windows.h>
 #include <glew.h>
 #include <glfw3.h>
 #include <math.h>
 #include <locale.h>
-
+#include <vector> 
 
 
 ////////////////////////////////////////

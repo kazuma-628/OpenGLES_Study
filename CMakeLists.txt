@@ -29,6 +29,7 @@ add_executable(
 	Source/Texture.cpp
 	Source/ModelManager.cpp
 	Source/Maths.cpp
+	Source/ScreenString.cpp
 
 #「Header File」を指定する
 	Header/Common.h
@@ -41,11 +42,14 @@ add_executable(
 	Header/Texture.h
 	Header/ModelManager.h
 	Header/Maths.h
+	Header/ScreenString.h
 
 #「Shader File」を指定する
 	Shader/Main.frag
 	Shader/Main.vert
 	Shader/Main.geom
+	Shader/ScreenString.vert
+	Shader/ScreenString.frag
 )
 
 #############################################
@@ -82,6 +86,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/Header
 	${CMAKE_SOURCE_DIR}/Library/GLEW/include/GL
 	${CMAKE_SOURCE_DIR}/Library/GLFW/include/GLFW
+	${CMAKE_SOURCE_DIR}/Library/FreeType/include
 )
 
 #############################################
@@ -99,6 +104,7 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 10")
 		gdiplus.lib
 		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2010/glfw3.lib
+		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype265MT.lib
 	)
 endif(${CMAKE_GENERATOR} MATCHES "Visual Studio 10")
 
@@ -113,6 +119,7 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 11")
 		gdiplus.lib
 		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2012/glfw3.lib
+		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype265MT.lib
 	)
 endif(${CMAKE_GENERATOR} MATCHES "Visual Studio 11")
 
@@ -127,6 +134,7 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 12")
 		gdiplus.lib
 		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2013/glfw3.lib
+		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype265MT.lib
 	)
 endif(${CMAKE_GENERATOR} MATCHES "Visual Studio 12")
 
@@ -141,5 +149,6 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
 		gdiplus.lib
 		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2015/glfw3.lib
+		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype265MT.lib
 	)
 endif(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")

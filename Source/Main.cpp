@@ -66,16 +66,19 @@ void main(void)
 	//ウインドウを作成
 	//※ ウィンドウを複数生成することにはまだ対応していないので注意 ※
 	m_WindowManager->CreateNewWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGLES_Study");
-	//作成したウィンドウハンドルを取得
-	GLFWwindow* const window = m_WindowManager->GetWindow();
+	//ウィンドウサイズをグローバル領域に保存
+	m_Global.WindowSize = m_WindowManager->GetWindowSize();
 
 	//デバイス管理用のオブジェクト初期化（マウスやキーボード制御のコールバックなどを登録）
 	//この関数コールの前にウィンドウが生成されている必要がある
 	//※ ウィンドウを複数生成して、それぞれKey管理することはまだ対応していないので注意 ※
-	m_DeviceManager->Initialize(window);
+	m_DeviceManager->Initialize( m_WindowManager->GetWindow() );
 
 	//メイン描画準備
 	m_MainDraw->Prepare();
+
+	//画面に文字列を表示する用のクラスの準備
+	ScreenString::Prepare(m_Global);
 
 	//////////////////////////////////////////////////////
 	//	描画メインループ
@@ -83,16 +86,40 @@ void main(void)
 	//ウィンドウが開いている間はループ
 	while (GL_FALSE == m_WindowManager->GetWindowShouldClose())
 	{
+		/////////////////////////////
+		// 各種情報の更新
+
 		//イベント取り出し（マウス状態などのイベントを取得）
 		glfwPollEvents();
 
 		//描画に必要な各種情報を設定/更新
 		SetVarietyOfInformation(m_WindowManager, m_DeviceManager, &m_Global);
 
+		//ウィンドウサイズに変更があった場合
+		if (true == TmpGlobal.ChangeWindowSize)
+		{
+			/////////////////////////////
+			// 資源の再作成
+
+			ScreenString::RePrepare(m_Global);
+
+			//再作成完了
+			TmpGlobal.ChangeWindowSize = false;
+		}
+
+		/////////////////////////////
+		// 各種描画
+
 		//メイン描画開始
 		m_MainDraw->Drawing(m_Global);
 
-		//描画反映処理
+		//デバッグ表示の描画を実行する
+		//デバッグ表示が最前面に来るようにするため一番最後に描画する
+		ScreenString::DebugDrawing(m_Global);
+
+		/////////////////////////////
+		// 描画反映処理
+
 		m_WindowManager->DrawingOnWindow();
 
 		//GLエラーチェック
@@ -110,6 +137,7 @@ void main(void)
 	delete m_WindowManager;
 	delete m_DeviceManager;
 	delete m_ModelManager;
+	ScreenString::Destroy();
 }
 
 /*-------------------------------------------------------------------------------
@@ -144,6 +172,8 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//平行移動用の変数にマウス情報の座標を加える
 	if (GLFW_PRESS == MouseButton.Left.StateChange)
 	{
+		//デバッグ表示する
+		ScreenString::DebugPrint(*p_Global, "左クリック：%d, %d", (int)MouseButton.Position.x, (int)MouseButton.Position.y);
 		p_Global->TranslateAmount.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
 		p_Global->TranslateAmount.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
 	}
@@ -203,6 +233,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//本来であれば360度回転したら変数を初期化した方が良いが、サンプルなので割愛
 	if (GLFW_PRESS == MouseButton.Right.StateChange)
 	{
+		ScreenString::DebugPrint(*p_Global, "右クリック：%d, %d", (int)MouseButton.Position.x, (int)MouseButton.Position.y);
 		p_Global->RotateAmount.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
 		p_Global->RotateAmount.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
 		//360度を超えたら0度に戻す（360度と0度は同じなので）
@@ -275,15 +306,20 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	p_Global->ModelViewMatrix = ModelView.GetMatrix();
 	p_Global->ProjectionMatrix = Projection.GetMatrix();
 
-	//ウィンドウサイズを保存
-	p_Global->WindowSize.Width = WindowSize.Width;
-	p_Global->WindowSize.Height = WindowSize.Height;
+	//ウィンドウサイズの変更チェック
+	if (p_Global->WindowSize.Width != WindowSize.Width || p_Global->WindowSize.Height != WindowSize.Height)
+	{
+		//ウィンドウマネージャーで通知するのではなく、実際に変更と判断してから通知する
+		printf("ウィンドウサイズが変更されました → （%d × %d）\n", WindowSize.Width, WindowSize.Height);
+
+		TmpGlobal.ChangeWindowSize = true;
+	}
+	//ウィンドウサイズ保存
+	p_Global->WindowSize = WindowSize;
 
 	//1イベント前の情報を保存する
-	TmpGlobal.OldPosition.x = MouseButton.Position.x;
-	TmpGlobal.OldPosition.y = MouseButton.Position.y;
-	TmpGlobal.OldScrollAmount.x = MouseButton.ScrollAmount.x;
-	TmpGlobal.OldScrollAmount.y = MouseButton.ScrollAmount.y;
+	TmpGlobal.OldPosition = MouseButton.Position;
+	TmpGlobal.OldScrollAmount = MouseButton.ScrollAmount;
 	TmpGlobal.OldLeftState = MouseButton.Left.StateChange;
 	TmpGlobal.OldRightState = MouseButton.Right.StateChange;
 }

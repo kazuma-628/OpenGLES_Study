@@ -6,6 +6,7 @@
 #include "DeviceManager.h"
 #include "WindowManager.h"
 #include "ModelManager.h"
+#include "ScreenString.h"
 
 //define
 #define RotateSpeedWeight		2.0f		//回転速度の重み（値が大きいほど回転速度は遅くなる）
@@ -20,6 +21,7 @@ typedef struct
 									//　スクロールした分だけ値が蓄積（加算/減算）されていく
 	bool OldLeftState;				//【1イベント前】マウスの左クリックの状態
 	bool OldRightState;				//【1イベント前】マウスの右クリックの状態
+	bool ChangeWindowSize;			//【1イベント前】ウィンドウサイズに変更があったかを示す変数
 	Vec3 InertiaTranslate;			// 惰性に伴う1イベント分の移動量（フリックするとフリック速度に応じた値が入り徐々に[0]になる、マウスを動かさなければ[0]）
 	Vec3 InertiaRotate;				// 惰性に伴う1イベント分の回転量（フリックするとフリック速度に応じた値が入り徐々に[0]になる、マウスを動かさなければ[0]）
 }TmpGlobalData;
