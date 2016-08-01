@@ -72,9 +72,6 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	printf("ウィンドウ（%d × %d）の生成を開始します... ", p_Width, p_Height);
 	GLFWwindow *const window = glfwCreateWindow(p_Width, p_Height, p_Title, NULL, NULL);
 
-	//ウィンドウの最低サイズを設定（[0 * 0]になると処理上 0除算などがありえるのでここでブロックしておく）
-	glfwSetWindowSizeLimits(window, 1, 1, GLFW_DONT_CARE, GLFW_DONT_CARE);
-
 	//ウィンドウが生成できているかチェック
 	if (NULL == window)
 	{
@@ -90,6 +87,9 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	{
 		printf("完了\n");
 	}
+
+	//ウィンドウの最低サイズを設定（[0 * 0]になると処理上 0除算などがありえるのでここでブロックしておく）
+	glfwSetWindowSizeLimits(window, 1, 1, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
 	// 作成したウィンドウをOpenGLの処理対象にする
 	glfwMakeContextCurrent(window);
