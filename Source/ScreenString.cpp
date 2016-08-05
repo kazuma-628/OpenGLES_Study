@@ -174,12 +174,12 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 	//////////////////////////////////////////
 	// FreeTypeで文字をラスタライズ
 
-	unsigned int DebugSumWidth = CHAR_SPACING;		//デバッグ表示用の文字列の合計幅
+	unsigned int DebugSumWidth = WIDTH_SPACING;		//デバッグ表示用の文字列の合計幅
 	FT_Bitmap bitmap;		//FreeTypeでラスタライズしたビットマップデータ
 
 	//ビットマップフォントのサイズ（幅と高さ）を指定
 	//第2引数（幅）、第3引数(高さ）のどちらかが[0]のときはもう一方の値と同じになる
-	FT_Set_Pixel_Sizes(m_ft_Face, 0, DEBUG_FONT_SIZE - 2);							//何故かピクセルを超えてラスタライズされるので、暫定処置として[-2]しておく
+	FT_Set_Pixel_Sizes(m_ft_Face, 0, DEBUG_FONT_SIZE);
 
 	//文字数分ループして文字列を作り出す
 	for (int index = 0; L'\0' != w_String[index]; index++)
@@ -189,17 +189,17 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 		{
 		case L'　':
 			//全角空白相当を文字列の合計幅に加算
-			DebugSumWidth += DEBUG_FONT_SIZE;
+			DebugSumWidth += DEBUG_ROWS_SPACING;
 			break;
 
 		case L' ':
 			//半角空白相当を文字列の合計幅に加算
-			DebugSumWidth += DEBUG_FONT_SIZE / 2;
+			DebugSumWidth += DEBUG_ROWS_SPACING / 2;
 			break;
 
 		case L'\n':
 			//改行のため文字列の合計高さを加算
-			DebugSumRows += DEBUG_FONT_SIZE;
+			DebugSumRows += DEBUG_ROWS_SPACING;
 
 			//今の行の合計幅が今までの合計幅より大きかったら更新する
 			if (DebugSumWidth > DebugMaxWidth)
@@ -208,7 +208,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 			}
 
 			//改行なので合計幅を初期化する
-			DebugSumWidth = CHAR_SPACING;
+			DebugSumWidth = WIDTH_SPACING;
 
 			break;
 
@@ -223,7 +223,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 			if (DebugSumWidth + bitmap.width >= (unsigned int)p_Global.WindowSize.Width)
 			{
 				//改行のため文字列の合計高さを加算
-				DebugSumRows += DEBUG_FONT_SIZE;
+				DebugSumRows += DEBUG_ROWS_SPACING;
 
 				//今の行の合計幅が今までの合計幅より大きかったら更新する
 				if (DebugSumWidth > DebugMaxWidth)
@@ -232,7 +232,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 				}
 
 				//改行なので合計幅を初期化する
-				DebugSumWidth = CHAR_SPACING;
+				DebugSumWidth = WIDTH_SPACING;
 			}
 			
 			//ラスタライズ結果のピクセル分ループ
@@ -243,7 +243,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 					//文字を格納する場所を計算する
 					int PixelPos =
 						//高さの計算
-						(((DebugSumRows + Rows) + (DEBUG_FONT_SIZE - bitmap.rows)) * p_Global.WindowSize.Width)
+						(((DebugSumRows + Rows) + (DEBUG_FONT_SIZE - m_ft_Face->glyph->bitmap_top)) * p_Global.WindowSize.Width)
 						// 幅の計算
 						+ (DebugSumWidth + Width);
 
@@ -257,14 +257,14 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 			}
 
 			//描画したピクセル幅を、文字列の合計幅に加算する（[+CHAR_SPACING]は文字間の空白分の値）
-			DebugSumWidth += bitmap.width + CHAR_SPACING;
+			DebugSumWidth += bitmap.width + WIDTH_SPACING;
 			break;
 		}
 	}
 	
 	//デバッグ表示がコールされるたびに改行を行う
 	//改行のため文字列の合計高さを加算
-	DebugSumRows += DEBUG_FONT_SIZE;
+	DebugSumRows += DEBUG_ROWS_SPACING;
 	
 	//今の行の合計幅が今までの合計幅より大きかったら更新する
 	if (DebugSumWidth > DebugMaxWidth)
