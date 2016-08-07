@@ -53,7 +53,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureData *p_TextureData);
+	static void FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureData *p_TextureData);
 
 private:
 
@@ -68,7 +68,7 @@ private:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void TextureDataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData);
+	static void DataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData);
 
 };
 #endif

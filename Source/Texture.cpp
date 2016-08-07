@@ -26,7 +26,7 @@ Texture::~Texture()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Texture::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureData *p_TextureData)
+void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureData *p_TextureData)
 {
 	printf("テクスチャ「%s」の読み込みを開始します...", p_FileName);
 
@@ -119,7 +119,7 @@ void Texture::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelF
 	p_TextureData->data = (GLvoid*)calloc(BitmapData.Height * BitmapData.Stride, sizeof(byte));
 
 	//ロードしたテクスチャは「BGR」で格納されているので「RGB」に変換しつつコピーする
-	TextureDataBRGtoRGB(p_PixelFotmat, &BitmapData, p_TextureData);
+	DataBRGtoRGB(p_PixelFotmat, &BitmapData, p_TextureData);
 
 	//読み込んだテクスチャ情報/データを破棄する
 	Texture->UnlockBits(&BitmapData);
@@ -143,7 +143,7 @@ void Texture::TextureDataLoad(const char* p_FileName, const PixelFotmat p_PixelF
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Texture::TextureDataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData)
+void Texture::DataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData)
 {
 	//1色分の情報のバイト数
 	int ColorByte = 0;
