@@ -54,8 +54,8 @@
 ４、成果物を他人に渡す場合
 　ビルドした成果物は「OpenGLES_Study\Output」に「OpenGLES_Study.exe」として生成されます。
 　もし、このファイルを他人に渡すときは、
-　「OpenGLES_Study\Shader」と「OpenGLES_Study\Output」をフォルダごと両方渡してください。
-　このフォルダ位置関係が崩れるとプログラムが正しくシェーダーを読み込めず、エラーとなります。
+　「OpenGLES_Study\Shader」と「OpenGLES_Study\Output」と「OpenGLES_Study\Resource」をフォルダごと渡してください。
+　このフォルダ位置関係が崩れるとプログラムが正しくシェーダーなどのデータを読み込めず、エラーとなります。
 　（改善したいなとは考えています）
 　
 ※ちなみに私は「Visual Studio 2015」で動作確認をしています。
