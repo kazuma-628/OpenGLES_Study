@@ -89,6 +89,10 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 		ERROR_MESSAGE("テクスチャファイルの読み込みに失敗しました。\n"\
 			"「Resource/Texture/」フォルダに格納されていますか？\n"\
 			"ファイル名が間違っていませんか？");
+		
+		//オブジェクト破棄
+		delete Texture;
+		
 		return;
 	}
 
@@ -109,6 +113,10 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 		printf("失敗\n");
 		ERROR_MESSAGE("ピクセルフォーマットの引数が不正です。\n"\
 			"p_PixelFotmat = %d", p_PixelFotmat);
+
+		//オブジェクト破棄
+		delete Texture;
+		
 		return;
 	}
 

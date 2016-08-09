@@ -261,6 +261,9 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 			break;
 		}
 	}
+
+	//メモリ解放
+	free(w_String);
 	
 	//デバッグ表示がコールされるたびに改行を行う
 	//改行のため文字列の合計高さを加算
