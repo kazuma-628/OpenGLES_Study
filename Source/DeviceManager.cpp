@@ -348,7 +348,7 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 					*KeySummary[index].StateKeep = !*KeySummary[index].StateKeep;
 
 					//[PushCount]には、押すたびに値を加算していく
-					*KeySummary[index].PushCount++;
+					*(KeySummary[index].PushCount)++;
 				}
 				break;
 			}
