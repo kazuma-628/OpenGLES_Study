@@ -26,7 +26,7 @@ typedef struct
 	GLenum format;				//ピクセルフォーマット（ピクセル内部フォーマットと同じものが設定される）
 	GLenum type;				//ピクセル情報の型
 	GLvoid *data;				//ピクセルデータ
-}TextureData;
+}TextureInfo;
 
 
 class Texture
@@ -53,7 +53,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureData *p_TextureData);
+	static void FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureInfo *p_TextureData);
 
 private:
 
@@ -68,7 +68,7 @@ private:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void DataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData);
+	static void DataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureInfo* p_TextureData);
 
 };
 #endif

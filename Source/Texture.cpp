@@ -26,7 +26,7 @@ Texture::~Texture()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureData *p_TextureData)
+void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureInfo *p_TextureData)
 {
 	printf("テクスチャ「%s」の読み込みを開始します...", p_FileName);
 
@@ -143,7 +143,7 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Texture::DataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureData* p_TextureData)
+void Texture::DataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureInfo* p_TextureData)
 {
 	//1色分の情報のバイト数
 	int ColorByte = 0;
