@@ -44,7 +44,7 @@ ModelManager::~ModelManager()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ModelManager::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
+void ModelManager::GetPiercedCube(ModelInfo *p_ModelData, bool p_vbo)
 {
 	// 頂点データ
 	Vec3_bColor3 vertex[] =
@@ -137,7 +137,7 @@ void ModelManager::GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ModelManager::GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p_vbo)
+void ModelManager::GetPiercedCube_index(ModelInfo_index *p_ModelData, bool p_vbo)
 {
 	// 頂点データ
 	Vec3_bColor3 vertex[] =

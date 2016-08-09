@@ -72,11 +72,11 @@ void MainDraw::Drawing(const GlobalData &p_Global)
 	m_MainShader->EnableVertexAttribArray(m_attr_color);
 
 	//キューブ形状のモデルデータを取得する
-	ModelDataInfo PiercedCube;
+	ModelInfo PiercedCube;
 	ModelManager::GetPiercedCube(&PiercedCube, false);
 
 	//キューブ形状のモデルデータを取得する（インデックス版）
-	ModelDataInfo_index PiercedCube_index;
+	ModelInfo_index PiercedCube_index;
 	ModelManager::GetPiercedCube_index(&PiercedCube_index, false);
 
 	//震度テストを有効

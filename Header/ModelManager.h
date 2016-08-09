@@ -48,7 +48,7 @@ typedef struct
 	VertexAttribPointerInfo Color;		//カラー情報
 	DrawArraysInfo DrawArrays;			//描画情報
 	BufferDataInfo BufferData;			//バッファー情報
-}ModelDataInfo;
+}ModelInfo;
 
 //モデルデータ（インデックス使用版）情報
 typedef struct
@@ -57,7 +57,7 @@ typedef struct
 	VertexAttribPointerInfo Color;		//カラー情報
 	DrawElementsInfo DrawElements;		//描画情報
 	BufferDataInfo BufferData;			//バッファー情報
-}ModelDataInfo_index;
+}ModelInfo_index;
 
 class ModelManager
 {
@@ -81,7 +81,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void GetPiercedCube(ModelDataInfo *p_ModelData, bool p_vbo);
+	static void GetPiercedCube(ModelInfo *p_ModelData, bool p_vbo);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -95,7 +95,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void GetPiercedCube_index(ModelDataInfo_index *p_ModelData, bool p_vbo);
+	static void GetPiercedCube_index(ModelInfo_index *p_ModelData, bool p_vbo);
 
 private:
 
