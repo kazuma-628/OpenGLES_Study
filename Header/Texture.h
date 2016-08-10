@@ -8,11 +8,11 @@
 //#define定義
 #define TEXTURE_FILE_DIR				"../Resource/Texture/"	//リソースファイルの保存ディレクトリ
 
-
+//ピクセルフォーマット
 typedef enum
 {
-	PIXELFORMAT_24BIT_RGB = PixelFormat24bppRGB,	//1色が8bitで透過情報が含まれていないPNG形式やBMP形式JPG形式など（GL_RGBに相当）
-	PIXELFORMAT_32BIT_RGBA = PixelFormat32bppARGB	//1色が8bitで透過情報が含まれているPNG形式など（GL_RGBAに相当）
+	PIXEL_FORMAT_24BIT_RGB = PixelFormat24bppRGB,	//1色が8bitで透過情報が含まれていないPNG形式やBMP形式JPG形式など（GL_RGBに相当）
+	PIXEL_FORMAT_32BIT_RGBA = PixelFormat32bppARGB	//1色が8bitで透過情報が含まれているPNG形式など（GL_RGBAに相当）
 }PixelFotmat;
 
 //テクスチャデータの情報

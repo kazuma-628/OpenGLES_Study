@@ -100,12 +100,12 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 	// 返却する情報の設定
 	switch (p_PixelFotmat)
 	{
-	case PIXELFORMAT_24BIT_RGB:
+	case PIXEL_FORMAT_24BIT_RGB:
 		p_TextureData->internalFormat = GL_RGB;
 		p_TextureData->format = GL_RGB;
 		break;
 
-	case PIXELFORMAT_32BIT_RGBA:
+	case PIXEL_FORMAT_32BIT_RGBA:
 		p_TextureData->internalFormat = GL_RGBA;
 		p_TextureData->format = GL_RGBA;
 		break;
@@ -157,11 +157,11 @@ void Texture::DataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p
 	int ColorByte = 0;
 
 	//画像のフォーマットから1色分の情報のバイト数を決定
-	if (PIXELFORMAT_24BIT_RGB == p_PixelFotmat)
+	if (PIXEL_FORMAT_24BIT_RGB == p_PixelFotmat)
 	{
 		ColorByte = 3;
 	}
-	else if (PIXELFORMAT_32BIT_RGBA)
+	else if (PIXEL_FORMAT_32BIT_RGBA)
 	{
 		ColorByte = 4;
 	}
