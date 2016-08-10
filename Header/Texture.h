@@ -45,7 +45,7 @@ public:
 	*	引数
 	*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きの画像ファイル名
 	*							 [Resource/Texture/]フォルダ以降のファイルパスを入力してください。
-	*							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.vert」）
+	*							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.png」）
 	*	　p_PixelFotmat	：[I/ ]　画像ファイルのフォーマット
 	*							 [PIXELFORMAT_24BIT_RGB] or [PIXELFORMAT_32BIT_RGBA] で指定（詳細は定義部分のコメント参照）
 	*	　p_TextureData	：[ /O]　テクスチャデータ
@@ -65,7 +65,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void FileDataLoad(TextureInfo *p_TextureData);
+	static void FileDataFree(TextureInfo *p_TextureData);
 
 private:
 
