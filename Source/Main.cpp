@@ -46,11 +46,6 @@ void main(void)
 	//デバイス管理用のオブジェクト生成
 	DeviceManager *m_DeviceManager = new DeviceManager;
 
-	//モデルデータ管理用のオブジェクト生成
-	//※このオブジェクトを直接操作することはないが、
-	//　コンストラクタとデストラクタを明示的にコールさせるために生成する
-	ModelManager *m_ModelManager = new ModelManager;
-
 	//グローバルデータ生成
 	GlobalData m_Global = { 0 };
 
@@ -136,7 +131,6 @@ void main(void)
 	delete m_MainDraw;
 	delete m_WindowManager;
 	delete m_DeviceManager;
-	delete m_ModelManager;
 	ScreenString::Destroy();
 }
 

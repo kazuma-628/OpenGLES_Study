@@ -28,7 +28,7 @@ add_executable(
 	Source/DeviceManager.cpp
 	Source/WindowManager.cpp
 	Source/Texture.cpp
-	Source/ModelManager.cpp
+	Source/Model.cpp
 	Source/Maths.cpp
 	Source/ScreenString.cpp
 
@@ -41,7 +41,7 @@ add_executable(
 	Header/DeviceManager.h
 	Header/WindowManager.h
 	Header/Texture.h
-	Header/ModelManager.h
+	Header/Model.h
 	Header/Maths.h
 	Header/ScreenString.h
 

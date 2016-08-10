@@ -72,12 +72,12 @@ void MainDraw::Drawing(const GlobalData &p_Global)
 	m_MainShader->EnableVertexAttribArray(m_attr_color);
 
 	//キューブ形状のモデルデータを取得する
-	ModelInfo PiercedCube;
-	ModelManager::GetPiercedCube(&PiercedCube, false);
+	ModelInfo_Original PiercedCube;
+	Model::GetPiercedCube(false, &PiercedCube);
 
 	//キューブ形状のモデルデータを取得する（インデックス版）
-	ModelInfo_index PiercedCube_index;
-	ModelManager::GetPiercedCube_index(&PiercedCube_index, false);
+	ModelInfo_index_Original PiercedCube_index;
+	Model::GetPiercedCube_index(false, &PiercedCube_index);
 
 	//震度テストを有効
 	glEnable(GL_DEPTH_TEST);
@@ -104,5 +104,8 @@ void MainDraw::Drawing(const GlobalData &p_Global)
 //	m_MainShader->VertexAttribPointer(m_attr_color, PiercedCube_index.Color.size, PiercedCube_index.Color.type, PiercedCube_index.Color.normalized, PiercedCube_index.Color.stride, PiercedCube_index.Color.pointer);
 //	glDrawElements(PiercedCube_index.DrawElements.mode, PiercedCube_index.DrawElements.count, PiercedCube_index.DrawElements.type, PiercedCube_index.DrawElements.indices);
 
+	//メモリ解放
+	Model::PiercedCube_free(&PiercedCube);
+	Model::PiercedCube_index_free(&PiercedCube_index);
 }
 
