@@ -3,6 +3,16 @@
 
 //include定義
 #include "Common.h"
+#include "OBJLoader.h"
+
+//#define定義
+#define MODEL_FILE_DIR	"../Resource/Model/"	//モデルファイルの保存ディレクトリ
+
+//モデルデータのフォーマット
+typedef enum
+{
+	FILE_FORMAT_OBJ = 0,			//OBJファイル（OBJファイルに指定があればMTLファイルも読み込まれる）
+}FileFotmat;
 
 ////////////////////////////////////
 // モデルデータ情報構造体
@@ -59,6 +69,15 @@ typedef struct
 	BufferDataInfo BufferData;			//バッファー情報
 }ModelInfo_index_Original;
 
+//モデルデータ情報（OBJファイル用）
+typedef struct
+{
+	VertexAttribPointerInfo Vertex;		//頂点情報
+	VertexAttribPointerInfo Normal;		//法線情報
+	DrawElementsInfo DrawElements;		//描画情報
+	void *OBJLoader;	//OBJファイルの読み込みをしたクラスのオブジェクト
+						//（使用者側としては一切関係ない変数なので、データを参照したり書き換えたりしないでください）
+}ModelInfo;
 
 class Model
 {
@@ -69,6 +88,33 @@ public:
 
 	//デストラクタ
 	~Model();
+
+	/*-------------------------------------------------------------------------------
+	*	関数説明
+	*	　モデルファイルからモデルデータの読み込みを行います
+	*	引数
+	*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
+	*							 [Resource/Model/]フォルダ以降のファイルパスを入力してください。
+	*							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.obj」）
+	*	　p_FileFotmat	：[I/ ]　モデルファイルのフォーマット（詳細は定義部分のコメント参照）
+	*	　p_ModelData	：[ /O]　モデルデータ情報
+	*							 ※注意※
+	*							 モデルデータが不要になった時点で、必ず[FileDataFree]をコールしてください。
+	*							 （モデルデータのメモリを解放します）
+	*	戻り値
+	*	　なし
+	*-------------------------------------------------------------------------------*/
+	static void FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat, ModelInfo *p_ModelData);
+
+	/*-------------------------------------------------------------------------------
+	*	関数説明
+	*	　モデルデータのメモリを解放します
+	*	引数
+	*	　p_ModelData	：[ /O]　モデルデータ（メモリを解放後「NULL」が格納されるという意味で[ /O]指定）
+	*	戻り値
+	*	　なし
+	*-------------------------------------------------------------------------------*/
+	static void FileDataFree(ModelInfo *p_ModelData);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -158,6 +204,21 @@ private:
 		Vec3 Vector;
 		bColor4 Color;
 	}Vec3_bColor4;
+
+
+	/*-------------------------------------------------------------------------------
+	*	関数説明
+	*	　OBJ形式のモデルファイルからモデルデータの読み込みを行います
+	*	引数
+	*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名（ディレクトリ構造も含んだフルパスを設定）
+	*	　p_ModelData	：[ /O]　モデルデータ情報
+	*							 ※注意※
+	*							 モデルデータが不要になった時点で、必ず[FileDataFree]をコールしてください。
+	*							 （モデルデータのメモリを解放します）
+	*	戻り値
+	*	　なし
+	*-------------------------------------------------------------------------------*/
+	static void FileLoad_OBJ(const char* p_FileName, ModelInfo *p_ModelData);
 
 };
 

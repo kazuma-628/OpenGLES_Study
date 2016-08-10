@@ -31,6 +31,7 @@ add_executable(
 	Source/Model.cpp
 	Source/Maths.cpp
 	Source/ScreenString.cpp
+	Source/OBJLoader.cpp
 
 #「Header File」を指定する
 	Header/Common.h
@@ -44,6 +45,7 @@ add_executable(
 	Header/Model.h
 	Header/Maths.h
 	Header/ScreenString.h
+	Header/OBJLoader.h
 
 #「Shader File」を指定する
 	Shader/Main.frag
