@@ -244,6 +244,10 @@ void Model::PiercedCube_index_free(ModelInfo_index_Original *p_ModelData)
 	{
 		free(p_ModelData->BufferData.data);
 	}
+	if (NULL != p_ModelData->DrawElements.indices)
+	{
+		free(p_ModelData->DrawElements.indices);
+	}
 
 	p_ModelData = NULL;
 }

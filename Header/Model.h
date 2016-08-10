@@ -31,7 +31,7 @@ typedef struct
 	GLenum mode;
 	GLsizei count;
 	GLenum type;
-	const void *indices;
+	GLvoid *indices;
 }DrawElementsInfo;
 
 //バッファーデータ用（glBufferData等）パラメータ情報
