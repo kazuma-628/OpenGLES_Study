@@ -22,7 +22,9 @@ Texture::~Texture()
 *	　p_PixelFotmat	：[I/ ]　画像ファイルのフォーマット
 *							 [PIXELFORMAT_24BIT_RGB] or [PIXELFORMAT_32BIT_RGBA] で指定（詳細は定義部分のコメント参照）
 *	　p_TextureData	：[ /O]　テクスチャデータ
-*							 [TextureData]構造体の[data]変数は不要になった時点で必ず[free]でメモリ解放してください。
+*							 ※注意※
+*							 テクスチャデータが不要になった時点で、必ず[FileDataFree]をコールしてください。
+*							（テクスチャデータのメモリを解放します）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -139,6 +141,24 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 	printf("完了\n");
 }
 
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　テクスチャデータのメモリを解放します
+*	引数
+*	　p_TextureData	：[ /O]　テクスチャデータ（メモリを解放後「NULL」が格納されるという意味で[ /O]指定）
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+static void FileDataLoad(TextureInfo *p_TextureData)
+{
+	//データが格納されていれば開放する
+	if (NULL != p_TextureData->data)
+	{
+		free(p_TextureData->data);
+	}
+
+	p_TextureData = NULL;
+}
 
 /*-------------------------------------------------------------------------------
 *	関数説明
