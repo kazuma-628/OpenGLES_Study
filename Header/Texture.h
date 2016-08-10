@@ -6,7 +6,7 @@
 #include <gdiplus.h>
 
 //#define定義
-#define TEXTURE_FILE_DIR				"../Resource/Texture/"	//リソースファイルの保存ディレクトリ
+#define TEXTURE_FILE_DIR	"../Resource/Texture/"	//テクスチャファイルの保存ディレクトリ
 
 //ピクセルフォーマット
 typedef enum

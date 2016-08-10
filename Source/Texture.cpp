@@ -49,7 +49,7 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 	wchar_t *w_texture_dir_file_name = NULL;	//テクスチャファイルへのパス（ワイド文字）
 	int StrLength = 0;		//読み込むテクスチャファイル名の長さ（バイト数）
 
-							// 文字列の長さを取得してメモリ確保（終端を明確にするため +1 する。[\0]となる）
+	// 文字列の長さを取得してメモリ確保（終端を明確にするため +1 する。[\0]となる）
 	StrLength = strlen(TEXTURE_FILE_DIR) + strlen(p_FileName);
 	texture_dir_file_name = (char*)calloc(StrLength + 1, sizeof(char));
 
