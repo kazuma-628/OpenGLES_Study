@@ -67,8 +67,14 @@ void Model::FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat, ModelI
 		printf("失敗\n");
 		ERROR_MESSAGE("ピクセルフォーマットの引数が不正です。\n"\
 					  "p_FileFotmat = %d", p_FileFotmat);
+
+		//メモリ解放
+		free(model_dir_file_name);
 		return;
 	}
+
+	//メモリ解放
+	free(model_dir_file_name);
 
 	printf("完了\n");
 }
