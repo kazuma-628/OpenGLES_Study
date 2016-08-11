@@ -89,7 +89,7 @@ void Model::FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat, ModelI
 *-------------------------------------------------------------------------------*/
 void Model::FileDataFree(ModelInfo *p_ModelData)
 {
-	//データが格納されていれば開放する
+	////OBJファイルの読み込みをしたクラスのオブジェクト型に変換
 	OBJMESH *mesh = (OBJMESH*)p_ModelData->OBJLoader;
 	
 	//メモリ解放
