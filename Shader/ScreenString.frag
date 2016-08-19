@@ -1,4 +1,4 @@
-﻿#version 320 es
+#version 320 es
 
 //テクスチャ座標
 in mediump vec2 f_attr_tex_coord;

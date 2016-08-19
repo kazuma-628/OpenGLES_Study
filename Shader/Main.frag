@@ -1,4 +1,4 @@
-﻿#version 320 es
+#version 320 es
 
 //ジオメトリシェーダからのデータ
 in lowp vec4 f_vary_color;
