@@ -19,6 +19,7 @@ typedef enum
 typedef struct
 {
 	//各変数は[glTexImage2D(3D,etc...)]の引数となるもの（そのまま引数に設定すれば良い）
+	//ここに用意されてない引数は各自使用用途に合わせて設定すること
 	GLint internalFormat;		//ピクセル内部フォーマット
 	GLsizei width;				//幅
 	GLsizei height;				//高さ
