@@ -44,11 +44,13 @@ typedef struct
 	GLvoid *indices;
 }DrawElementsInfo;
 
-//バッファーデータ用（glBufferData等）パラメータ情報
+//[glBufferData]用パラメータ情報
 typedef struct
 {
-	GLsizei size;		//全頂点のサイズ（byte）
-	GLvoid *data;		//全頂点が格納された先頭アドレス
+	//ここに用意されてない引数は各自使用用途に合わせて設定すること
+	GLenum target;
+	GLsizeiptr size;
+	GLvoid *data;
 }BufferDataInfo;
 
 //モデルデータ情報（オリジナル用）
@@ -57,7 +59,7 @@ typedef struct
 	VertexAttribPointerInfo Vertex;		//頂点情報
 	VertexAttribPointerInfo Color;		//カラー情報
 	DrawArraysInfo DrawArrays;			//描画情報
-	BufferDataInfo BufferData;			//バッファー情報（VBOを）
+	BufferDataInfo BufferData_v;		//バッファー情報（頂点データ用）
 }ModelInfo_Original;
 
 //モデルデータ（インデックス使用版）情報（オリジナル用）
@@ -66,7 +68,9 @@ typedef struct
 	VertexAttribPointerInfo Vertex;		//頂点情報
 	VertexAttribPointerInfo Color;		//カラー情報
 	DrawElementsInfo DrawElements;		//描画情報
-	BufferDataInfo BufferData;			//バッファー情報
+	BufferDataInfo BufferData_v;		//バッファー情報（頂点データ用）
+	BufferDataInfo BufferData_i;		//バッファー情報（インデックスデータ用）
+
 }ModelInfo_index_Original;
 
 //モデルデータ情報（OBJファイル用）
@@ -75,6 +79,8 @@ typedef struct
 	VertexAttribPointerInfo Vertex;		//頂点情報
 	VertexAttribPointerInfo Normal;		//法線情報
 	DrawElementsInfo DrawElements;		//描画情報
+	BufferDataInfo BufferData_v;		//バッファー情報（頂点データ用）
+	BufferDataInfo BufferData_i;		//バッファー情報（インデックスデータ用）
 	void *OBJLoader;	//OBJファイルの読み込みをしたクラスのオブジェクト
 						//（使用者側としては一切関係ない変数なので、データを参照したり書き換えたりしないでください）
 }ModelInfo;
@@ -96,6 +102,10 @@ public:
 	*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
 	*							 [Resource/Model/]フォルダ以降のファイルパスを入力してください。
 	*							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.obj」）
+	*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
+	*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
+	*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
+	*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
 	*	　p_FileFotmat	：[I/ ]　モデルファイルのフォーマット（詳細は定義部分のコメント参照）
 	*	　p_ModelData	：[ /O]　モデルデータ情報
 	*							 ※注意※
@@ -104,7 +114,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat, ModelInfo *p_ModelData);
+	static void FileDataLoad(const char* p_FileName, bool p_vbo, FileFotmat p_FileFotmat, ModelInfo *p_ModelData);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -123,8 +133,8 @@ public:
 	*	引数
 	*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
 	*					　		 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawArrays」する。
-	*							 登録するデータは「BufferData」メンバに格納されている情報を使用すれば良い。
-	*							 ※「false」を指定した場合は「BufferData」メンバには情報が格納されないので扱いに注意
+	*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
+	*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
 	*	　p_ModelData	：[ /O]　モデルデータ情報
 	*							 ※注意※
 	*							 モデルデータが不要になった時点で、必ず[PiercedCube_free]をコールしてください。
@@ -151,8 +161,8 @@ public:
 	*	引数
 	*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
 	*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
-	*							 登録するデータは「BufferData」メンバに格納されている情報を使用すれば良い。
-	*							 ※「false」を指定した場合は「BufferData」メンバには情報が格納されないので扱いに注意
+	*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
+	*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
 	*	　p_ModelData	：[ /O]　モデルデータ情報
 	*							 ※注意※
 	*							 モデルデータが不要になった時点で、必ず[PiercedCube_index_free]をコールしてください。
@@ -211,6 +221,10 @@ private:
 	*	　OBJ形式のモデルファイルからモデルデータの読み込みを行います
 	*	引数
 	*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名（ディレクトリ構造も含んだフルパスを設定）
+	*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
+	*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
+	*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
+	*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
 	*	　p_ModelData	：[ /O]　モデルデータ情報
 	*							 ※注意※
 	*							 モデルデータが不要になった時点で、必ず[FileDataFree]をコールしてください。
@@ -218,7 +232,7 @@ private:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void FileLoad_OBJ(const char* p_FileName, ModelInfo *p_ModelData);
+	static void FileLoad_OBJ(const char* p_FileName, bool p_vbo, ModelInfo *p_ModelData);
 
 };
 

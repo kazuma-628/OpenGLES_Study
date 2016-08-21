@@ -17,6 +17,10 @@ Model::~Model()
 *	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
 *							 [Resource/Model/]フォルダ以降のファイルパスを入力してください。
 *							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.obj」）
+*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
+*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
+*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
+*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
 *	　p_FileFotmat	：[I/ ]　モデルファイルのフォーマット（詳細は定義部分のコメント参照）
 *	　p_ModelData	：[ /O]　モデルデータ情報
 *							 ※注意※
@@ -25,7 +29,7 @@ Model::~Model()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat, ModelInfo *p_ModelData)
+void Model::FileDataLoad(const char* p_FileName, bool p_vbo, FileFotmat p_FileFotmat, ModelInfo *p_ModelData)
 {
 	printf("モデルデータ「%s」の読み込みを開始します...", p_FileName);
 
@@ -60,7 +64,7 @@ void Model::FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat, ModelI
 
 	//OBJファイル
 	case FILE_FORMAT_OBJ:
-		FileLoad_OBJ(model_dir_file_name, p_ModelData);
+		FileLoad_OBJ(model_dir_file_name, p_vbo, p_ModelData);
 		break;
 
 	default:
@@ -101,6 +105,10 @@ void Model::FileDataFree(ModelInfo *p_ModelData)
 *	　OBJ形式のモデルファイルからモデルデータの読み込みを行います
 *	引数
 *	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名（ディレクトリ構造も含んだフルパスを設定）
+*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
+*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
+*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
+*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
 *	　p_ModelData	：[ /O]　モデルデータ情報
 *							 ※注意※
 *							 モデルデータが不要になった時点で、必ず[FileDataFree]をコールしてください。
@@ -108,7 +116,7 @@ void Model::FileDataFree(ModelInfo *p_ModelData)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::FileLoad_OBJ(const char* p_FileName, ModelInfo *p_ModelData)
+void Model::FileLoad_OBJ(const char* p_FileName, bool p_vbo, ModelInfo *p_ModelData)
 {
 	//引数チェック
 	if (NULL == p_FileName)
@@ -145,20 +153,68 @@ void Model::FileLoad_OBJ(const char* p_FileName, ModelInfo *p_ModelData)
 	p_ModelData->Vertex.type = GL_FLOAT;
 	p_ModelData->Vertex.normalized = GL_FALSE;
 	p_ModelData->Vertex.stride = sizeof(OBJVERTEX);
-	p_ModelData->Vertex.pointer = (GLvoid*)&Vertex->position;
+	if (true == p_vbo)
+	{
+		p_ModelData->Vertex.pointer = 0;
+	}
+	else
+	{
+		p_ModelData->Vertex.pointer = (GLvoid*)&Vertex->position;
+	}
 
 	//法線の設定
 	p_ModelData->Normal.size = sizeof(Vertex->normal) / sizeof(Vertex->normal.x);
 	p_ModelData->Normal.type = GL_FLOAT;
 	p_ModelData->Normal.normalized = GL_FALSE;
 	p_ModelData->Normal.stride = sizeof(OBJVERTEX);
-	p_ModelData->Normal.pointer = (GLvoid*)&Vertex->normal;
+	if (true == p_vbo)
+	{
+		p_ModelData->Normal.pointer = (GLvoid*)sizeof(Vertex->position);
+	}
+	else
+	{
+		p_ModelData->Normal.pointer = (GLvoid*)&Vertex->normal;
+	}
 
 	//描画情報の設定
 	p_ModelData->DrawElements.mode = GL_TRIANGLES;
 	p_ModelData->DrawElements.count = NumIndices;
 	p_ModelData->DrawElements.type = GL_UNSIGNED_INT;
-	p_ModelData->DrawElements.indices = (GLvoid*)Indices;
+	if (true == p_vbo)
+	{
+		p_ModelData->DrawElements.indices = 0;
+	}
+	else
+	{
+		p_ModelData->DrawElements.indices = (GLvoid*)Indices;
+	}
+
+	//バッファーデータ設定
+	if (true == p_vbo)
+	{
+		//頂点
+		p_ModelData->BufferData_v.target = GL_ARRAY_BUFFER;
+		p_ModelData->BufferData_v.size = NumVertices * sizeof(OBJVERTEX);
+		p_ModelData->BufferData_v.data = (GLvoid*)Vertex;
+
+		//インデックス
+		p_ModelData->BufferData_i.target = GL_ELEMENT_ARRAY_BUFFER;
+		p_ModelData->BufferData_i.size = NumIndices * sizeof(unsigned int);
+		p_ModelData->BufferData_i.data = (GLvoid*)Indices;
+	}
+	else
+	{
+		//VBO未使用が指定されているのでデータは詰めない
+		//頂点
+		p_ModelData->BufferData_v.target = 0;
+		p_ModelData->BufferData_v.size = 0;
+		p_ModelData->BufferData_v.data = NULL;
+
+		//インデックス
+		p_ModelData->BufferData_i.target = 0;
+		p_ModelData->BufferData_i.size = 0;
+		p_ModelData->BufferData_i.data = NULL;
+	}
 
 	//OBJファイルの読み込みをしたクラスのオブジェクトを記憶してく（メモリ破棄時に使用）
 	p_ModelData->OBJLoader = (void*)mesh;
@@ -171,8 +227,8 @@ void Model::FileLoad_OBJ(const char* p_FileName, ModelInfo *p_ModelData)
 *	引数
 *	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
 *					　		 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawArrays」する。
-*							 登録するデータは「BufferData」メンバに格納されている情報を使用すれば良い。
-*							 ※「false」を指定した場合は「BufferData」メンバには情報が格納されないので扱いに注意
+*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
+*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
 *	　p_ModelData	：[ /O]　モデルデータ情報
 *							 ※注意※
 *							 モデルデータが不要になった時点で、必ず[PiercedCube_free]をコールしてください。
@@ -241,24 +297,31 @@ void Model::GetPiercedCube(bool p_vbo, ModelInfo_Original *p_ModelData)
 	if (true == p_vbo)
 	{
 		p_ModelData->Color.pointer = (GLvoid*)sizeof(vertex[0].Vector);
-
-		//バッファーデータ設定
-		p_ModelData->BufferData.size = sizeof(vertex);
-		p_ModelData->BufferData.data = PiercedCube_vertex;
 	}
 	else
 	{
 		p_ModelData->Color.pointer = (GLvoid*)((byte*)PiercedCube_vertex + sizeof(vertex[0].Vector));
-
-		//バッファーデータ設定（VBO未使用が指定されているのでデータは詰めない）
-		p_ModelData->BufferData.size = 0;
-		p_ModelData->BufferData.data = NULL;
 	}
 
 	//描画情報設定
 	p_ModelData->DrawArrays.mode = GL_TRIANGLE_STRIP;
 	p_ModelData->DrawArrays.first = 0;
 	p_ModelData->DrawArrays.count = sizeof(vertex) / sizeof(vertex[0]);
+
+	//バッファーデータ設定
+	if (true == p_vbo)
+	{
+		p_ModelData->BufferData_v.target = GL_ARRAY_BUFFER;
+		p_ModelData->BufferData_v.size = sizeof(vertex);
+		p_ModelData->BufferData_v.data = PiercedCube_vertex;
+	}
+	else
+	{
+		//VBO未使用が指定されているのでデータは詰めない
+		p_ModelData->BufferData_v.target = 0;
+		p_ModelData->BufferData_v.size = 0;
+		p_ModelData->BufferData_v.data = NULL;
+	}
 }
 
 /*-------------------------------------------------------------------------------
@@ -276,9 +339,9 @@ void Model::PiercedCube_free(ModelInfo_Original *p_ModelData)
 	{
 		free(p_ModelData->Vertex.pointer);
 	}
-	if (NULL != p_ModelData->BufferData.data)
+	if (NULL != p_ModelData->BufferData_v.data)
 	{
-		free(p_ModelData->BufferData.data);
+		free(p_ModelData->BufferData_v.data);
 	}
 
 	p_ModelData = NULL;
@@ -291,8 +354,8 @@ void Model::PiercedCube_free(ModelInfo_Original *p_ModelData)
 *	引数
 *	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
 *						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
-*							 登録するデータは「BufferData」メンバに格納されている情報を使用すれば良い。
-*							 ※「false」を指定した場合は「BufferData」メンバには情報が格納されないので扱いに注意
+*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
+*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
 *	　p_ModelData	：[ /O]　モデルデータ情報
 *							 ※注意※
 *							 モデルデータが不要になった時点で、必ず[PiercedCube_index_free]をコールしてください。
@@ -358,25 +421,52 @@ void Model::GetPiercedCube_index(bool p_vbo, ModelInfo_index_Original *p_ModelDa
 	if (true == p_vbo)
 	{
 		p_ModelData->Color.pointer = (GLvoid*)sizeof(vertex[0].Vector);
-
-		//バッファーデータ設定
-		p_ModelData->BufferData.size = sizeof(vertex);
-		p_ModelData->BufferData.data = PiercedCube_vertex;
 	}
 	else
 	{
 		p_ModelData->Color.pointer = (GLvoid*)((byte*)PiercedCube_vertex + sizeof(vertex[0].Vector));
-
-		//バッファーデータ設定（VBO未使用が指定されているのでデータは詰めない）
-		p_ModelData->BufferData.size = 0;
-		p_ModelData->BufferData.data = NULL;
 	}
 
 	//描画情報設定
 	p_ModelData->DrawElements.mode = GL_TRIANGLE_STRIP;
 	p_ModelData->DrawElements.count = sizeof(index) / sizeof(index[0]);
 	p_ModelData->DrawElements.type = GL_UNSIGNED_BYTE;
-	p_ModelData->DrawElements.indices = PiercedCube_index;
+	
+	if (true == p_vbo)
+	{
+		p_ModelData->DrawElements.indices = 0;
+	}
+	else
+	{
+		p_ModelData->DrawElements.indices = PiercedCube_index;
+	}
+
+	//バッファーデータ設定
+	if (true == p_vbo)
+	{
+		//頂点
+		p_ModelData->BufferData_v.target = GL_ARRAY_BUFFER;
+		p_ModelData->BufferData_v.size = sizeof(vertex);
+		p_ModelData->BufferData_v.data = PiercedCube_vertex;
+
+		//インデックス
+		p_ModelData->BufferData_i.target = GL_ELEMENT_ARRAY_BUFFER;
+		p_ModelData->BufferData_i.size = sizeof(index);
+		p_ModelData->BufferData_i.data = PiercedCube_index;
+	}
+	else
+	{
+		//VBO未使用が指定されているのでデータは詰めない
+		//頂点
+		p_ModelData->BufferData_v.target = 0;
+		p_ModelData->BufferData_v.size = 0;
+		p_ModelData->BufferData_v.data = NULL;
+
+		//インデックス
+		p_ModelData->BufferData_i.target = 0;
+		p_ModelData->BufferData_i.size = 0;
+		p_ModelData->BufferData_i.data = NULL;
+	}
 }
 
 /*-------------------------------------------------------------------------------
@@ -394,13 +484,17 @@ void Model::PiercedCube_index_free(ModelInfo_index_Original *p_ModelData)
 	{
 		free(p_ModelData->Vertex.pointer);
 	}
-	if (NULL != p_ModelData->BufferData.data)
+	if (NULL != p_ModelData->BufferData_v.data)
 	{
-		free(p_ModelData->BufferData.data);
+		free(p_ModelData->BufferData_v.data);
 	}
 	if (NULL != p_ModelData->DrawElements.indices)
 	{
 		free(p_ModelData->DrawElements.indices);
+	}
+	if (NULL != p_ModelData->BufferData_i.data)
+	{
+		free(p_ModelData->BufferData_i.data);
 	}
 
 	p_ModelData = NULL;

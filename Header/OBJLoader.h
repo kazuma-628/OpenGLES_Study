@@ -74,9 +74,9 @@ struct OBJVEC3
 /////////////////////////////////////////////////////////////////////////
 struct OBJVERTEX
 {
-	OBJVEC2 texcoord;
-	OBJVEC3 normal;
 	OBJVEC3 position;
+	OBJVEC3 normal;
+	OBJVEC2 texcoord;
 	OBJVERTEX(){}
 };
 
