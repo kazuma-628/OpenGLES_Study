@@ -383,6 +383,10 @@ void ScreenString::DebugDrawing(const GlobalData &p_Global)
 	//ブレンドを無効にする
 	glDisable(GL_BLEND);
 
+	//シェーダーの変数を無効化
+	m_StringShader->DisableVertexAttribArray(m_attr_pos);
+	m_StringShader->DisableVertexAttribArray(m_attr_tex_coord);
+
 	//デバッグ表示を描画したので、関連する変数を初期化する
 	DebugMaxWidth = 0;
 	DebugSumRows = 0;
