@@ -176,6 +176,20 @@ void Model::FileLoad_OBJ(const char* p_FileName, bool p_vbo, ModelInfo *p_ModelD
 		p_ModelData->Normal.pointer = (GLvoid*)&Vertex->normal;
 	}
 
+	//テクスチャ座標の設定
+	p_ModelData->TexCoord.size = sizeof(Vertex->texcoord) / sizeof(Vertex->texcoord.x);
+	p_ModelData->TexCoord.type = GL_FLOAT;
+	p_ModelData->TexCoord.normalized = GL_FALSE;
+	p_ModelData->TexCoord.stride = sizeof(OBJVERTEX);
+	if (true == p_vbo)
+	{
+		p_ModelData->TexCoord.pointer = (GLvoid*)(sizeof(Vertex->position) + sizeof(Vertex->normal));
+	}
+	else
+	{
+		p_ModelData->TexCoord.pointer = (GLvoid*)&Vertex->texcoord;
+	}
+
 	//描画情報の設定
 	p_ModelData->DrawElements.mode = GL_TRIANGLES;
 	p_ModelData->DrawElements.count = NumIndices;

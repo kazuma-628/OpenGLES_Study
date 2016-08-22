@@ -78,6 +78,7 @@ typedef struct
 {
 	VertexAttribPointerInfo Vertex;		//頂点情報
 	VertexAttribPointerInfo Normal;		//法線情報
+	VertexAttribPointerInfo TexCoord;	//テクスチャ座標情報
 	DrawElementsInfo DrawElements;		//描画情報
 	BufferDataInfo BufferData_v;		//バッファー情報（頂点データ用）
 	BufferDataInfo BufferData_i;		//バッファー情報（インデックスデータ用）
