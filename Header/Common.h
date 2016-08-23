@@ -87,7 +87,7 @@ typedef struct
 }iVec4;
 
 ////////////////////////////////////
-// ベクトル構造体
+// マトリクス構造体
 typedef struct
 {
 	GLfloat m[2][2];
