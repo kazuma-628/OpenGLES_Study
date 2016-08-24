@@ -27,6 +27,7 @@ ShaderManager::~ShaderManager()
 *	関数説明
 *	　各シェーダーのソースを指定されたファイルから読み込み、
 *	　コンパイル及びリンクして、プログラムオブジェクトを作成する
+*	　既にプログラムオブジェクトが作成されている場合は、データを破棄（メモリ解放）してから新しく読み込みします。
 *	引数
 *	　p_vertex_file_name			：[I/ ]　バーテックスシェーダーのファイル名
 *	　p_fragment_file_name			：[I/ ]　フラグメントシェーダーのファイル名
@@ -62,7 +63,7 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name,
 		//作成されていれば破棄してから新規作成
 		DeleteShaderProgram();
 
-		//本来であれば上書きはありえないはずなので、警告メッセージを表示しておく
+		//本来であれば上書きはしない事が多いので、警告メッセージを表示しておく
 		WARNING_MESSAGE("プログラムオブジェクトの再作成がされました。\n" \
 						"破棄処理を忘れていませんか？\n");
 	}
