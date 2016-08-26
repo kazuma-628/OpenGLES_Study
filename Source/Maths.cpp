@@ -54,7 +54,7 @@ Vec3 Math::Normalize(const Vec3 &p_Vector)
 	double z = (double)(p_Vector.z);
 
 	//引数チェック
-	if (0.0 == x || 0.0 == y || 0.0 == z)
+	if (0.0 == x && 0.0 == y && 0.0 == z)
 	{
 		ERROR_MESSAGE("ベクトルを正規化 引数エラー ベクトルが[0]です。\n");
 		return normalize;
@@ -178,7 +178,7 @@ Vec3 Math::Normal(const Vec3 &p_Vector1, const Vec3 &p_Vector2, const Vec3 &p_Ve
 	normal = Cross(tmp_normal1, tmp_normal2);
 
 	//引数チェック
-	if (0.0 == normal.x || 0.0 == normal.y || 0.0 == normal.z)
+	if (0.0 == normal.x && 0.0 == normal.y && 0.0 == normal.z)
 	{
 		ERROR_MESSAGE("法線を計算 引数エラー\n" \
 					  "p_Vector1.x = %f, p_Vector1.y = %f, p_Vector1.z = %f\n" \
