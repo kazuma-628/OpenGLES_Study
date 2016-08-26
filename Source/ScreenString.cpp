@@ -290,6 +290,12 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 *-------------------------------------------------------------------------------*/
 void ScreenString::DebugDrawing(const GlobalData &p_Global)
 {
+	//デバッグ文字列がない場合は描画命令しない
+	if(0 == DebugMaxWidth)
+	{
+		return;
+	}
+
 	// シェーダープログラムの利用を開始する
 	m_StringShader->UseProgram();
 
