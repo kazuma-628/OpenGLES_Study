@@ -586,6 +586,62 @@ void ShaderManager::VertexAttribPointer(const GLint p_index, const GLint p_size,
 
 /*-------------------------------------------------------------------------------
 *	関数説明
+*	　Attribute変数へデータを送信（関連付け）します。（ほぼ glVertexAttrib1f, glVertexAttrib2f, glVertexAttrib3f, glVertexAttrib4f と同じです）
+*	　エラーや情報管理を一元化して利便性の向上を図っています。
+*	引数
+*	　p_index		：[I/ ]　Attribute変数のロケーションを呼び出すためのインデックス値
+*					　		（GetAttribLocationで取得した返り値）
+*	　p_scalar		：[I/ ]　転送するデータの個数（シェーダー内変数のベクトル成分と同じ数を入力　例)[4] → vec4）
+*							 ※ 要約すると [1]を指定すれば → glVertexAttrib1f、[4]を指定すれば → glVertexAttrib4f がコールされる ※
+*					----------------------------------------------------------
+*					下記成分については、引数「p_scalar」で指定した数分を「データ1」から詰めて入力する
+*					（使用しない引数が出てくると思われるが、その引数には「0」を指定すること）
+*	　p_param1		：[I/ ]　転送するデータ 1（シェーダー内変数の Xベクトル成分に該当）
+*	　p_param2		：[I/ ]　転送するデータ 2（シェーダー内変数の Yベクトル成分に該当）
+*	　p_param3		：[I/ ]　転送するデータ 3（シェーダー内変数の Zベクトル成分に該当）
+*	　p_param4		：[I/ ]　転送するデータ 4（シェーダー内変数の Wベクトル成分に該当）
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void ShaderManager::VertexAttribXf(const GLint p_index, const GLint p_scalar, const GLfloat p_param1, const GLfloat p_param2, const GLfloat p_param3, const GLfloat p_param4)
+{
+	if (-1 == m_AttribInfo[p_index].Location)
+	{
+		ERROR_MESSAGE_SUB("シェーダー[%s]用の\n"\
+						  "アトリビュート変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+						  "シェーダーに変数が定義されていない可能性があります\n"\
+						  , m_vertex_file_name, m_AttribInfo[p_index].Name);
+	}
+	else
+	{
+		if (1 == p_scalar)
+		{
+			glVertexAttrib1f(m_AttribInfo[p_index].Location, p_param1);
+		}
+		else if (2 == p_scalar)
+		{
+			glVertexAttrib2f(m_AttribInfo[p_index].Location, p_param1, p_param2);
+		}
+		else if (3 == p_scalar)
+		{
+			glVertexAttrib3f(m_AttribInfo[p_index].Location, p_param1, p_param2, p_param3);
+		}
+		else if (4 == p_scalar)
+		{
+			glVertexAttrib4f(m_AttribInfo[p_index].Location, p_param1, p_param2, p_param3, p_param4);
+		}
+		else
+		{
+			ERROR_MESSAGE("シェーダー[%s]用の\n"\
+						  "アトリビュート変数「%s」へのデータの送信（関連付け）に失敗しました\n"\
+						  "「p_scalar」引数のエラーです → 設定値：%d\n" \
+						  , m_AllShaderFileName, m_AttribInfo[p_index].Name, p_scalar);
+		}
+	}
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
 *	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniform1f, glUniform2f, glUniform3f, glUniform4f と同じです）
 *	　エラーや情報管理を一元化して利便性の向上を図っています。
 *	引数
