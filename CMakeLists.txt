@@ -22,7 +22,7 @@ add_executable(
 
 #「Source File」を指定する
 	Source/Main.cpp
-	Source/MainDraw.cpp
+	Source/HelloWorld.cpp
 	Source/ShaderManager.cpp
 	Source/Matrix.cpp
 	Source/DeviceManager.cpp
@@ -36,7 +36,7 @@ add_executable(
 #「Header File」を指定する
 	Header/Common.h
 	Header/Main.h
-	Header/MainDraw.h
+	Header/HelloWorld.h
 	Header/ShaderManager.h
 	Header/Matrix.h
 	Header/DeviceManager.h
@@ -48,9 +48,8 @@ add_executable(
 	Header/OBJLoader.h
 
 #「Shader File」を指定する
-	Shader/Main.frag
-	Shader/Main.vert
-	Shader/Main.geom
+	Shader/HelloWorld.frag
+	Shader/HelloWorld.vert
 	Shader/ScreenString.vert
 	Shader/ScreenString.frag
 )

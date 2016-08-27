@@ -2,7 +2,7 @@
 #define MAIN_H
 
 #include "Common.h"
-#include "MainDraw.h"
+#include "HelloWorld.h"
 #include "DeviceManager.h"
 #include "WindowManager.h"
 #include "Model.h"

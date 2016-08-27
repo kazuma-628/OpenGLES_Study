@@ -53,7 +53,7 @@ void main(void)
 	//	各シェーダーオブジェクト生成
 
 	//メイン描画用のオブジェクト生成
-	MainDraw *m_MainDraw = new MainDraw;
+	HelloWorld *m_HelloWorld = new HelloWorld;
 
 	//////////////////////////////////////////////////////
 	//	各オブジェクト初期化 及び 準備
@@ -70,7 +70,7 @@ void main(void)
 	m_DeviceManager->Initialize( m_WindowManager->GetWindow() );
 
 	//メイン描画準備
-	m_MainDraw->Prepare();
+	m_HelloWorld->Prepare();
 
 	//画面に文字列を表示する用のクラスの準備
 	ScreenString::Prepare(m_Global);
@@ -106,7 +106,7 @@ void main(void)
 		// 各種描画
 
 		//メイン描画開始
-		m_MainDraw->Drawing(m_Global);
+		m_HelloWorld->Drawing(m_Global);
 
 		//デバッグ表示の描画を実行する
 		//デバッグ表示が最前面に来るようにするため一番最後に描画する
@@ -128,7 +128,7 @@ void main(void)
 	//	生成したオブジェクトの破棄
 
 	//終了処理
-	delete m_MainDraw;
+	delete m_HelloWorld;
 	delete m_WindowManager;
 	delete m_DeviceManager;
 	ScreenString::Destroy();

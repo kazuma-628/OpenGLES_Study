@@ -1,24 +1,20 @@
-﻿#ifndef MAIN_DRAW_H
-#define MAIN_DRAW_H
+﻿#ifndef HELLO_WORLD_H
+#define HELLO_WORLD_H
 
 //include定義
 #include "Common.h"
 #include "ShaderManager.h"
 #include "Matrix.h"
-#include "DeviceManager.h"
-#include "WindowManager.h"
-#include "Model.h"
-#include "Texture.h"
 
-class MainDraw
+class HelloWorld
 {
 
 public:
 	//コンストラクタ
-	MainDraw();
+	HelloWorld();
 
 	//デストラクタ
-	~MainDraw();
+	~HelloWorld();
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -41,6 +37,13 @@ public:
 	void Drawing(const GlobalData &p_Global);
 
 private:
+
+	// 頂点データ構造体
+	typedef struct
+	{
+		Vec3 Vector;
+		bColor3 Color;
+	}Vec3_bColor3;
 
 	ShaderManager *m_MainShader;		//メインシェーダーオブジェクト
 	GLint m_attr_pos;					//頂点データ

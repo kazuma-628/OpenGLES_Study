@@ -1,7 +1,7 @@
-﻿#include "MainDraw.h"
+﻿#include "HelloWorld.h"
 
 //コンストラクタ
-MainDraw::MainDraw()
+HelloWorld::HelloWorld()
 {
 	//変数初期化
 	m_MainShader = NULL;
@@ -13,7 +13,7 @@ MainDraw::MainDraw()
 }
 
 //デストラクタ
-MainDraw::~MainDraw()
+HelloWorld::~HelloWorld()
 {
 	//Mainシェーダー管理用のオブジェクト破棄
 	delete m_MainShader;
@@ -27,7 +27,7 @@ MainDraw::~MainDraw()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void MainDraw::Prepare()
+void HelloWorld::Prepare()
 {
 	//データが作成されていなければ
 	if(NULL == m_MainShader)
@@ -37,7 +37,7 @@ void MainDraw::Prepare()
 
 		//シェーダーの読み込みを行う
 		//「Shader」フォルダに格納されている必要があります。
-		m_MainShader->CreateShaderProgram("Main.vert", "Main.frag", "Main.geom", NULL, NULL, NULL);
+		m_MainShader->CreateShaderProgram("HelloWorld.vert", "HelloWorld.frag", NULL, NULL, NULL, NULL);
 
 		//シェーダー内で使用する変数を取得します（頂点データ）
 		m_attr_pos = m_MainShader->GetAttribLocation("attr_pos");
@@ -58,7 +58,7 @@ void MainDraw::Prepare()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void MainDraw::Drawing(const GlobalData &p_Global)
+void HelloWorld::Drawing(const GlobalData &p_Global)
 {
 	// シェーダープログラムの利用を開始する
 	m_MainShader->UseProgram();
@@ -71,13 +71,39 @@ void MainDraw::Drawing(const GlobalData &p_Global)
 	m_MainShader->EnableVertexAttribArray(m_attr_pos);
 	m_MainShader->EnableVertexAttribArray(m_attr_color);
 
-	//キューブ形状のモデルデータを取得する
-	ModelInfo_Original PiercedCube;
-	Model::GetPiercedCube(false, &PiercedCube);
-
-	//キューブ形状のモデルデータを取得する（インデックス版）
-	ModelInfo_index_Original PiercedCube_index;
-	Model::GetPiercedCube_index(false, &PiercedCube_index);
+	//穴あきキューブ形状のモデルデータを作成する
+	// 頂点データ
+	Vec3_bColor3 vertex[] =
+	{
+		// v0
+		{ { -10.0f, -10.0f, 10.0f },{ 50, 50, 50 } },
+		// v1
+		{ { -10.0f, -10.0f, -10.0f },{ 90, 0, 0 } },
+		// v2
+		{ { -10.0f, 10.0f, 10.0f },{ 0, 90, 0 } },
+		// v3
+		{ { -10.0f, 10.0f, -10.0f },{ 0, 0, 90 } },
+		// v4
+		{ { 10.0f, 10.0f, 10.0f },{ 130, 0, 0 } },
+		// v5
+		{ { 10.0f, 10.0f, -10.0f },{ 0, 130, 0 } },
+		// v6
+		{ { 10.0f, -10.0f, 10.0f },{ 0, 0, 130 } },
+		// v7
+		{ { 10.0f, -10.0f, -10.0f },{ 170, 0, 0 } },
+		// v8
+		{ { -10.0f, -10.0f, 10.0f },{ 0, 170, 0 } },
+		// v9
+		{ { -10.0f, -10.0f, -10.0f },{ 0, 0, 170 } },
+		// v10
+		{ { -10.0f, -10.0f, -10.0f },{ 210, 0, 0 } },
+		// v11
+		{ { -10.0f, 10.0f, -10.0f },{ 0, 210, 0 } },
+		// v12
+		{ { 10.0f, -10.0f, -10.0f },{ 0, 0, 210 } },
+		// v13
+		{ { 10.0f, 10.0f, -10.0f },{ 250, 0, 0 } },
+	};
 
 	//震度テストを有効
 	glEnable(GL_DEPTH_TEST);
@@ -95,17 +121,12 @@ void MainDraw::Drawing(const GlobalData &p_Global)
 	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, ProjModel.GetMatrixFloat());
 
 	// [glDrawArrays]を使用した描画（一番オーソドックス（初歩的）な描画方法）
-	m_MainShader->VertexAttribPointer(m_attr_pos, PiercedCube.Vertex.size, PiercedCube.Vertex.type, PiercedCube.Vertex.normalized, PiercedCube.Vertex.stride, PiercedCube.Vertex.pointer);
-	m_MainShader->VertexAttribPointer(m_attr_color, PiercedCube.Color.size, PiercedCube.Color.type, PiercedCube.Color.normalized, PiercedCube.Color.stride, PiercedCube.Color.pointer);
-	glDrawArrays(PiercedCube.DrawArrays.mode, PiercedCube.DrawArrays.first, PiercedCube.DrawArrays.count);
+	m_MainShader->VertexAttribPointer(m_attr_pos, sizeof(vertex[0].Vector) / sizeof(vertex[0].Vector.x), GL_FLOAT, GL_FALSE, sizeof(Vec3_bColor3), (GLvoid*)&vertex[0].Vector);
+	m_MainShader->VertexAttribPointer(m_attr_color, sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r), GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vec3_bColor3), (GLvoid*)&vertex[0].Color);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof(vertex) / sizeof(vertex[0]));
 
-	// [glDrawElements]を使用した描画（インデックスバッファを使用する場合）
-//	m_MainShader->VertexAttribPointer(m_attr_pos, PiercedCube_index.Vertex.size, PiercedCube_index.Vertex.type, PiercedCube_index.Vertex.normalized, PiercedCube_index.Vertex.stride, PiercedCube_index.Vertex.pointer);
-//	m_MainShader->VertexAttribPointer(m_attr_color, PiercedCube_index.Color.size, PiercedCube_index.Color.type, PiercedCube_index.Color.normalized, PiercedCube_index.Color.stride, PiercedCube_index.Color.pointer);
-//	glDrawElements(PiercedCube_index.DrawElements.mode, PiercedCube_index.DrawElements.count, PiercedCube_index.DrawElements.type, PiercedCube_index.DrawElements.indices);
-
-	//メモリ解放
-	Model::PiercedCube_free(&PiercedCube);
-	Model::PiercedCube_index_free(&PiercedCube_index);
+	//シェーダーの変数を無効化
+	m_MainShader->DisableVertexAttribArray(m_attr_pos);
+	m_MainShader->DisableVertexAttribArray(m_attr_color);
 }
 
