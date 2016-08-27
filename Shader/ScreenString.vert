@@ -1,4 +1,4 @@
-#version 320 es
+#version 300 es
 
 //頂点座標
 in mediump vec4 attr_pos;
