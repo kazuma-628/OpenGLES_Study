@@ -286,7 +286,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 
 	//投資投影行列で使用する値をグローバル領域に保存
 	p_Global->NearClip = 1.0f;
-	p_Global->FarClip = 200.0f;
+	p_Global->FarClip = 300.0f;
 	//透視投影行列を適用する
 	Projection.Perspective(-1.0f, 1.0f, -1.0f, 1.0f, p_Global->NearClip, p_Global->FarClip);
 
