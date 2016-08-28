@@ -428,7 +428,7 @@ GLint ShaderManager::GetAttribLocation(const GLchar* p_name)
 	int StrLength = 0;			//生成するロケーションの変数名の長さ（バイト数）
 
 	printf("シェーダー[%s]用の\n", m_vertex_file_name);
-	printf("アトリビュート変数「%s」のロケーションの生成を開始します... ", p_name);
+	printf("　アトリビュート変数「%s」のロケーションの生成を開始します... ", p_name);
 
 	GLint Location = glGetAttribLocation(m_ProgramObject, p_name);
 
@@ -472,7 +472,7 @@ GLint ShaderManager::GetUniformLocation(const GLchar* p_name)
 	int StrLength = 0;			//生成するロケーションの変数名の長さ（バイト数）
 
 	printf("シェーダー%s用の\n", m_AllShaderFileName);
-	printf("ユニホーム変数「%s」のロケーションの生成を開始します... ", p_name);
+	printf("　ユニホーム変数「%s」のロケーションの生成を開始します... ", p_name);
 
 	GLint Location = glGetUniformLocation(m_ProgramObject, p_name);
 
