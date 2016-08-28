@@ -50,7 +50,7 @@ void main(void)
 	GlobalData m_Global = { 0 };
 
 	//////////////////////////////////////////////////////
-	//	各シェーダーオブジェクト生成
+	//	各描画オブジェクト生成
 
 	//ハローワールド描画（OpenGLの基本的な描画）用のオブジェクト生成
 	HelloWorld *m_HelloWorld = new HelloWorld;

@@ -4,87 +4,23 @@
 //include定義
 #include "Common.h"
 #include "OBJLoader.h"
+#include "ShaderManager.h"
+#include "Matrix.h"
+#include "Texture.h"
 
 //#define定義
 #define MODEL_FILE_DIR	"../Resource/Model/"	//モデルファイルの保存ディレクトリ
 
 //モデルデータのフォーマット
+//ここの定義を変更する場合は、「Model.frag」の上部「#define」定義も同じように変更してください
 typedef enum
 {
-	FILE_FORMAT_OBJ = 0,			//OBJファイル（OBJファイルに指定があればMTLファイルも読み込まれる）
+	FILE_FORMAT_OBJ = 1,				//OBJ形式のモデルファイル（OBJファイルに指定があればMTLファイルも読み込まれる）
+	
+	//以下、自作モデルデータ（特殊パターン）
+	ORIGINAL_FORMAT_PIERCED_CUBE,		//オリジナルフォーマットで穴あきのキューブデータ（エッジ有り）
+	ORIGINAL_FORMAT_PIERCED_CUBE2,		//オリジナルフォーマットで穴あきのキューブデータ（エッジ無し）
 }FileFotmat;
-
-////////////////////////////////////
-// モデルデータ情報構造体
-
-//頂点パラメータ情報（[VertexAttribPointer]用）
-typedef struct
-{
-	GLint size;
-	GLenum type;
-	GLboolean normalized;
-	GLsizei stride;
-	GLvoid *pointer;
-}VertexAttribPointerInfo;
-
-//[glDrawArrays]用パラメータ情報
-typedef struct
-{
-	GLenum mode;
-	GLint first;
-	GLsizei count;
-}DrawArraysInfo;
-
-//[glDrawElements]用パラメータ情報
-typedef struct
-{
-	GLenum mode;
-	GLsizei count;
-	GLenum type;
-	GLvoid *indices;
-}DrawElementsInfo;
-
-//[glBufferData]用パラメータ情報
-typedef struct
-{
-	//ここに用意されてない引数は各自使用用途に合わせて設定すること
-	GLenum target;
-	GLsizeiptr size;
-	GLvoid *data;
-}BufferDataInfo;
-
-//モデルデータ情報（オリジナル用）
-typedef struct
-{
-	VertexAttribPointerInfo Vertex;		//頂点情報
-	VertexAttribPointerInfo Color;		//カラー情報
-	DrawArraysInfo DrawArrays;			//描画情報
-	BufferDataInfo BufferData_v;		//バッファー情報（頂点データ用）
-}ModelInfo_Original;
-
-//モデルデータ（インデックス使用版）情報（オリジナル用）
-typedef struct
-{
-	VertexAttribPointerInfo Vertex;		//頂点情報
-	VertexAttribPointerInfo Color;		//カラー情報
-	DrawElementsInfo DrawElements;		//描画情報
-	BufferDataInfo BufferData_v;		//バッファー情報（頂点データ用）
-	BufferDataInfo BufferData_i;		//バッファー情報（インデックスデータ用）
-
-}ModelInfo_index_Original;
-
-//モデルデータ情報（OBJファイル用）
-typedef struct
-{
-	VertexAttribPointerInfo Vertex;		//頂点情報
-	VertexAttribPointerInfo Normal;		//法線情報
-	VertexAttribPointerInfo TexCoord;	//テクスチャ座標情報
-	DrawElementsInfo DrawElements;		//描画情報
-	BufferDataInfo BufferData_v;		//バッファー情報（頂点データ用）
-	BufferDataInfo BufferData_i;		//バッファー情報（インデックスデータ用）
-	void *OBJLoader;	//OBJファイルの読み込みをしたクラスのオブジェクト
-						//（使用者側としては一切関係ない変数なので、データを参照したり書き換えたりしないでください）
-}ModelInfo;
 
 class Model
 {
@@ -98,143 +34,222 @@ public:
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
-	*	　モデルファイルからモデルデータの読み込みを行います
+	*	　モデルファイルからモデルデータの読み込みを行います。
+	*	　既にモデルデータが読み込まれている場合は、データを破棄（メモリ解放）してから新しく読み込みします。
+	*	　読み込んだモデルデータの描画は「ModelDataDraw」関数で行います。
 	*	引数
 	*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
 	*							 [Resource/Model/]フォルダ以降のファイルパスを入力してください。
 	*							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.obj」）
-	*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
-	*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
-	*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
-	*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
+	*					　　　※「p_FileFotmat」で自作モデルデータ（特殊パターン）を指定するときは、
+	*							「p_FileName」は「NULL」を指定してください。
 	*	　p_FileFotmat	：[I/ ]　モデルファイルのフォーマット（詳細は定義部分のコメント参照）
-	*	　p_ModelData	：[ /O]　モデルデータ情報
-	*							 ※注意※
-	*							 モデルデータが不要になった時点で、必ず[FileDataFree]をコールしてください。
-	*							 （モデルデータのメモリを解放します）
+	*
+	*					　　　※「p_FileFotmat」で自作モデルデータ（特殊パターン）を指定するときは、
+	*							「p_FileName」は「NULL」を指定してください。
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void FileDataLoad(const char* p_FileName, bool p_vbo, FileFotmat p_FileFotmat, ModelInfo *p_ModelData);
+	void FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
-	*	　モデルデータのメモリを解放します
+	*	　モデルデータを破棄（メモリ解放）します。
 	*	引数
-	*	　p_ModelData	：[ /O]　モデルデータ（メモリを解放後「NULL」が格納されるという意味で[ /O]指定）
+	*	　なし
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void FileDataFree(ModelInfo *p_ModelData);
+	void FileDataFree(void);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
-	*	　穴あきキューブを取得する
-	*	　（[glDrawArrays]として登録するモデルデータ）
+	*	　モデルデータを描画します。
+	*	　予めモデルデータを「FileDataLoad」関数で読み込んでおく必要があります。
+	*
+	*	　※本関数では描画のみしか実行しません
+	*　　　「glClearColor, glClear, glViewport」などの設定は関数コール前に必要に応じて行ってください。
 	*	引数
-	*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
-	*					　		 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawArrays」する。
-	*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
-	*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
-	*	　p_ModelData	：[ /O]　モデルデータ情報
-	*							 ※注意※
-	*							 モデルデータが不要になった時点で、必ず[PiercedCube_free]をコールしてください。
-	*							 （モデルデータのメモリを解放します）
+	*	　p_ProjModelMat	：[I/ ]　「プロジェクション × モデルビュー」を乗算済みの行列
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void GetPiercedCube(bool p_vbo, ModelInfo_Original *p_ModelData);
+	void DataDraw(Matrix &p_ProjModelMat);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
-	*	　モデルデータのメモリを解放します
+	*	　モデルデータを描画するための準備をします
 	*	引数
-	*	　p_ModelData	：[ /O]　モデルデータ（メモリを解放後「NULL」が格納されるという意味で[ /O]指定）
+	*	　p_Global		：[I/ ]　グローバルデータ
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void PiercedCube_free(ModelInfo_Original *p_ModelData);
+	static void Prepare(void);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
-	*	　穴あきキューブを取得する（インデックス版）
-	*	　（[glDrawElements]用パラメータ情報）
+	*	　破棄(終了)処理（変数などを破棄します）
 	*	引数
-	*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
-	*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
-	*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
-	*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
-	*	　p_ModelData	：[ /O]　モデルデータ情報
-	*							 ※注意※
-	*							 モデルデータが不要になった時点で、必ず[PiercedCube_index_free]をコールしてください。
-	*							 （モデルデータのメモリを解放します）
+	*	　なし
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void GetPiercedCube_index(bool p_vbo, ModelInfo_index_Original *p_ModelData);
-
-	/*-------------------------------------------------------------------------------
-	*	関数説明
-	*	　モデルデータのメモリを解放します
-	*	引数
-	*	　p_ModelData	：[ /O]　モデルデータ（メモリを解放後「NULL」が格納されるという意味で[ /O]指定）
-	*	戻り値
-	*	　なし
-	*-------------------------------------------------------------------------------*/
-	static void PiercedCube_index_free(ModelInfo_index_Original *p_ModelData);
+	static void Destroy(void);
 
 private:
 
 	///////////////////////////////
-	// 構造体定義
+	// 描画情報データ構造体
+
+	//[glVertexAttribPointer]用パラメータ情報
+	typedef struct
+	{
+		GLuint index;
+		GLint size;
+		GLenum type;
+		GLboolean normalized;
+		GLsizei stride;
+		GLvoid *pointer;
+	}VertexAttribPointerInfo;
+
+	//[glDrawArrays]用パラメータ情報
+	typedef struct
+	{
+		GLenum mode;
+		GLint first;
+		GLsizei count;
+	}DrawArraysInfo;
+
+	//[glDrawElements]用パラメータ情報
+	typedef struct
+	{
+		GLenum mode;
+		GLsizei count;
+		GLenum type;
+		GLvoid *indices;
+		unsigned int MaterialIndex;		//特殊パラメータ（glDrawElementsには直接使用しない）
+										//どのマテリアル情報を使用すればよいのかを示すパラメータ
+	}DrawElementsInfo;
+
+	//マテリアル情報
+	typedef struct
+	{
+		Vec3 ambient;				//アンビエント値
+		Vec3 diffuse;				//ディフューズ値
+		Vec3 specular;				//スペキュラ値
+		GLfloat shininess;			//シャイネス値
+		GLfloat alpha;				//アルファ値
+		GLuint ambientTexObj;		//テクスチャオブジェクト（アンビエント） 
+		GLuint diffuseTexObj;		//テクスチャオブジェクト（ディフューズ） 
+		GLuint specularTexObj;		//テクスチャオブジェクト（スペキュラ）
+		GLuint bumpMapTexObj;		//テクスチャオブジェクト（バンプマップ）
+	}MaterialInfo;
+
+	///////////////////////////////
+	// 通常構造体
 
 	// 頂点データ構造体
 	typedef struct
 	{
-		Vec2 Vector;
+		Vec2 Position;
 		bColor3 Color;
 	}Vec2_bColor3;
 
 	// 頂点データ構造体
 	typedef struct
 	{
-		Vec2 Vector;
+		Vec2 Position;
 		bColor4 Color;
 	}Vec2_bColor4;
 
 	// 頂点データ構造体
 	typedef struct
 	{
-		Vec3 Vector;
+		Vec3 Position;
 		bColor3 Color;
 	}Vec3_bColor3;
 
 	// 頂点データ構造体
 	typedef struct
 	{
-		Vec3 Vector;
+		Vec3 Position;
 		bColor4 Color;
 	}Vec3_bColor4;
 
+	typedef struct
+	{
+		char *Name;
+		GLuint *TexObj;
+	}MaterialTex;
+
+	///////////////////////////////
+	//【モデルデータ情報】
+	// ※モデルデータのフォーマットによって設定されるメンバと設定されないメンバがある
+
+	typedef struct
+	{
+		VertexAttribPointerInfo Position;			//頂点座標情報
+		VertexAttribPointerInfo Normal;				//法線情報
+		VertexAttribPointerInfo Color;				//カラー情報
+		VertexAttribPointerInfo TexCoord;			//テクスチャ座標情報
+		std::vector<DrawElementsInfo> DrawElements;	//描画情報（DrawElements版）
+		std::vector<MaterialInfo> Material;			//マテリアル情報
+		GLuint BufferObj_v;							//VBO、バッファーオブジェクト（頂点データ用）
+		GLuint BufferObj_i;							//VBO、バッファーオブジェクト（インデックスデータ用）
+		FileFotmat FileFotmat;						//モデルデータのフォーマット
+		void *ClassObj;								//モデルデータの読み込み処理をしたクラスのオブジェクト
+	}ModelInfo;
+
+	///////////////////////////////
+	// メンバ変数定義
+
+	ModelInfo m_ModelInfo;
+	
+	static ShaderManager m_ModelShader;		//モデル描画用のシェーダーオブジェクト
+	static GLint m_attr_Position;			//頂点座標のロケーション
+	static GLint m_attr_Normal;				//法線ロケーション
+	static GLint m_attr_Color;				//カラーロケーション
+	static GLint m_attr_TexCoord;			//テクスチャ座標のロケーション
+	static GLint m_unif_FileFotmat;			//モデルデータのフォーマットのロケーション
+	static GLint m_unif_TexFlag;			//テクスチャ有り・無しフラグのロケーション
+	static GLint m_unif_ProjModelMat;		//「プロジェクション × モデルビュー」を乗算済みの行列のロケーション
+	static GLint m_unif_TexUnit;			//テクスチャユニットのロケーション
+
+	///////////////////////////////
+	// 関数定義
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
 	*	　OBJ形式のモデルファイルからモデルデータの読み込みを行います
 	*	引数
-	*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名（ディレクトリ構造も含んだフルパスを設定）
-	*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
-	*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
-	*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
-	*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
-	*	　p_ModelData	：[ /O]　モデルデータ情報
-	*							 ※注意※
-	*							 モデルデータが不要になった時点で、必ず[FileDataFree]をコールしてください。
-	*							 （モデルデータのメモリを解放します）
+	*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
+	*					　		（ディレクトリ構造を含まないファイル名を設定、デバッグ情報表示として使用）
+	*	　p_DirFileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
+	*					　		（ディレクトリ構造も含んだフルパスを設定）
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void FileLoad_OBJ(const char* p_FileName, bool p_vbo, ModelInfo *p_ModelData);
+	void FileLoad_OBJ(const char* p_FileName, const char* p_DirFileName);
 
+	/*-------------------------------------------------------------------------------
+	*	関数説明
+	*	　穴あきキューブを取得する（エッジ有り）
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　なし
+	*-------------------------------------------------------------------------------*/
+	void DataLoad_PiercedCube(void);
+
+	/*-------------------------------------------------------------------------------
+	*	関数説明
+	*	　穴あきキューブを取得する（エッジ無し）
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　なし
+	*-------------------------------------------------------------------------------*/
+	void DataLoad_PiercedCube2(void);
 };
 
 #endif

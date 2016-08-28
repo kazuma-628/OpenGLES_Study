@@ -52,6 +52,8 @@ add_executable(
 	Shader/HelloWorld.vert
 	Shader/ScreenString.vert
 	Shader/ScreenString.frag
+	Shader/Model.vert
+	Shader/Model.frag
 )
 
 #############################################

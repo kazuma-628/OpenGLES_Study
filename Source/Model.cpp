@@ -1,409 +1,654 @@
 ﻿#include "Model.h"
 
-//コンストラクタ
+/////////////////////////////////////////////
+//static変数の実体を定義
+
+ShaderManager Model::m_ModelShader;				//モデル描画用のシェーダーオブジェクト	
+GLint Model::m_attr_Position = -1;				//頂点座標のロケーション
+GLint Model::m_attr_Normal = -1;				//法線ロケーション
+GLint Model::m_attr_Color = -1;					//カラーロケーション
+GLint Model::m_attr_TexCoord = -1;				//テクスチャ座標のロケーション
+GLint Model::m_unif_FileFotmat = -1;			//モデルデータのフォーマットのロケーション
+GLint Model::m_unif_TexFlag = -1;				//テクスチャ有り・無しフラグのロケーション
+GLint Model::m_unif_ProjModelMat = -1;			//「プロジェクション × モデルビュー」を乗算済みの行列のロケーション
+GLint Model::m_unif_TexUnit = -1;				//テクスチャユニットのロケーション
+
+												//コンストラクタ
 Model::Model()
 {
+	memset(&m_ModelInfo, 0, sizeof(m_ModelInfo));
+
+	//データが作成されていなければ
+	if (0 == m_ModelShader.GetProgramObject())
+	{
+		//シェーダーの読み込みを行う
+		//「Shader」フォルダに格納されている必要があります。
+		m_ModelShader.CreateShaderProgram("Model.vert", "Model.frag", NULL, NULL, NULL, NULL);
+
+		//シェーダー内で使用する変数のロケーションを取得（頂点座標）
+		m_attr_Position = m_ModelShader.GetAttribLocation("attr_Position");
+
+		//シェーダー内で使用する変数のロケーションを取得（法線）
+		m_attr_Normal = m_ModelShader.GetAttribLocation("attr_Normal");
+
+		//シェーダー内で使用する変数のロケーションを取得（カラー）
+		m_attr_Color = m_ModelShader.GetAttribLocation("attr_Color");
+
+		//シェーダー内で使用する変数のロケーションを取得（テクスチャ座標）
+		m_attr_TexCoord = m_ModelShader.GetAttribLocation("attr_TexCoord");
+
+		//シェーダー内で使用する変数のロケーションを取得（モデルデータのフォーマット）
+		m_unif_FileFotmat = m_ModelShader.GetUniformLocation("unif_FileFotmat");
+
+		//シェーダー内で使用する変数のロケーションを取得（テクスチャ有り・無しフラグ）
+		m_unif_TexFlag = m_ModelShader.GetUniformLocation("unif_TexFlag");
+
+		//シェーダー内で使用する変数のロケーションを取得（「プロジェクション × モデルビュー」を乗算済みの行列）
+		m_unif_ProjModelMat = m_ModelShader.GetUniformLocation("unif_ProjModelMat");
+
+		//シェーダー内で使用する変数のロケーションを取得（テクスチャユニット）
+		m_unif_TexUnit = m_ModelShader.GetUniformLocation("unif_TexUnit");
+	}
 }
 
 //デストラクタ
 Model::~Model()
 {
+	//既にモデルデータが読み込まれているかの確認
+	if (0 != m_ModelInfo.FileFotmat)
+	{
+		//作成されていれば念のため破棄処理する
+		FileDataFree();
+
+		//本来であれば破棄されているべきなので、警告メッセージを表示しておく
+		WARNING_MESSAGE("破棄処理される前にデストラクタが呼ばれました。\n" \
+						"破棄処理を忘れていませんか？\n");
+	}
 }
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　モデルファイルからモデルデータの読み込みを行います
+*	　モデルファイルからモデルデータの読み込みを行います。
+*	　既にモデルデータが読み込まれている場合は、データを破棄（メモリ解放）してから新しく読み込みします。
+*	　読み込んだモデルデータの描画は「ModelDataDraw」関数で行います。
 *	引数
 *	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
 *							 [Resource/Model/]フォルダ以降のファイルパスを入力してください。
 *							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.obj」）
-*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
-*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
-*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
-*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
+*					　　　※「p_FileFotmat」で自作モデルデータ（特殊パターン）を指定するときは、
+*							「p_FileName」は「NULL」を指定してください。
 *	　p_FileFotmat	：[I/ ]　モデルファイルのフォーマット（詳細は定義部分のコメント参照）
-*	　p_ModelData	：[ /O]　モデルデータ情報
-*							 ※注意※
-*							 モデルデータが不要になった時点で、必ず[FileDataFree]をコールしてください。
-*							 （モデルデータのメモリを解放します）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::FileDataLoad(const char* p_FileName, bool p_vbo, FileFotmat p_FileFotmat, ModelInfo *p_ModelData)
+void Model::FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat)
 {
 	printf("モデルデータ「%s」の読み込みを開始します...", p_FileName);
 
 	//引数チェック
-	if (NULL == p_FileName)
+	if (NULL == p_FileName && 0 == p_FileFotmat)
 	{
 		printf("失敗\n");
 		ERROR_MESSAGE("モデルデータの読み込み 引数エラー\n" \
-					  "p_FileName = %s\n", p_FileName);
+					  "p_FileName = %s, p_FileFotmat = %d\n", p_FileName, p_FileFotmat);
 		return;
+	}
+
+	//既にモデルデータが読み込まれているかの確認
+	if (0 != m_ModelInfo.FileFotmat)
+	{
+		//作成されていれば破棄してから新規作成
+		FileDataFree();
+
+		//本来であれば上書きはしない事が多いので、警告メッセージを表示しておく
+		WARNING_MESSAGE("モデルデータが再作成がされました。\n" \
+						"破棄処理を忘れていませんか？\n");
 	}
 
 	///////////////////////////////
 	// モデルファイルへのパスを作成
 
-	char *model_dir_file_name = NULL;			//モデルファイルへのパス
-	int StrLength = 0;		//読み込むテクスチャファイル名の長さ（バイト数）
+	char *model_dir_file_name = NULL;	//モデルファイルへのパス
+	int StrLength = 0;					//読み込むテクスチャファイル名の長さ（バイト数）
 
-	// 文字列の長さを取得してメモリ確保（終端を明確にするため +1 する。[\0]となる）
-	StrLength = strlen(MODEL_FILE_DIR) + strlen(p_FileName);
-	model_dir_file_name = (char*)calloc(StrLength + 1, sizeof(char));
+	//モデルファイルが指定されている場合（独自フォーマットの場合は作成しない）
+	if (NULL != p_FileName)
+	{
+		// 文字列の長さを取得してメモリ確保（終端を明確にするため +1 する。[\0]となる）
+		StrLength = strlen(MODEL_FILE_DIR) + strlen(p_FileName);
+		model_dir_file_name = (char*)calloc(StrLength + 1, sizeof(char));
 
-	//テクスチャファイルへのパスを生成する（マルチバイト文字）
-	sprintf(model_dir_file_name, "%s%s", MODEL_FILE_DIR, p_FileName);
+		//テクスチャファイルへのパスを生成する（マルチバイト文字）
+		sprintf(model_dir_file_name, "%s%s", MODEL_FILE_DIR, p_FileName);
+	}
 
 	///////////////////////////////
 	// モデルファイルの読み込み
 
+	//読み込むフォーマットを記憶
+	m_ModelInfo.FileFotmat = p_FileFotmat;
+
 	//モデルファイルのフォーマットによって処理を分岐
 	switch (p_FileFotmat)
 	{
+		//OBJファイル
+		case FILE_FORMAT_OBJ:
+			FileLoad_OBJ(p_FileName, model_dir_file_name);
+			break;
 
-	//OBJファイル
-	case FILE_FORMAT_OBJ:
-		FileLoad_OBJ(model_dir_file_name, p_vbo, p_ModelData);
-		break;
+		//////////////////
+		// 以下、自作モデルデータ（特殊パターン）
 
-	default:
-		printf("失敗\n");
-		ERROR_MESSAGE("ピクセルフォーマットの引数が不正です。\n"\
-					  "p_FileFotmat = %d", p_FileFotmat);
+		//オリジナルフォーマットで穴あきのキューブデータ（エッジ有り）
+		case ORIGINAL_FORMAT_PIERCED_CUBE:
+			DataLoad_PiercedCube();
+			break;
 
-		//メモリ解放
-		free(model_dir_file_name);
-		return;
+		//オリジナルフォーマットで穴あきのキューブデータ（エッジ有り）
+		case ORIGINAL_FORMAT_PIERCED_CUBE2:
+			DataLoad_PiercedCube2();
+			break;
+
+		default:
+			printf("失敗\n");
+			ERROR_MESSAGE("ピクセルフォーマットの引数が不正です。\n"\
+						  "p_FileFotmat = %d", p_FileFotmat);
+
+			break;
 	}
 
-	//メモリ解放
-	free(model_dir_file_name);
+	if (NULL == model_dir_file_name)
+	{
+		//メモリ解放
+		free(model_dir_file_name);
+	}
 
 	printf("完了\n");
 }
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　モデルデータのメモリを解放します
+*	　モデルデータを破棄（メモリ解放）します
 *	引数
-*	　p_ModelData	：[ /O]　モデルデータ（メモリを解放後「NULL」が格納されるという意味で[ /O]指定）
+*	　なし
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::FileDataFree(ModelInfo *p_ModelData)
+void Model::FileDataFree(void)
 {
-	////OBJファイルの読み込みをしたクラスのオブジェクト型に変換
-	OBJMESH *mesh = (OBJMESH*)p_ModelData->OBJLoader;
-	
-	//メモリ解放
-	mesh->Release();
+	//データが格納されていれば破棄処理する
+	if (0 != m_ModelInfo.BufferObj_v)
+	{
+		glDeleteBuffers(1, &m_ModelInfo.BufferObj_v);
+	}
+	if (0 != m_ModelInfo.BufferObj_i)
+	{
+		glDeleteBuffers(1, &m_ModelInfo.BufferObj_i);
+	}
+
+	//要素を削除
+	m_ModelInfo.DrawElements.clear();
+
+	//本当はここで[shrink_to_fit]を呼び、余分なメモリ解放するべき
+	//（VisualStudio2013(C++11)からしか対応してないので、ひとまず互換性を優先して放置）
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　モデルデータを描画します。
+*	　予めモデルデータを「FileDataLoad」関数で読み込んでおく必要があります。
+*
+*	　※本関数では描画のみしか実行しません
+*　　　「glClearColor, glClear, glViewport」などの設定は関数コール前に必要に応じて行ってください。
+*	引数
+*	　p_ProjModelMat	：[I/ ]　「プロジェクション × モデルビュー」を乗算済みの行列
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void Model::DataDraw(Matrix &p_ProjModelMat)
+{
+	if (0 == m_ModelInfo.FileFotmat)
+	{
+		ERROR_MESSAGE("モデルデータを読み込んでいない状態で描画しようとしました。\n"\
+					  "モデルデータの読み込みを行ってから描画を実行してください。");
+		return;
+	}
+	// シェーダープログラムの利用を開始する
+	m_ModelShader.UseProgram();
+
+	//バッファーを有効化
+	glBindBuffer(GL_ARRAY_BUFFER, m_ModelInfo.BufferObj_v);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ModelInfo.BufferObj_i);
+
+	//////////////////////////////////
+	// 必ず送る変数を先に設定
+
+	//頂点座標設定
+	m_ModelShader.EnableVertexAttribArray(m_attr_Position);
+	m_ModelShader.VertexAttribPointer(m_attr_Position, m_ModelInfo.Position.size, m_ModelInfo.Position.type, m_ModelInfo.Position.normalized, m_ModelInfo.Position.stride, m_ModelInfo.Position.pointer);
+
+	//モデルデータのフォーマットを設定
+	m_ModelShader.UniformXi(m_unif_FileFotmat, 1, m_ModelInfo.FileFotmat, 0, 0, 0);
+
+	//「プロジェクション × モデルビュー」を乗算済みの行列を設定
+	m_ModelShader.UniformMatrixXfv(m_unif_ProjModelMat, 4, 1, GL_FALSE, p_ProjModelMat.GetMatrixFloat());
+
+	//////////////////////////////////
+	// 残りの変数の初期値を設定
+
+	//法線
+	m_ModelShader.DisableVertexAttribArray(m_attr_Normal);
+	m_ModelShader.VertexAttribXf(m_attr_Normal, 3, 0, 0, 0, 0);
+
+	//カラー
+	m_ModelShader.DisableVertexAttribArray(m_attr_Color);
+	m_ModelShader.VertexAttribXf(m_attr_Color, 4, 0, 0, 0, 0);
+
+	//テクスチャ座標
+	m_ModelShader.DisableVertexAttribArray(m_attr_TexCoord);
+	m_ModelShader.VertexAttribXf(m_attr_TexCoord, 2, 0, 0, 0, 0);
+
+	//テクスチャフラグとテクスチャユニット
+	m_ModelShader.UniformXi(m_unif_TexFlag, 1, 0, 0, 0, 0);
+	m_ModelShader.UniformXi(m_unif_TexUnit, 1, 0, 0, 0, 0);
+
+	//////////////////////////////////
+	// 以下のロケーションの設定はファイルフォーマットによって個別設定する必要あり
+	// m_attr_Normal			//法線
+	// m_attr_Color				//カラー
+	// m_attr_TexCoord			//テクスチャ座標
+	// m_unif_TexFlag			//テクスチャ有り・無しフラグ
+	// m_unif_TexUnit			//テクスチャユニット
+
+	//深度テストを有効
+	glEnable(GL_DEPTH_TEST);
+
+	//シェーダーへの設定（モデルファイルのフォーマットによって処理を分岐）
+	switch (m_ModelInfo.FileFotmat)
+	{
+		//OBJファイル
+		case FILE_FORMAT_OBJ:
+			//法線設定
+			m_ModelShader.EnableVertexAttribArray(m_attr_Normal);
+			m_ModelShader.VertexAttribPointer(m_attr_Normal, m_ModelInfo.Normal.size, m_ModelInfo.Normal.type, m_ModelInfo.Normal.normalized, m_ModelInfo.Normal.stride, m_ModelInfo.Normal.pointer);
+
+			//テクスチャ座標設定
+			m_ModelShader.EnableVertexAttribArray(m_attr_TexCoord);
+			m_ModelShader.VertexAttribPointer(m_attr_TexCoord, m_ModelInfo.TexCoord.size, m_ModelInfo.TexCoord.type, m_ModelInfo.TexCoord.normalized, m_ModelInfo.TexCoord.stride, m_ModelInfo.TexCoord.pointer);
+
+			break;
+
+		//オリジナルフォーマットで穴あきのキューブデータ（エッジ有り）
+		case ORIGINAL_FORMAT_PIERCED_CUBE:
+			//カラー設定
+			m_ModelShader.EnableVertexAttribArray(m_attr_Color);
+			m_ModelShader.VertexAttribPointer(m_attr_Color, m_ModelInfo.Color.size, m_ModelInfo.Color.type, m_ModelInfo.Color.normalized, m_ModelInfo.Color.stride, m_ModelInfo.Color.pointer);
+
+			break;
+
+		//オリジナルフォーマットで穴あきのキューブデータ（エッジ有り）
+		case ORIGINAL_FORMAT_PIERCED_CUBE2:
+			//カラー設定
+			m_ModelShader.EnableVertexAttribArray(m_attr_Color);
+			m_ModelShader.VertexAttribPointer(m_attr_Color, m_ModelInfo.Color.size, m_ModelInfo.Color.type, m_ModelInfo.Color.normalized, m_ModelInfo.Color.stride, m_ModelInfo.Color.pointer);
+
+			break;
+
+		default:
+
+			break;
+	}
+
+	//描画実行
+	for (unsigned int cnt = 0; cnt < m_ModelInfo.DrawElements.size(); cnt++)
+	{
+		//描画実行（モデルファイルのフォーマットによって処理を分岐）
+		switch (m_ModelInfo.FileFotmat)
+		{
+			//OBJファイル
+			case FILE_FORMAT_OBJ:
+			{
+				//テクスチャを貼る
+				if (0 != m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].diffuseTexObj)
+				{
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].diffuseTexObj);
+					m_ModelShader.UniformXi(m_unif_TexFlag, 1, 1, 0, 0, 0);
+					m_ModelShader.UniformXi(m_unif_TexUnit, 1, 0, 0, 0, 0);
+				}
+				else
+				{
+					m_ModelShader.UniformXi(m_unif_TexFlag, 1, 0, 0, 0, 0);
+				}
+				break;
+			}
+
+			default:
+
+				break;
+		}
+
+		glDrawElements(m_ModelInfo.DrawElements[cnt].mode, m_ModelInfo.DrawElements[cnt].count, m_ModelInfo.DrawElements[cnt].type, m_ModelInfo.DrawElements[cnt].indices);
+	}
+
+	//シェーダーの変数を無効化
+	m_ModelShader.DisableVertexAttribArray(m_attr_Position);
+	m_ModelShader.DisableVertexAttribArray(m_attr_Normal);
+	m_ModelShader.DisableVertexAttribArray(m_attr_Color);
+	m_ModelShader.DisableVertexAttribArray(m_attr_TexCoord);
+
+	//バッファーを無効化
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	//テクスチャを解除
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 /*-------------------------------------------------------------------------------
 *	関数説明
 *	　OBJ形式のモデルファイルからモデルデータの読み込みを行います
 *	引数
-*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名（ディレクトリ構造も含んだフルパスを設定）
-*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
-*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
-*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
-*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
-*	　p_ModelData	：[ /O]　モデルデータ情報
-*							 ※注意※
-*							 モデルデータが不要になった時点で、必ず[FileDataFree]をコールしてください。
-*							 （モデルデータのメモリを解放します）
+*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
+*					　		（ディレクトリ構造を含まないファイル名を設定、デバッグ情報表示として使用）
+*	　p_DirFileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
+*					　		（ディレクトリ構造も含んだフルパスを設定）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::FileLoad_OBJ(const char* p_FileName, bool p_vbo, ModelInfo *p_ModelData)
+void Model::FileLoad_OBJ(const char* p_FileName, const char* p_DirFileName)
 {
 	//引数チェック
-	if (NULL == p_FileName)
+	if (NULL == p_FileName || NULL == p_DirFileName)
 	{
 		printf("失敗\n");
 		ERROR_MESSAGE("OBJファイルの読み込み 引数エラー\n" \
-					  "p_FileName = %s\n", p_FileName);
+					  "p_FileName = %s, p_DirFileName = %s\n", p_FileName, p_DirFileName);
 		return;
 	}
 
 	//OBJ, MTLファイルを読み込む
-	OBJMESH *mesh = new OBJMESH;
-	mesh->LoadFile(p_FileName);
+	OBJMESH mesh;
+	mesh.LoadFile(p_DirFileName);
 
 	//頂点数とデータを取得
-	unsigned int NumVertices = mesh->GetNumVertices();
-	OBJVERTEX *Vertex = mesh->GetVertices();
+	unsigned int NumVertices = mesh.GetNumVertices();
+	OBJVERTEX *Vertices = mesh.GetVertices();
 
 	//サブセット数とデータを取得
-	unsigned int NumSubsets = mesh->GetNumSubsets();
-	OBJSUBSET *Subsets = mesh->GetSubsets();
+	unsigned int NumSubsets = mesh.GetNumSubsets();
+	OBJSUBSET *Subsets = mesh.GetSubsets();
 
 	//マテリアル数とデータを取得
-	unsigned int NumMaterials = mesh->GetNumMaterials();
-	OBJMATERIAL *Materials = mesh->GetMaterials();
+	unsigned int NumMaterials = mesh.GetNumMaterials();
+	OBJMATERIAL *Materials = mesh.GetMaterials();
 
 	//インデックス数とデータを取得
-	unsigned int NumIndices = mesh->GetNumIndices();
-	unsigned int* Indices = mesh->GetIndices();
-
+	unsigned int NumIndices = mesh.GetNumIndices();
+	unsigned int* Indices = mesh.GetIndices();
 
 	//頂点座標の設定
-	p_ModelData->Vertex.size = sizeof(Vertex->position) / sizeof(Vertex->position.x);
-	p_ModelData->Vertex.type = GL_FLOAT;
-	p_ModelData->Vertex.normalized = GL_FALSE;
-	p_ModelData->Vertex.stride = sizeof(OBJVERTEX);
-	if (true == p_vbo)
-	{
-		p_ModelData->Vertex.pointer = 0;
-	}
-	else
-	{
-		p_ModelData->Vertex.pointer = (GLvoid*)&Vertex->position;
-	}
+	m_ModelInfo.Position.size = sizeof(Vertices->position) / sizeof(Vertices->position.x);
+	m_ModelInfo.Position.type = GL_FLOAT;
+	m_ModelInfo.Position.normalized = GL_FALSE;
+	m_ModelInfo.Position.stride = sizeof(OBJVERTEX);
+	m_ModelInfo.Position.pointer = 0;
 
 	//法線の設定
-	p_ModelData->Normal.size = sizeof(Vertex->normal) / sizeof(Vertex->normal.x);
-	p_ModelData->Normal.type = GL_FLOAT;
-	p_ModelData->Normal.normalized = GL_FALSE;
-	p_ModelData->Normal.stride = sizeof(OBJVERTEX);
-	if (true == p_vbo)
-	{
-		p_ModelData->Normal.pointer = (GLvoid*)sizeof(Vertex->position);
-	}
-	else
-	{
-		p_ModelData->Normal.pointer = (GLvoid*)&Vertex->normal;
-	}
+	m_ModelInfo.Normal.size = sizeof(Vertices->normal) / sizeof(Vertices->normal.x);
+	m_ModelInfo.Normal.type = GL_FLOAT;
+	m_ModelInfo.Normal.normalized = GL_FALSE;
+	m_ModelInfo.Normal.stride = sizeof(OBJVERTEX);
+	m_ModelInfo.Normal.pointer = (GLvoid*)sizeof(Vertices->position);
 
 	//テクスチャ座標の設定
-	p_ModelData->TexCoord.size = sizeof(Vertex->texcoord) / sizeof(Vertex->texcoord.x);
-	p_ModelData->TexCoord.type = GL_FLOAT;
-	p_ModelData->TexCoord.normalized = GL_FALSE;
-	p_ModelData->TexCoord.stride = sizeof(OBJVERTEX);
-	if (true == p_vbo)
-	{
-		p_ModelData->TexCoord.pointer = (GLvoid*)(sizeof(Vertex->position) + sizeof(Vertex->normal));
-	}
-	else
-	{
-		p_ModelData->TexCoord.pointer = (GLvoid*)&Vertex->texcoord;
-	}
+	m_ModelInfo.TexCoord.size = sizeof(Vertices->texcoord) / sizeof(Vertices->texcoord.x);
+	m_ModelInfo.TexCoord.type = GL_FLOAT;
+	m_ModelInfo.TexCoord.normalized = GL_FALSE;
+	m_ModelInfo.TexCoord.stride = sizeof(OBJVERTEX);
+	m_ModelInfo.TexCoord.pointer = (GLvoid*)(sizeof(Vertices->position) + sizeof(Vertices->normal));
 
 	//描画情報の設定
-	p_ModelData->DrawElements.mode = GL_TRIANGLES;
-	p_ModelData->DrawElements.count = NumIndices;
-	p_ModelData->DrawElements.type = GL_UNSIGNED_INT;
-	if (true == p_vbo)
+	for (unsigned int cnt = 0; cnt < NumSubsets; cnt++)
 	{
-		p_ModelData->DrawElements.indices = 0;
-	}
-	else
-	{
-		p_ModelData->DrawElements.indices = (GLvoid*)Indices;
+		DrawElementsInfo DrawElements = { 0 };
+		DrawElements.mode = GL_TRIANGLES;
+		DrawElements.count = Subsets[cnt].faceCount;
+		DrawElements.type = GL_UNSIGNED_INT;
+		DrawElements.indices = (GLvoid*)(Subsets[cnt].faceStart * sizeof(unsigned int));
+
+		//特殊パラメータ（glDrawElementsには直接使用しない）
+		//どのマテリアル情報を使用すればよいのかを示すパラメータを保存
+		DrawElements.MaterialIndex = Subsets[cnt].materialIndex;
+
+		//描画情報を追加
+		m_ModelInfo.DrawElements.push_back(DrawElements);
 	}
 
 	//バッファーデータ設定
-	if (true == p_vbo)
+	glGenBuffers(1, &m_ModelInfo.BufferObj_v);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ModelInfo.BufferObj_v);
+	glBufferData(GL_ARRAY_BUFFER, NumVertices * sizeof(OBJVERTEX), (GLvoid*)Vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &m_ModelInfo.BufferObj_i);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ModelInfo.BufferObj_i);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, NumIndices * sizeof(unsigned int), (GLvoid*)Indices, GL_STATIC_DRAW);
+
+	//バッファーを無効化
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	//マテリアルデータの読み込み（数値部分のみ）
+	for (unsigned int cnt = 0; cnt < NumMaterials; cnt++)
 	{
-		//頂点
-		p_ModelData->BufferData_v.target = GL_ARRAY_BUFFER;
-		p_ModelData->BufferData_v.size = NumVertices * sizeof(OBJVERTEX);
-		p_ModelData->BufferData_v.data = (GLvoid*)Vertex;
+		MaterialInfo Material = { 0 };
 
-		//インデックス
-		p_ModelData->BufferData_i.target = GL_ELEMENT_ARRAY_BUFFER;
-		p_ModelData->BufferData_i.size = NumIndices * sizeof(unsigned int);
-		p_ModelData->BufferData_i.data = (GLvoid*)Indices;
+		//アンビエント値
+		memmove(&Material.ambient, &Materials->ambient, sizeof(Material.ambient));
+
+		//ディフューズ値
+		memmove(&Material.diffuse, &Materials->diffuse, sizeof(Material.diffuse));
+
+		//スペキュラ値
+		memmove(&Material.specular, &Materials->specular, sizeof(Material.specular));
+
+		//シャイネス値
+		Material.shininess = Materials->shininess;
+
+		//アルファ値
+		Material.alpha = Materials->alpha;
+
+		m_ModelInfo.Material.push_back(Material);
 	}
-	else
+
+	printf("完了\n");
+
+
+	//////////////////////////////////
+	// モデルデータのマテリアルデータに記載されていたテクスチャの読み込みを行う
+
+	for (unsigned int cnt = 0; cnt < NumMaterials; cnt++)
 	{
-		//VBO未使用が指定されているのでデータは詰めない
-		//頂点
-		p_ModelData->BufferData_v.target = 0;
-		p_ModelData->BufferData_v.size = 0;
-		p_ModelData->BufferData_v.data = NULL;
+		//以下、簡略化出来る要素あり
+		MaterialTex MaterialTex[] =	{
+			{ Materials[cnt].ambientMapName,  &m_ModelInfo.Material[cnt].ambientTexObj },		//アンビエント
+			{ Materials[cnt].diffuseMapName,  &m_ModelInfo.Material[cnt].diffuseTexObj },		//ディフューズ
+			{ Materials[cnt].specularMapName, &m_ModelInfo.Material[cnt].specularTexObj},		//スペキュラ
+			{ Materials[cnt].bumpMapName,	  &m_ModelInfo.Material[cnt].bumpMapTexObj },		//バンプマップ
+		};
 
-		//インデックス
-		p_ModelData->BufferData_i.target = 0;
-		p_ModelData->BufferData_i.size = 0;
-		p_ModelData->BufferData_i.data = NULL;
+		//マテリアルの要素数を算出
+		int MaterialCnt = sizeof(MaterialTex) / sizeof(MaterialTex[0]);
+		for (int index = 0; index < MaterialCnt; index++)
+		{
+			//テクスチャが指定されていれば読み込む
+			if (0 != strlen(MaterialTex[index].Name))
+			{
+				//テクスチャ読み込み
+				printf("モデルデータ「%s」用の\n　", p_FileName);
+				TextureInfo TextureData = { 0 };
+				Texture::FileDataLoad(MaterialTex[index].Name, PIXEL_FORMAT_24BIT_RGB, &TextureData);
+
+				//テクスチャオブジェクト作成
+				GLuint TextureObj;
+				glGenTextures(1, &TextureObj);
+				glBindTexture(GL_TEXTURE_2D, TextureObj);
+				glTexImage2D(GL_TEXTURE_2D, 0, TextureData.internalFormat, TextureData.width, TextureData.height, TextureData.border, TextureData.format, TextureData.type, TextureData.data);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+				//テクスチャオブジェクトを保存
+				*MaterialTex[index].TexObj = TextureObj;
+
+				//テクスチャデータを破棄
+				Texture::FileDataFree(&TextureData);
+			}
+		}
 	}
 
-	//OBJファイルの読み込みをしたクラスのオブジェクトを記憶してく（メモリ破棄時に使用）
-	p_ModelData->OBJLoader = (void*)mesh;
+	//テクスチャを解除
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//メモリ解放
+	mesh.Release();
 }
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　穴あきキューブを取得する
-*	　（[glDrawArrays]として登録するモデルデータ）
+*	　穴あきキューブを取得する（エッジ有り）
 *	引数
-*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
-*					　		 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawArrays」する。
-*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
-*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
-*	　p_ModelData	：[ /O]　モデルデータ情報
-*							 ※注意※
-*							 モデルデータが不要になった時点で、必ず[PiercedCube_free]をコールしてください。
-*							 （モデルデータのメモリを解放します）
+*	　なし
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::GetPiercedCube(bool p_vbo, ModelInfo_Original *p_ModelData)
+void Model::DataLoad_PiercedCube(void)
 {
 	// 頂点データ
 	Vec3_bColor3 vertex[] =
 	{
 		// v0
-		{ { -10.0f, -10.0f, 10.0f }, { 50, 50, 50 } },
+		{ { -10.0f, -10.0f, 10.0f },{ 50, 50, 50 } },
 		// v1
-		{ { -10.0f, -10.0f, -10.0f }, { 90, 0, 0 } },
+		{ { -10.0f, -10.0f, -10.0f },{ 90, 0, 0 } },
 		// v2
-		{ { -10.0f, 10.0f, 10.0f }, { 0, 90, 0 } },
+		{ { -10.0f, 10.0f, 10.0f },{ 0, 90, 0 } },
 		// v3
-		{ { -10.0f, 10.0f, -10.0f }, { 0, 0, 90 } },
+		{ { -10.0f, 10.0f, -10.0f },{ 0, 0, 90 } },
 		// v4
-		{ { 10.0f, 10.0f, 10.0f }, { 130, 0, 0 } },
+		{ { 10.0f, 10.0f, 10.0f },{ 130, 0, 0 } },
 		// v5
-		{ { 10.0f, 10.0f, -10.0f }, { 0, 130, 0 } },
+		{ { 10.0f, 10.0f, -10.0f },{ 0, 130, 0 } },
 		// v6
-		{ { 10.0f, -10.0f, 10.0f }, { 0, 0, 130 } },
+		{ { 10.0f, -10.0f, 10.0f },{ 0, 0, 130 } },
 		// v7
-		{ { 10.0f, -10.0f, -10.0f }, { 170, 0, 0 } },
+		{ { 10.0f, -10.0f, -10.0f },{ 170, 0, 0 } },
 		// v8
-		{ { -10.0f, -10.0f, 10.0f }, { 0, 170, 0 } },
+		{ { -10.0f, -10.0f, 10.0f },{ 0, 170, 0 } },
 		// v9
-		{ { -10.0f, -10.0f, -10.0f }, { 0, 0, 170 } },
+		{ { -10.0f, -10.0f, -10.0f },{ 0, 0, 170 } },
 		// v10
-		{ { -10.0f, -10.0f, -10.0f }, { 210, 0, 0 } },
+		{ { -10.0f, -10.0f, -10.0f },{ 210, 0, 0 } },
 		// v11
-		{ { -10.0f, 10.0f, -10.0f }, { 0, 210, 0 } },
+		{ { -10.0f, 10.0f, -10.0f },{ 0, 210, 0 } },
 		// v12
-		{ { 10.0f, -10.0f, -10.0f }, { 0, 0, 210 } },
+		{ { 10.0f, -10.0f, -10.0f },{ 0, 0, 210 } },
 		// v13
-		{ { 10.0f, 10.0f, -10.0f }, { 250, 0, 0 } },
-	};
-
-	//頂点とインデックスのメモリを確保してコピーする
-	GLvoid* PiercedCube_vertex = (GLvoid*)calloc(sizeof(vertex), sizeof(byte));
-	memmove(PiercedCube_vertex, vertex, sizeof(vertex));
-
-	//モデルデータ設定（頂点情報）
-	p_ModelData->Vertex.size = sizeof(vertex[0].Vector) / sizeof(vertex[0].Vector.x);
-	p_ModelData->Vertex.type = GL_FLOAT;
-	p_ModelData->Vertex.normalized = GL_FALSE;
-	p_ModelData->Vertex.stride = sizeof(Vec3_bColor3);
-	if (true == p_vbo)
-	{
-		p_ModelData->Vertex.pointer = 0;
-	}
-	else
-	{
-		p_ModelData->Vertex.pointer = PiercedCube_vertex;
-	}
-
-	//モデルデータ設定（カラー情報）
-	p_ModelData->Color.size = sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r);
-	p_ModelData->Color.type = GL_UNSIGNED_BYTE;
-	p_ModelData->Color.normalized = GL_TRUE;
-	p_ModelData->Color.stride = sizeof(Vec3_bColor3);
-	if (true == p_vbo)
-	{
-		p_ModelData->Color.pointer = (GLvoid*)sizeof(vertex[0].Vector);
-	}
-	else
-	{
-		p_ModelData->Color.pointer = (GLvoid*)((byte*)PiercedCube_vertex + sizeof(vertex[0].Vector));
-	}
-
-	//描画情報設定
-	p_ModelData->DrawArrays.mode = GL_TRIANGLE_STRIP;
-	p_ModelData->DrawArrays.first = 0;
-	p_ModelData->DrawArrays.count = sizeof(vertex) / sizeof(vertex[0]);
-
-	//バッファーデータ設定
-	if (true == p_vbo)
-	{
-		p_ModelData->BufferData_v.target = GL_ARRAY_BUFFER;
-		p_ModelData->BufferData_v.size = sizeof(vertex);
-		p_ModelData->BufferData_v.data = PiercedCube_vertex;
-	}
-	else
-	{
-		//VBO未使用が指定されているのでデータは詰めない
-		p_ModelData->BufferData_v.target = 0;
-		p_ModelData->BufferData_v.size = 0;
-		p_ModelData->BufferData_v.data = NULL;
-	}
-}
-
-/*-------------------------------------------------------------------------------
-*	関数説明
-*	　モデルデータのメモリを解放します
-*	引数
-*	　p_ModelData	：[ /O]　モデルデータ（メモリを解放後「NULL」が格納されるという意味で[ /O]指定）
-*	戻り値
-*	　なし
-*-------------------------------------------------------------------------------*/
-void Model::PiercedCube_free(ModelInfo_Original *p_ModelData)
-{
-	//データが格納されていれば開放する
-	if (NULL != p_ModelData->Vertex.pointer)
-	{
-		free(p_ModelData->Vertex.pointer);
-	}
-	if (NULL != p_ModelData->BufferData_v.data)
-	{
-		free(p_ModelData->BufferData_v.data);
-	}
-
-	p_ModelData = NULL;
-}
-
-/*-------------------------------------------------------------------------------
-*	関数説明
-*	　穴あきキューブを取得する（インデックス版）
-*	　（[glDrawElements]用パラメータ情報）
-*	引数
-*	　p_vbo			：[I/ ]　モデルデータをVBOとして登録/使用する場合は「true」そうでない場合は「false」を指定
-*						　	 VBOとして使用する場合、「glBufferData」でデータを登録してから「glDrawElements」する。
-*							 登録するデータは「BufferData_?」メンバに格納されている情報を使用すれば良い。
-*							 ※「false」を指定した場合は「BufferData_?」メンバには情報が格納されないので扱いに注意
-*	　p_ModelData	：[ /O]　モデルデータ情報
-*							 ※注意※
-*							 モデルデータが不要になった時点で、必ず[PiercedCube_index_free]をコールしてください。
-*							 （モデルデータのメモリを解放します）
-*	戻り値
-*	　なし
-*-------------------------------------------------------------------------------*/
-void Model::GetPiercedCube_index(bool p_vbo, ModelInfo_index_Original *p_ModelData)
-{
-	// 頂点データ
-	Vec3_bColor3 vertex[] =
-	{
-		// v0
-		{ { -10.0f, -10.0f, 10.0f }, { 90, 0, 0 } },
-		// v1
-		{ { -10.0f, -10.0f, -10.0f }, { 0, 90, 0 } },
-		// v2
-		{ { -10.0f, 10.0f, 10.0f }, { 0, 0, 90 } },
-		// v3
-		{ { -10.0f, 10.0f, -10.0f }, { 180, 0, 0 } },
-		// v4
-		{ { 10.0f, 10.0f, 10.0f }, { 0, 180, 0 } },
-		// v5
-		{ { 10.0f, 10.0f, -10.0f }, { 0, 0, 180 } },
-		// v6
-		{ { 10.0f, -10.0f, 10.0f }, { 250, 0, 0 } },
-		// v7
-		{ { 10.0f, -10.0f, -10.0f }, { 0, 250, 0 } },
+		{ { 10.0f, 10.0f, -10.0f },{ 250, 0, 0 } },
 	};
 
 	// インデックスデータ
 	GLubyte index[] =
 	{
-	// v0  1  2  3  4  5  6  7  8  9  10 11 12 13
+		// v0  1  2  3  4  5  6  7  8  9  10 11 12 13
+		0, 1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
+	};
+
+	//頂点とインデックスのメモリを確保してコピーする
+	GLvoid* PiercedCube_vertex = (GLvoid*)calloc(sizeof(vertex), sizeof(byte));
+	GLvoid* PiercedCube_index = (GLvoid*)calloc(sizeof(index), sizeof(byte));
+	memmove(PiercedCube_vertex, vertex, sizeof(vertex));
+	memmove(PiercedCube_index, index, sizeof(index));
+
+	//モデルデータ設定（頂点情報）
+	m_ModelInfo.Position.size = sizeof(vertex[0].Position) / sizeof(vertex[0].Position.x);
+	m_ModelInfo.Position.type = GL_FLOAT;
+	m_ModelInfo.Position.normalized = GL_FALSE;
+	m_ModelInfo.Position.stride = sizeof(Vec3_bColor3);
+	m_ModelInfo.Position.pointer = 0;
+
+	//モデルデータ設定（カラー情報）
+	m_ModelInfo.Color.size = sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r);
+	m_ModelInfo.Color.type = GL_UNSIGNED_BYTE;
+	m_ModelInfo.Color.normalized = GL_TRUE;
+	m_ModelInfo.Color.stride = sizeof(Vec3_bColor3);
+	m_ModelInfo.Color.pointer = (GLvoid*)sizeof(vertex[0].Position);
+
+	//描画情報設定
+	DrawElementsInfo DrawElements = { 0 };
+	DrawElements.mode = GL_TRIANGLE_STRIP;
+	DrawElements.count = sizeof(index) / sizeof(index[0]);
+	DrawElements.type = GL_UNSIGNED_BYTE;
+	DrawElements.indices = 0;
+	m_ModelInfo.DrawElements.push_back(DrawElements);
+
+	//バッファーデータ設定（頂点）
+	glGenBuffers(1, &m_ModelInfo.BufferObj_v);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ModelInfo.BufferObj_v);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), PiercedCube_vertex, GL_STATIC_DRAW);
+
+	//バッファーデータ設定（インデックス）
+	glGenBuffers(1, &m_ModelInfo.BufferObj_i);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ModelInfo.BufferObj_i);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), PiercedCube_index, GL_STATIC_DRAW);
+
+	//バッファーを無効化
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	//メモリ解放
+	free(PiercedCube_vertex);
+	free(PiercedCube_index);
+
+	printf("完了\n");
+}
+
+/*-------------------------------------------------------------------------------
+*	関数説明
+*	　穴あきキューブを取得する（エッジ無し）
+*	引数
+*	　なし
+*	戻り値
+*	　なし
+*-------------------------------------------------------------------------------*/
+void Model::DataLoad_PiercedCube2(void)
+{
+	// 頂点データ
+	Vec3_bColor3 vertex[] =
+	{
+		// v0
+		{ { -10.0f, -10.0f, 10.0f },{ 90, 0, 0 } },
+		// v1
+		{ { -10.0f, -10.0f, -10.0f },{ 0, 90, 0 } },
+		// v2
+		{ { -10.0f, 10.0f, 10.0f },{ 0, 0, 90 } },
+		// v3
+		{ { -10.0f, 10.0f, -10.0f },{ 180, 0, 0 } },
+		// v4
+		{ { 10.0f, 10.0f, 10.0f },{ 0, 180, 0 } },
+		// v5
+		{ { 10.0f, 10.0f, -10.0f },{ 0, 0, 180 } },
+		// v6
+		{ { 10.0f, -10.0f, 10.0f },{ 250, 0, 0 } },
+		// v7
+		{ { 10.0f, -10.0f, -10.0f },{ 0, 250, 0 } },
+	};
+
+	// インデックスデータ
+	GLubyte index[] =
+	{
+		// v0  1  2  3  4  5  6  7  8  9  10 11 12 13
 		0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 1, 3, 7, 5,
 	};
 
@@ -414,102 +659,44 @@ void Model::GetPiercedCube_index(bool p_vbo, ModelInfo_index_Original *p_ModelDa
 	memmove(PiercedCube_index, index, sizeof(index));
 
 	//モデルデータ設定（頂点情報）
-	p_ModelData->Vertex.size = sizeof(vertex[0].Vector) / sizeof(vertex[0].Vector.x);
-	p_ModelData->Vertex.type = GL_FLOAT;
-	p_ModelData->Vertex.normalized = GL_FALSE;
-	p_ModelData->Vertex.stride = sizeof(Vec3_bColor3);
-	if (true == p_vbo)
-	{
-		p_ModelData->Vertex.pointer = 0;
-	}
-	else
-	{
-		p_ModelData->Vertex.pointer = PiercedCube_vertex;
-	}
+	m_ModelInfo.Position.size = sizeof(vertex[0].Position) / sizeof(vertex[0].Position.x);
+	m_ModelInfo.Position.type = GL_FLOAT;
+	m_ModelInfo.Position.normalized = GL_FALSE;
+	m_ModelInfo.Position.stride = sizeof(Vec3_bColor3);
+	m_ModelInfo.Position.pointer = 0;
 
 	//モデルデータ設定（カラー情報）
-	p_ModelData->Color.size = sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r);
-	p_ModelData->Color.type = GL_UNSIGNED_BYTE;
-	p_ModelData->Color.normalized = GL_TRUE;
-	p_ModelData->Color.stride = sizeof(Vec3_bColor3);
-	if (true == p_vbo)
-	{
-		p_ModelData->Color.pointer = (GLvoid*)sizeof(vertex[0].Vector);
-	}
-	else
-	{
-		p_ModelData->Color.pointer = (GLvoid*)((byte*)PiercedCube_vertex + sizeof(vertex[0].Vector));
-	}
+	m_ModelInfo.Color.size = sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r);
+	m_ModelInfo.Color.type = GL_UNSIGNED_BYTE;
+	m_ModelInfo.Color.normalized = GL_TRUE;
+	m_ModelInfo.Color.stride = sizeof(Vec3_bColor3);
+	m_ModelInfo.Color.pointer = (GLvoid*)sizeof(vertex[0].Position);
 
 	//描画情報設定
-	p_ModelData->DrawElements.mode = GL_TRIANGLE_STRIP;
-	p_ModelData->DrawElements.count = sizeof(index) / sizeof(index[0]);
-	p_ModelData->DrawElements.type = GL_UNSIGNED_BYTE;
-	
-	if (true == p_vbo)
-	{
-		p_ModelData->DrawElements.indices = 0;
-	}
-	else
-	{
-		p_ModelData->DrawElements.indices = PiercedCube_index;
-	}
+	DrawElementsInfo DrawElements = { 0 };
+	DrawElements.mode = GL_TRIANGLE_STRIP;
+	DrawElements.count = sizeof(index) / sizeof(index[0]);
+	DrawElements.type = GL_UNSIGNED_BYTE;
+	DrawElements.indices = 0;
+	m_ModelInfo.DrawElements.push_back(DrawElements);
 
-	//バッファーデータ設定
-	if (true == p_vbo)
-	{
-		//頂点
-		p_ModelData->BufferData_v.target = GL_ARRAY_BUFFER;
-		p_ModelData->BufferData_v.size = sizeof(vertex);
-		p_ModelData->BufferData_v.data = PiercedCube_vertex;
+	//バッファーデータ設定（頂点）
+	glGenBuffers(1, &m_ModelInfo.BufferObj_v);
+	glBindBuffer(GL_ARRAY_BUFFER, m_ModelInfo.BufferObj_v);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), PiercedCube_vertex, GL_STATIC_DRAW);
 
-		//インデックス
-		p_ModelData->BufferData_i.target = GL_ELEMENT_ARRAY_BUFFER;
-		p_ModelData->BufferData_i.size = sizeof(index);
-		p_ModelData->BufferData_i.data = PiercedCube_index;
-	}
-	else
-	{
-		//VBO未使用が指定されているのでデータは詰めない
-		//頂点
-		p_ModelData->BufferData_v.target = 0;
-		p_ModelData->BufferData_v.size = 0;
-		p_ModelData->BufferData_v.data = NULL;
+	//バッファーデータ設定（インデックス）
+	glGenBuffers(1, &m_ModelInfo.BufferObj_i);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ModelInfo.BufferObj_i);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), PiercedCube_index, GL_STATIC_DRAW);
 
-		//インデックス
-		p_ModelData->BufferData_i.target = 0;
-		p_ModelData->BufferData_i.size = 0;
-		p_ModelData->BufferData_i.data = NULL;
-	}
-}
+	//バッファーを無効化
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-/*-------------------------------------------------------------------------------
-*	関数説明
-*	　モデルデータのメモリを解放します
-*	引数
-*	　p_ModelData	：[ /O]　モデルデータ（メモリを解放後「NULL」が格納されるという意味で[ /O]指定）
-*	戻り値
-*	　なし
-*-------------------------------------------------------------------------------*/
-void Model::PiercedCube_index_free(ModelInfo_index_Original *p_ModelData)
-{
-	//データが格納されていれば開放する
-	if (NULL != p_ModelData->Vertex.pointer)
-	{
-		free(p_ModelData->Vertex.pointer);
-	}
-	if (NULL != p_ModelData->BufferData_v.data)
-	{
-		free(p_ModelData->BufferData_v.data);
-	}
-	if (NULL != p_ModelData->DrawElements.indices)
-	{
-		free(p_ModelData->DrawElements.indices);
-	}
-	if (NULL != p_ModelData->BufferData_i.data)
-	{
-		free(p_ModelData->BufferData_i.data);
-	}
+	//メモリ解放
+	free(PiercedCube_vertex);
+	free(PiercedCube_index);
 
-	p_ModelData = NULL;
+	printf("完了\n");
 }
