@@ -1,13 +1,14 @@
 #version 300 es
 
-//頂点座標
-in mediump vec4 attr_pos;
+//デフォルトの精度を設定
+precision mediump float;
 
-//テクスチャ座標
-in mediump vec2 attr_tex_coord;
+//入力
+in mediump vec4 attr_pos;			//頂点座標
+in mediump vec2 attr_tex_coord;		//テクスチャ座標
 
-//テクスチャ座標
-out mediump vec2 f_attr_tex_coord;
+//出力
+out mediump vec2 f_attr_tex_coord;	//テクスチャ座標
 
 void main()
 {

@@ -1,5 +1,8 @@
 #version 300 es
 
+//デフォルトの精度を設定
+precision mediump float;
+
 //入力
 in mediump vec4 attr_pos;	//頂点データ
 in lowp vec4 attr_color;	//頂点カラー

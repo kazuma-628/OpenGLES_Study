@@ -1,17 +1,16 @@
 #version 300 es
 
-//テクスチャ座標
-in mediump vec2 f_attr_tex_coord;
+//デフォルトの精度を設定
+precision mediump float;
 
-//テクスチャ
-uniform sampler2D unif_tex;
+//入力
+in mediump vec2 f_attr_tex_coord;		//テクスチャ座標
 
-//文字のカラー
-uniform lowp vec4 unif_string_color;
+uniform sampler2D unif_tex;				//テクスチャ
+uniform lowp vec4 unif_string_color;	//文字のカラー
+uniform lowp vec4 unif_back_color;		//背景のカラー
 
-//背景のカラー
-uniform lowp vec4 unif_back_color;
-
+//出力
 out mediump vec4 FragColor;
 
 void main()
