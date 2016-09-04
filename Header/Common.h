@@ -19,6 +19,7 @@
 #include <locale.h>
 #include <vector> 
 #include <fstream>
+#include <string>
 
 ////////////////////////////////////////
 // Defineベクトル構造体

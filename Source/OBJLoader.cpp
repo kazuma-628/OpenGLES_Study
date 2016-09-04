@@ -98,7 +98,7 @@ char* CutDirectoryPath( const char* filename )
 // Name : SetDirectoryPath
 // Desc : ディレクトリを前に付加して文字列を返す
 //-----------------------------------------------------------------------
-char* SetDirectoryPath( char* dest, char* directory )
+char* SetDirectoryPath( const char* dest, char* directory )
 {
 	char* str;
 	str = new char[strlen(directory) + strlen(dest) + 1];
@@ -340,7 +340,6 @@ bool OBJMESH::LoadOBJFile(const char *filename)
 {
 	ifstream file;
 
-	char mtlFileName[OBJ_NAME_LENGTH] = {0};
 	char buf[OBJ_BUFFER_LENGTH] = {0};
 	vector<OBJVEC3> positions;
 	vector<OBJVEC3> normals;
@@ -514,11 +513,16 @@ bool OBJMESH::LoadOBJFile(const char *filename)
 		//　マテリアルファイル
 		else if ( 0 == strcmp( buf, "mtllib" ) )
 		{
-			file >> mtlFileName;
+			std::string mtlFileName(OBJ_NAME_LENGTH, 0);
+
+			//空白が含まれているファイル名でも読み込みできるように1行として読み込みする
+			std::getline(file, mtlFileName);
+
 			//　マテリアルファイルの読み込み
 			if ( mtlFileName[0] )
 			{
-				if ( !LoadMTLFile( SetDirectoryPath(mtlFileName, m_directoryPath) ) )
+				//最初の行には空白があるので1文字読み飛ばす（第一引数について）
+				if ( !LoadMTLFile( SetDirectoryPath(mtlFileName.c_str() + 1, m_directoryPath) ) )
 				{
 					//エラー処理等あればここに記載
 					//MTLファイルが読み込めなかった時のエラーメッセージはロード関数先で出力済み
@@ -531,14 +535,18 @@ bool OBJMESH::LoadOBJFile(const char *filename)
 		//　マテリアル
 		else if ( 0 == strcmp( buf, "usemtl" ) )
 		{
-			char strName[OBJ_NAME_LENGTH] = {0};
-			file >> strName;
+			std::string strName(OBJ_NAME_LENGTH, 0);
+
+			//空白が含まれているファイル名でも読み込みできるように1行として読み込みする
+			std::getline(file, strName);
+
 			OBJSUBSET subset;
 			subset.faceCount = 1;
 
 			for ( unsigned int i = 0; i < m_NumMaterials; i++ )
 			{
-				if ( 0 == strcmp( m_Materials[i].name, strName ) )
+				//最初の行には空白があるので1文字読み飛ばす（第一引数について）
+				if ( 0 == strcmp( m_Materials[i].name, strName.c_str() + 1) )
 				{
 					dwCurSubset = i;
 					break;
@@ -642,9 +650,13 @@ bool OBJMESH::LoadMTLFile( const char* filename )
 		{
 			iMtlCount++;
 			t_materials.push_back( material );
-			char strName[OBJ_NAME_LENGTH] = {0};
-			file >> strName;
-			strcpy( t_materials[iMtlCount].name, strName );
+
+			std::string strName(OBJ_NAME_LENGTH, 0);
+
+			//空白が含まれているファイル名でも読み込みできるように1行として読み込みする
+			std::getline(file, strName);
+			
+			strcpy( t_materials[iMtlCount].name, strName.c_str() + 1 );
 		}
 		// Ambient Color
 		else if ( 0 == strcmp( buf, "Ka" ) )
@@ -681,34 +693,46 @@ bool OBJMESH::LoadMTLFile( const char* filename )
 		// Ambient Map
 		else if ( 0 == strcmp( buf, "map_Ka" ) )
 		{
-			char mapKaName[OBJ_NAME_LENGTH];
-			file >> mapKaName;
-			SetDirectoryPath( mapKaName, m_directoryPath );
-			strcpy( t_materials[iMtlCount].ambientMapName, mapKaName );
+			std::string mapKaName(OBJ_NAME_LENGTH, 0);
+
+			//空白が含まれているファイル名でも読み込みできるように1行として読み込みする
+			std::getline(file, mapKaName);
+
+//			SetDirectoryPath( mapKaName.c_str() + 1, m_directoryPath );		//現段階では必要ないのでコメントアウト
+			strcpy( t_materials[iMtlCount].ambientMapName, mapKaName.c_str() + 1 );
 		}
 		// Diffuse Map
 		else if ( 0 == strcmp( buf, "map_Kd" ) )
 		{
-			char mapKdName[OBJ_NAME_LENGTH];
-			file >> mapKdName;
-			SetDirectoryPath( mapKdName, m_directoryPath );
-			strcpy( t_materials[iMtlCount].diffuseMapName, mapKdName );
+			std::string mapKdName(OBJ_NAME_LENGTH, 0);
+
+			//空白が含まれているファイル名でも読み込みできるように1行として読み込みする
+			std::getline(file, mapKdName);
+			
+//			SetDirectoryPath( mapKdName.c_str() + 1, m_directoryPath );		//現段階では必要ないのでコメントアウト
+			strcpy( t_materials[iMtlCount].diffuseMapName, mapKdName.c_str() + 1 );
 		}
 		// Specular Map
 		else if ( 0 == strcmp( buf, "map_Ks" ) )
 		{
-			char mapKsName[OBJ_NAME_LENGTH];
-			file >> mapKsName;
-			SetDirectoryPath( mapKsName, m_directoryPath );
-			strcpy( t_materials[iMtlCount].specularMapName, mapKsName );
+			std::string mapKsName(OBJ_NAME_LENGTH, 0);
+
+			//空白が含まれているファイル名でも読み込みできるように1行として読み込みする
+			std::getline(file, mapKsName);
+
+//			SetDirectoryPath( mapKsName.c_str() + 1, m_directoryPath );		//現段階では必要ないのでコメントアウト
+			strcpy( t_materials[iMtlCount].specularMapName, mapKsName.c_str() + 1 );
 		}
 		// Bump Map
 		else if ( 0 == strcmp( buf, "map_Bump" ) )
 		{
-			char mapBumpName[OBJ_NAME_LENGTH];
-			file >> mapBumpName;
-			SetDirectoryPath( mapBumpName, m_directoryPath );
-			strcpy( t_materials[iMtlCount].bumpMapName, mapBumpName );
+			std::string mapBumpName(OBJ_NAME_LENGTH, 0);
+
+			//空白が含まれているファイル名でも読み込みできるように1行として読み込みする
+			std::getline(file, mapBumpName);
+			
+//			SetDirectoryPath( mapBumpName.c_str() + 1, m_directoryPath );		//現段階では必要ないのでコメントアウト
+			strcpy( t_materials[iMtlCount].bumpMapName, mapBumpName.c_str() + 1 );
 		}
 
 		file.ignore( OBJ_BUFFER_LENGTH, '\n' );
