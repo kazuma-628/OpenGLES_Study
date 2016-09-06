@@ -186,7 +186,7 @@ void Model::FileDataFree(void)
 		glDeleteBuffers(1, &m_ModelInfo.BufferObj_i);
 	}
 
-	//描画実行
+	//テクスチャオブジェクト破棄
 	for (unsigned int cnt = 0; cnt < m_ModelInfo.Material.size(); cnt++)
 	{
 		glDeleteTextures(1, &m_ModelInfo.Material[cnt].ambientTexObj);

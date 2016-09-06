@@ -196,7 +196,7 @@ void Texture::DataBRGtoRGB_invert(const int p_PixelFotmat, const Gdiplus::Bitmap
 			//「BGR(A)」を「RGB(A)」に変換する1画素の先頭位置を算出する。
 			//GPU（VRAM）にアップロードするときに上下が反転するので、
 			//それを修正するような先頭位置（上下が反転する位置）も算出する。
-			//また、その際は画像は4 バイト境界を意識して格納されているのでそれも考慮する
+			//また、その際は「Stride」を考慮する
 
 			//変換する1画素の先頭位置
 			unsigned int DataPos = (Height * p_BitmapData->Stride) + Width;
@@ -207,11 +207,17 @@ void Texture::DataBRGtoRGB_invert(const int p_PixelFotmat, const Gdiplus::Bitmap
 			//R成分をコピー
 			memmove((byte*)p_TextureData->data + DataPos, (byte*)p_BitmapData->Scan0 + DataPos_invert + 2, sizeof(byte));
 
-			//G成分を一時的に保存
+			//G成分をコピー
 			memmove((byte*)p_TextureData->data + DataPos + 1, (byte*)p_BitmapData->Scan0 + DataPos_invert + 1, sizeof(byte));
 
-			//B成分を一時的に保存
+			//B成分をコピー
 			memmove((byte*)p_TextureData->data + DataPos + 2, (byte*)p_BitmapData->Scan0 + DataPos_invert, sizeof(byte));
+
+			//RGBAフォーマットではA成分もコピー
+			if (PIXEL_FORMAT_32BIT_RGBA == p_PixelFotmat)
+			{
+				memmove((byte*)p_TextureData->data + DataPos + 3, (byte*)p_BitmapData->Scan0 + DataPos_invert + 3, sizeof(byte));
+			}
 		}
 	}
 }
