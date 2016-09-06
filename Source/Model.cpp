@@ -186,8 +186,18 @@ void Model::FileDataFree(void)
 		glDeleteBuffers(1, &m_ModelInfo.BufferObj_i);
 	}
 
+	//描画実行
+	for (unsigned int cnt = 0; cnt < m_ModelInfo.Material.size(); cnt++)
+	{
+		glDeleteTextures(1, &m_ModelInfo.Material[cnt].ambientTexObj);
+		glDeleteTextures(1, &m_ModelInfo.Material[cnt].diffuseTexObj);
+		glDeleteTextures(1, &m_ModelInfo.Material[cnt].specularTexObj);
+		glDeleteTextures(1, &m_ModelInfo.Material[cnt].bumpMapTexObj);
+	}
+
 	//要素を削除
 	m_ModelInfo.DrawElements.clear();
+	m_ModelInfo.Material.clear();
 
 	//本当はここで[shrink_to_fit]を呼び、余分なメモリ解放するべき
 	//（VisualStudio2013(C++11)からしか対応してないので、ひとまず互換性を優先して放置）
