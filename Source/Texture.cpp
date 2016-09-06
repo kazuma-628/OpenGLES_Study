@@ -128,8 +128,8 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 	p_TextureData->type = GL_UNSIGNED_BYTE;
 	p_TextureData->data = (GLvoid*)calloc(BitmapData.Height * BitmapData.Stride, sizeof(byte));
 
-	//ロードしたテクスチャは「BGR」で格納されているので「RGB」に変換しつつコピーする
-	DataBRGtoRGB(p_PixelFotmat, &BitmapData, p_TextureData);
+	//ロードしたテクスチャは「BGR」で格納されているので「RGB」に変換しつつ上下を反転しながらコピーする
+	DataBRGtoRGB_invert(p_PixelFotmat, &BitmapData, p_TextureData);
 
 	//読み込んだテクスチャ情報/データを破棄する
 	Texture->UnlockBits(&BitmapData);
@@ -162,7 +162,8 @@ void Texture::FileDataFree(TextureInfo *p_TextureData)
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　色情報「BGR(A)」を「RGB(A)」に変換する
+*	　色情報「BGR(A)」を「RGB(A)」に変換しつつ、上下を反転させる
+*	　（VRAMにアップロードするときに上下が反転するので予め反転させておく）
 *	引数
 *	　p_PixelFotmat	：[I/ ]　画像ファイルのフォーマット
 *							 PIXELFORMAT_24BIT_RGB or PIXELFORMAT_32BIT_RGBA で指定（詳細は定義部分のコメント参照）
@@ -171,7 +172,7 @@ void Texture::FileDataFree(TextureInfo *p_TextureData)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Texture::DataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureInfo* p_TextureData)
+void Texture::DataBRGtoRGB_invert(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureInfo* p_TextureData)
 {
 	//1色分の情報のバイト数
 	int ColorByte = 0;
@@ -192,18 +193,25 @@ void Texture::DataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p
 		//幅ピクセル × カラー色分繰り返す（幅分の変換量となる）
 		for (unsigned int Width = 0; Width < p_BitmapData->Width * ColorByte; Width = Width + ColorByte)
 		{
-			//変換する1画素の先頭位置を算出する
-			//（画像は4 バイト境界を意識して格納されているのでそれも考慮する）
+			//「BGR(A)」を「RGB(A)」に変換する1画素の先頭位置を算出する。
+			//GPU（VRAM）にアップロードするときに上下が反転するので、
+			//それを修正するような先頭位置（上下が反転する位置）も算出する。
+			//また、その際は画像は4 バイト境界を意識して格納されているのでそれも考慮する
+
+			//変換する1画素の先頭位置
 			unsigned int DataPos = (Height * p_BitmapData->Stride) + Width;
 
+			//「DataPos」と上下が反転する位置
+			unsigned int DataPos_invert = ((p_BitmapData->Height - 1 - Height ) * p_BitmapData->Stride) + Width;
+
 			//R成分をコピー
-			memmove((byte*)p_TextureData->data + DataPos, (byte*)p_BitmapData->Scan0 + DataPos + 2, sizeof(byte));
+			memmove((byte*)p_TextureData->data + DataPos, (byte*)p_BitmapData->Scan0 + DataPos_invert + 2, sizeof(byte));
 
 			//G成分を一時的に保存
-			memmove((byte*)p_TextureData->data + DataPos + 1, (byte*)p_BitmapData->Scan0 + DataPos + 1, sizeof(byte));
+			memmove((byte*)p_TextureData->data + DataPos + 1, (byte*)p_BitmapData->Scan0 + DataPos_invert + 1, sizeof(byte));
 
 			//B成分を一時的に保存
-			memmove((byte*)p_TextureData->data + DataPos + 2, (byte*)p_BitmapData->Scan0 + DataPos, sizeof(byte));
+			memmove((byte*)p_TextureData->data + DataPos + 2, (byte*)p_BitmapData->Scan0 + DataPos_invert, sizeof(byte));
 		}
 	}
 }

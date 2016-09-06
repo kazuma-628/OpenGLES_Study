@@ -72,7 +72,8 @@ private:
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
-	*	　色情報「BGR(A)」を「RGB(A)」に変換する
+	*	　色情報「BGR(A)」を「RGB(A)」に変換しつつ、上下を反転させる
+	*	　（VRAMにアップロードするときに上下が反転するので予め反転させておく）
 	*	引数
 	*	　p_PixelFotmat	：[I/ ]　画像ファイルのフォーマット
 	*							 PIXELFORMAT_24BIT_RGB or PIXELFORMAT_32BIT_RGBA で指定（詳細は定義部分のコメント参照）
@@ -81,7 +82,7 @@ private:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void DataBRGtoRGB(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureInfo* p_TextureData);
+	static void DataBRGtoRGB_invert(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureInfo* p_TextureData);
 
 };
 #endif
