@@ -1,4 +1,7 @@
-#version 320 es
+#version 300 es
+
+//デフォルトの精度を設定
+precision mediump float;
 
 //入力
 in mediump vec4 attr_Position;			//頂点座標

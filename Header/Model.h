@@ -211,9 +211,16 @@ private:
 	static GLint m_attr_Color;				//カラーロケーション
 	static GLint m_attr_TexCoord;			//テクスチャ座標のロケーション
 	static GLint m_unif_FileFotmat;			//モデルデータのフォーマットのロケーション
-	static GLint m_unif_TexFlag;			//テクスチャ有り・無しフラグのロケーション
 	static GLint m_unif_ProjModelMat;		//「プロジェクション × モデルビュー」を乗算済みの行列のロケーション
-	static GLint m_unif_TexUnit;			//テクスチャユニットのロケーション
+	static GLint m_unif_AmbientTexFlag;		//テクスチャ（アンビエント） 有り・無しフラグのロケーション
+	static GLint m_unif_DiffuseTexFlag;		//テクスチャ（ディフューズ） 有り・無しフラグのロケーション
+	static GLint m_unif_SpecularTexFlag;	//テクスチャ（スペキュラ）有り・無しフラグのロケーション
+	static GLint m_unif_BumpMapTexFlag;		//テクスチャ（バンプマップ）有り・無しフラグのロケーション
+	static GLint m_unif_AmbientTexUnit;		//テクスチャユニット（アンビエント） のロケーション
+	static GLint m_unif_DiffuseTexUnit;		//テクスチャユニット（ディフューズ）のロケーション
+	static GLint m_unif_SpecularTexUnit;	//テクスチャユニット（スペキュラ）のロケーション
+	static GLint m_unif_BumpMapTexUnit;		//テクスチャユニット（バンプマップ）のロケーション
+
 
 	///////////////////////////////
 	// 関数定義

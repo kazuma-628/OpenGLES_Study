@@ -1,4 +1,7 @@
-#version 320 es
+#version 300 es
+
+//デフォルトの精度を設定
+precision mediump float;
 
 //モデルデータのフォーマット
 //ここの定義を変更する場合は、「Model.h」のemun「FileFotmat」定義も同じように変更してください
@@ -7,13 +10,19 @@
 #define ORIGINAL_FORMAT_PIERCED_CUBE2	3		//オリジナルフォーマットで穴あきのキューブデータ（エッジ無し）
 
 //入力
-in mediump vec3 f_attr_Normal;			//法線
-in mediump vec4 f_attr_Color;			//カラー
-in mediump vec2 f_attr_TexCoord;		//テクスチャ座標
+in mediump vec3 f_attr_Normal;				//法線
+in mediump vec4 f_attr_Color;				//カラー
+in mediump vec2 f_attr_TexCoord;			//テクスチャ座標
 
-uniform lowp int unif_FileFotmat;		//モデルデータのフォーマット
-uniform lowp int unif_TexFlag;			//テクスチャ有り・無しフラグ
-uniform sampler2D unif_TexUnit;			//テクスチャユニット
+uniform lowp int unif_FileFotmat;			//モデルデータのフォーマット
+uniform lowp int unif_AmbientTexFlag;		//テクスチャ（アンビエント） 有り・無しフラグ
+uniform lowp int unif_DiffuseTexFlag;		//テクスチャ（ディフューズ） 有り・無しフラグ
+uniform lowp int unif_SpecularTexFlag;		//テクスチャ（スペキュラ）有り・無しフラグ
+uniform lowp int unif_BumpMapTexFlag;		//テクスチャ（バンプマップ）有り・無しフラグ
+uniform sampler2D unif_AmbientTexUnit;		//テクスチャ（アンビエント） ユニット
+uniform sampler2D unif_DiffuseTexUnit;		//テクスチャ（ディフューズ） ユニット
+uniform sampler2D unif_SpecularTexUnit;		//テクスチャ（スペキュラ）ユニット
+uniform sampler2D unif_BumpMapTexUnit;		//テクスチャ（バンプマップ）ユニット
 
 //出力
 out mediump vec4 FragColor;
@@ -29,10 +38,10 @@ void main()
 		case FILE_FORMAT_OBJ:
 
 			//マテリアルファイルにテクスチャが指定されていた場合
-			if(1 == unif_TexFlag)
+			if(1 == unif_DiffuseTexFlag)
 			{
 				//テクスチャ情報を読み込む
-				FinalColor = texture(unif_TexUnit, vec2(f_attr_TexCoord.x, f_attr_TexCoord.y));
+				FinalColor = texture(unif_DiffuseTexUnit, vec2(f_attr_TexCoord.x, f_attr_TexCoord.y));
 			}
 			else
 			{
