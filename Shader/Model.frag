@@ -32,7 +32,7 @@ void main()
 			if(1 == unif_TexFlag)
 			{
 				//テクスチャ情報を読み込む
-				FinalColor = texture(unif_TexUnit, vec2(f_attr_TexCoord.x, -f_attr_TexCoord.y));
+				FinalColor = texture(unif_TexUnit, vec2(f_attr_TexCoord.x, f_attr_TexCoord.y));
 			}
 			else
 			{
