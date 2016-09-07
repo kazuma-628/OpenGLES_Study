@@ -134,9 +134,9 @@ private:
 	//マテリアル情報
 	typedef struct
 	{
-		Vec3 ambient;				//アンビエント値
-		Vec3 diffuse;				//ディフューズ値
-		Vec3 specular;				//スペキュラ値
+		Color3 ambient;				//アンビエント値
+		Color3 diffuse;				//ディフューズ値
+		Color3 specular;			//スペキュラ値
 		GLfloat shininess;			//シャイネス値
 		GLfloat alpha;				//アルファ値
 		GLuint ambientTexObj;		//テクスチャオブジェクト（アンビエント） 
@@ -205,6 +205,7 @@ private:
 
 	ModelInfo m_ModelInfo;
 	
+	//ロケーション
 	static ShaderManager m_ModelShader;		//モデル描画用のシェーダーオブジェクト
 	static GLint m_attr_Position;			//頂点座標のロケーション
 	static GLint m_attr_Normal;				//法線ロケーション
@@ -212,6 +213,11 @@ private:
 	static GLint m_attr_TexCoord;			//テクスチャ座標のロケーション
 	static GLint m_unif_FileFotmat;			//モデルデータのフォーマットのロケーション
 	static GLint m_unif_ProjModelMat;		//「プロジェクション × モデルビュー」を乗算済みの行列のロケーション
+	static GLint m_unif_Ambient;			//アンビエント値のロケーション
+	static GLint m_unif_Diffuse;			//ディフューズ値のロケーション
+	static GLint m_unif_Specular;			//スペキュラ値のロケーション
+	static GLint m_unif_Shininess;			//シャイネス値のロケーション
+	static GLint m_unif_Alpha;				//アルファ値のロケーション
 	static GLint m_unif_AmbientTexFlag;		//テクスチャ（アンビエント） 有り・無しフラグのロケーション
 	static GLint m_unif_DiffuseTexFlag;		//テクスチャ（ディフューズ） 有り・無しフラグのロケーション
 	static GLint m_unif_SpecularTexFlag;	//テクスチャ（スペキュラ）有り・無しフラグのロケーション

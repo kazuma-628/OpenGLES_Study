@@ -15,6 +15,11 @@ in mediump vec4 f_attr_Color;				//カラー
 in mediump vec2 f_attr_TexCoord;			//テクスチャ座標
 
 uniform lowp int unif_FileFotmat;			//モデルデータのフォーマット
+uniform lowp vec3 unif_Ambient;				//アンビエント値
+uniform lowp vec3 unif_Diffuse;				//ディフューズ値
+uniform lowp vec3 unif_Specular;			//スペキュラ値
+uniform lowp float unif_Shininess;			//シャイネス値
+uniform lowp float unif_Alpha;				//アルファ値
 uniform lowp int unif_AmbientTexFlag;		//テクスチャ（アンビエント） 有り・無しフラグ
 uniform lowp int unif_DiffuseTexFlag;		//テクスチャ（ディフューズ） 有り・無しフラグ
 uniform lowp int unif_SpecularTexFlag;		//テクスチャ（スペキュラ）有り・無しフラグ

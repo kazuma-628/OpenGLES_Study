@@ -3,13 +3,19 @@
 /////////////////////////////////////////////
 //static変数の実体を定義
 
-ShaderManager Model::m_ModelShader;				//モデル描画用のシェーダーオブジェクト	
+ShaderManager Model::m_ModelShader;				//モデル描画用のシェーダーオブジェクト
+//ロケーション
 GLint Model::m_attr_Position = -1;				//頂点座標のロケーション
 GLint Model::m_attr_Normal = -1;				//法線ロケーション
 GLint Model::m_attr_Color = -1;					//カラーロケーション
 GLint Model::m_attr_TexCoord = -1;				//テクスチャ座標のロケーション
 GLint Model::m_unif_FileFotmat = -1;			//モデルデータのフォーマットのロケーション
 GLint Model::m_unif_ProjModelMat = -1;			//「プロジェクション × モデルビュー」を乗算済みの行列のロケーション
+GLint Model::m_unif_Ambient;					//アンビエント値のロケーション
+GLint Model::m_unif_Diffuse;					//ディフューズ値のロケーション
+GLint Model::m_unif_Specular;					//スペキュラ値のロケーション
+GLint Model::m_unif_Shininess;					//シャイネス値のロケーション
+GLint Model::m_unif_Alpha;						//アルファ値のロケーション
 GLint Model::m_unif_AmbientTexFlag = -1;		//テクスチャ（アンビエント） 有り・無しフラグのロケーション
 GLint Model::m_unif_DiffuseTexFlag = -1;		//テクスチャ（ディフューズ） 有り・無しフラグのロケーション
 GLint Model::m_unif_SpecularTexFlag = -1;		//テクスチャ（スペキュラ）有り・無しフラグのロケーション
@@ -19,7 +25,7 @@ GLint Model::m_unif_DiffuseTex = -1;			//テクスチャ（ディフューズ）
 GLint Model::m_unif_SpecularTex = -1;			//テクスチャ（スペキュラ）のロケーション
 GLint Model::m_unif_BumpMapTex = -1;			//テクスチャ（バンプマップ）のロケーション
 
-												//コンストラクタ
+//コンストラクタ
 Model::Model()
 {
 	memset(&m_ModelInfo, 0, sizeof(m_ModelInfo));
@@ -31,46 +37,64 @@ Model::Model()
 		//「Shader」フォルダに格納されている必要があります。
 		m_ModelShader.CreateShaderProgram("Model.vert", "Model.frag", NULL, NULL, NULL, NULL);
 
-		//シェーダー内で使用する変数のロケーションを取得（頂点座標）
+		///////////////////////////////
+		//シェーダー内で使用する変数のロケーションを取得
+		
+		//頂点座標
 		m_attr_Position = m_ModelShader.GetAttribLocation("attr_Position");
 
-		//シェーダー内で使用する変数のロケーションを取得（法線）
+		//法線
 		m_attr_Normal = m_ModelShader.GetAttribLocation("attr_Normal");
 
-		//シェーダー内で使用する変数のロケーションを取得（カラー）
+		//カラー
 		m_attr_Color = m_ModelShader.GetAttribLocation("attr_Color");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ座標）
+		//テクスチャ座標
 		m_attr_TexCoord = m_ModelShader.GetAttribLocation("attr_TexCoord");
 
-		//シェーダー内で使用する変数のロケーションを取得（モデルデータのフォーマット）
+		//モデルデータのフォーマット
 		m_unif_FileFotmat = m_ModelShader.GetUniformLocation("unif_FileFotmat");
 
-		//シェーダー内で使用する変数のロケーションを取得（「プロジェクション × モデルビュー」を乗算済みの行列）
+		//「プロジェクション × モデルビュー」を乗算済みの行列
 		m_unif_ProjModelMat = m_ModelShader.GetUniformLocation("unif_ProjModelMat");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（アンビエント）有り・無しフラグ）
+		//アンビエント値
+		m_unif_Ambient = m_ModelShader.GetUniformLocation("unif_Ambient");
+
+		//ディフューズ値
+		m_unif_Diffuse = m_ModelShader.GetUniformLocation("unif_Diffuse");
+
+		//スペキュラ値
+		m_unif_Specular = m_ModelShader.GetUniformLocation("unif_Specular");
+
+		//シャイネス値
+		m_unif_Shininess = m_ModelShader.GetUniformLocation("unif_Shininess");
+
+		//アルファ値
+		m_unif_Alpha = m_ModelShader.GetUniformLocation("unif_Alpha");
+
+		//テクスチャ（アンビエント）有り・無しフラグ
 		m_unif_AmbientTexFlag = m_ModelShader.GetUniformLocation("unif_AmbientTexFlag");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（ディフューズ） 有り・無しフラグ）
+		//テクスチャ（ディフューズ） 有り・無しフラグ
 		m_unif_DiffuseTexFlag = m_ModelShader.GetUniformLocation("unif_DiffuseTexFlag");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（スペキュラ）有り・無しフラグ）
+		//テクスチャ（スペキュラ）有り・無しフラグ
 		m_unif_SpecularTexFlag = m_ModelShader.GetUniformLocation("unif_SpecularTexFlag");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（バンプマップ）有り・無しフラグ）
+		//テクスチャ（バンプマップ）有り・無しフラグ
 		m_unif_BumpMapTexFlag = m_ModelShader.GetUniformLocation("unif_BumpMapTexFlag");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（アンビエント））
+		//テクスチャ（アンビエント）
 		m_unif_AmbientTex = m_ModelShader.GetUniformLocation("unif_AmbientTex");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（ディフューズ））
+		//テクスチャ（ディフューズ）
 		m_unif_DiffuseTex = m_ModelShader.GetUniformLocation("unif_DiffuseTex");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（スペキュラ））
+		//テクスチャ（スペキュラ）
 		m_unif_SpecularTex = m_ModelShader.GetUniformLocation("unif_SpecularTex");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（バンプマップ））
+		//テクスチャ（バンプマップ）
 		m_unif_BumpMapTex = m_ModelShader.GetUniformLocation("unif_BumpMapTex");
 	}
 }
@@ -282,6 +306,13 @@ void Model::DataDraw(Matrix &p_ProjModelMat)
 	m_ModelShader.DisableVertexAttribArray(m_attr_TexCoord);
 	m_ModelShader.VertexAttribXf(m_attr_TexCoord, 2, 0, 0, 0, 0);
 
+	//カラー関連の係数
+	m_ModelShader.UniformXi(m_unif_Ambient, 1, 0, 0, 0, 0);
+	m_ModelShader.UniformXi(m_unif_Diffuse, 1, 0, 0, 0, 0);
+	m_ModelShader.UniformXi(m_unif_Specular, 1, 0, 0, 0, 0);
+	m_ModelShader.UniformXi(m_unif_Shininess, 1, 0, 0, 0, 0); 
+	m_ModelShader.UniformXi(m_unif_Alpha, 1, 0, 0, 0, 0);
+
 	//テクスチャフラグとテクスチャ
 	m_ModelShader.UniformXi(m_unif_AmbientTexFlag, 1, 0, 0, 0, 0);
 	m_ModelShader.UniformXi(m_unif_DiffuseTexFlag, 1, 0, 0, 0, 0);
@@ -297,8 +328,9 @@ void Model::DataDraw(Matrix &p_ProjModelMat)
 	// m_attr_Normal			//法線
 	// m_attr_Color				//カラー
 	// m_attr_TexCoord			//テクスチャ座標
-	// m_unif_TexFlag			//テクスチャ有り・無しフラグ
-	// m_unif_TexUnit			//テクスチャ
+	// m_unif_xxxxx				//カラー関連の係数
+	// m_unif_xxxxxTexFlag		//テクスチャ有り・無しフラグ
+	// m_unif_xxxxxTex			//テクスチャ
 
 	//深度テストを有効
 	glEnable(GL_DEPTH_TEST);
@@ -360,6 +392,20 @@ void Model::DataDraw(Matrix &p_ProjModelMat)
 				{
 					m_ModelShader.UniformXi(m_unif_DiffuseTexFlag, 1, 0, 0, 0, 0);
 				}
+
+				//カラー関連の係数設定
+				m_ModelShader.UniformXf(m_unif_Ambient, 3, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].ambient.r, 
+														   m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].ambient.g,
+														   m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].ambient.b, 0);
+				m_ModelShader.UniformXf(m_unif_Diffuse, 3, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].diffuse.r,
+														   m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].diffuse.g,
+														   m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].diffuse.b, 0);
+				m_ModelShader.UniformXf(m_unif_Specular, 3, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].specular.r,
+															m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].specular.g,
+															m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].specular.b, 0);
+				m_ModelShader.UniformXf(m_unif_Shininess, 1, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].shininess, 0 ,0, 0);
+				m_ModelShader.UniformXf(m_unif_Alpha, 1, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].alpha, 0, 0, 0);
+
 				break;
 			}
 
