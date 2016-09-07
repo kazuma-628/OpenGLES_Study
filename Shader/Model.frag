@@ -19,10 +19,10 @@ uniform lowp int unif_AmbientTexFlag;		//テクスチャ（アンビエント）
 uniform lowp int unif_DiffuseTexFlag;		//テクスチャ（ディフューズ） 有り・無しフラグ
 uniform lowp int unif_SpecularTexFlag;		//テクスチャ（スペキュラ）有り・無しフラグ
 uniform lowp int unif_BumpMapTexFlag;		//テクスチャ（バンプマップ）有り・無しフラグ
-uniform sampler2D unif_AmbientTexUnit;		//テクスチャ（アンビエント） ユニット
-uniform sampler2D unif_DiffuseTexUnit;		//テクスチャ（ディフューズ） ユニット
-uniform sampler2D unif_SpecularTexUnit;		//テクスチャ（スペキュラ）ユニット
-uniform sampler2D unif_BumpMapTexUnit;		//テクスチャ（バンプマップ）ユニット
+uniform sampler2D unif_AmbientTex;			//テクスチャ（アンビエント）
+uniform sampler2D unif_DiffuseTex;			//テクスチャ（ディフューズ） 
+uniform sampler2D unif_SpecularTex;			//テクスチャ（スペキュラ）
+uniform sampler2D unif_BumpMapTex;			//テクスチャ（バンプマップ）
 
 //出力
 out mediump vec4 FragColor;
@@ -41,7 +41,7 @@ void main()
 			if(1 == unif_DiffuseTexFlag)
 			{
 				//テクスチャ情報を読み込む
-				FinalColor = texture(unif_DiffuseTexUnit, vec2(f_attr_TexCoord.x, f_attr_TexCoord.y));
+				FinalColor = texture(unif_DiffuseTex, vec2(f_attr_TexCoord.x, f_attr_TexCoord.y));
 			}
 			else
 			{

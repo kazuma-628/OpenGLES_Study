@@ -216,10 +216,10 @@ private:
 	static GLint m_unif_DiffuseTexFlag;		//テクスチャ（ディフューズ） 有り・無しフラグのロケーション
 	static GLint m_unif_SpecularTexFlag;	//テクスチャ（スペキュラ）有り・無しフラグのロケーション
 	static GLint m_unif_BumpMapTexFlag;		//テクスチャ（バンプマップ）有り・無しフラグのロケーション
-	static GLint m_unif_AmbientTexUnit;		//テクスチャユニット（アンビエント） のロケーション
-	static GLint m_unif_DiffuseTexUnit;		//テクスチャユニット（ディフューズ）のロケーション
-	static GLint m_unif_SpecularTexUnit;	//テクスチャユニット（スペキュラ）のロケーション
-	static GLint m_unif_BumpMapTexUnit;		//テクスチャユニット（バンプマップ）のロケーション
+	static GLint m_unif_AmbientTex;			//テクスチャ（アンビエント） のロケーション
+	static GLint m_unif_DiffuseTex;			//テクスチャ（ディフューズ）のロケーション
+	static GLint m_unif_SpecularTex;		//テクスチャ（スペキュラ）のロケーション
+	static GLint m_unif_BumpMapTex;			//テクスチャ（バンプマップ）のロケーション
 
 
 	///////////////////////////////

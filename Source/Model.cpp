@@ -14,10 +14,10 @@ GLint Model::m_unif_AmbientTexFlag = -1;		//テクスチャ（アンビエント
 GLint Model::m_unif_DiffuseTexFlag = -1;		//テクスチャ（ディフューズ） 有り・無しフラグのロケーション
 GLint Model::m_unif_SpecularTexFlag = -1;		//テクスチャ（スペキュラ）有り・無しフラグのロケーション
 GLint Model::m_unif_BumpMapTexFlag = -1;		//テクスチャ（バンプマップ）有り・無しフラグのロケーション
-GLint Model::m_unif_AmbientTexUnit = -1;		//テクスチャユニット（アンビエント） のロケーション
-GLint Model::m_unif_DiffuseTexUnit = -1;		//テクスチャユニット（ディフューズ）のロケーション
-GLint Model::m_unif_SpecularTexUnit = -1;		//テクスチャユニット（スペキュラ）のロケーション
-GLint Model::m_unif_BumpMapTexUnit = -1;		//テクスチャユニット（バンプマップ）のロケーション
+GLint Model::m_unif_AmbientTex = -1;			//テクスチャ（アンビエント） のロケーション
+GLint Model::m_unif_DiffuseTex = -1;			//テクスチャ（ディフューズ）のロケーション
+GLint Model::m_unif_SpecularTex = -1;			//テクスチャ（スペキュラ）のロケーション
+GLint Model::m_unif_BumpMapTex = -1;			//テクスチャ（バンプマップ）のロケーション
 
 												//コンストラクタ
 Model::Model()
@@ -61,17 +61,17 @@ Model::Model()
 		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（バンプマップ）有り・無しフラグ）
 		m_unif_BumpMapTexFlag = m_ModelShader.GetUniformLocation("unif_BumpMapTexFlag");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（アンビエント）ユニット）
-		m_unif_AmbientTexUnit = m_ModelShader.GetUniformLocation("unif_AmbientTexUnit");
+		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（アンビエント））
+		m_unif_AmbientTex = m_ModelShader.GetUniformLocation("unif_AmbientTex");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（ディフューズ） ユニット）
-		m_unif_DiffuseTexUnit = m_ModelShader.GetUniformLocation("unif_DiffuseTexUnit");
+		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（ディフューズ））
+		m_unif_DiffuseTex = m_ModelShader.GetUniformLocation("unif_DiffuseTex");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（スペキュラ）ユニット）
-		m_unif_SpecularTexUnit = m_ModelShader.GetUniformLocation("unif_SpecularTexUnit");
+		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（スペキュラ））
+		m_unif_SpecularTex = m_ModelShader.GetUniformLocation("unif_SpecularTex");
 
-		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（バンプマップ）ユニット）
-		m_unif_BumpMapTexUnit = m_ModelShader.GetUniformLocation("unif_BumpMapTexUnit");
+		//シェーダー内で使用する変数のロケーションを取得（テクスチャ（バンプマップ））
+		m_unif_BumpMapTex = m_ModelShader.GetUniformLocation("unif_BumpMapTex");
 	}
 }
 
@@ -282,15 +282,15 @@ void Model::DataDraw(Matrix &p_ProjModelMat)
 	m_ModelShader.DisableVertexAttribArray(m_attr_TexCoord);
 	m_ModelShader.VertexAttribXf(m_attr_TexCoord, 2, 0, 0, 0, 0);
 
-	//テクスチャフラグとテクスチャユニット
+	//テクスチャフラグとテクスチャ
 	m_ModelShader.UniformXi(m_unif_AmbientTexFlag, 1, 0, 0, 0, 0);
 	m_ModelShader.UniformXi(m_unif_DiffuseTexFlag, 1, 0, 0, 0, 0);
 	m_ModelShader.UniformXi(m_unif_SpecularTexFlag, 1, 0, 0, 0, 0);
 	m_ModelShader.UniformXi(m_unif_BumpMapTexFlag, 1, 0, 0, 0, 0);
-	m_ModelShader.UniformXi(m_unif_AmbientTexUnit, 1, 0, 0, 0, 0);
-	m_ModelShader.UniformXi(m_unif_DiffuseTexUnit, 1, 0, 0, 0, 0);
-	m_ModelShader.UniformXi(m_unif_SpecularTexUnit, 1, 0, 0, 0, 0);
-	m_ModelShader.UniformXi(m_unif_BumpMapTexUnit, 1, 0, 0, 0, 0);
+	m_ModelShader.UniformXi(m_unif_AmbientTex, 1, 0, 0, 0, 0);
+	m_ModelShader.UniformXi(m_unif_DiffuseTex, 1, 0, 0, 0, 0);
+	m_ModelShader.UniformXi(m_unif_SpecularTex, 1, 0, 0, 0, 0);
+	m_ModelShader.UniformXi(m_unif_BumpMapTex, 1, 0, 0, 0, 0);
 
 	//////////////////////////////////
 	// 以下のロケーションの設定はファイルフォーマットによって個別設定する必要あり
@@ -298,7 +298,7 @@ void Model::DataDraw(Matrix &p_ProjModelMat)
 	// m_attr_Color				//カラー
 	// m_attr_TexCoord			//テクスチャ座標
 	// m_unif_TexFlag			//テクスチャ有り・無しフラグ
-	// m_unif_TexUnit			//テクスチャユニット
+	// m_unif_TexUnit			//テクスチャ
 
 	//深度テストを有効
 	glEnable(GL_DEPTH_TEST);
@@ -354,7 +354,7 @@ void Model::DataDraw(Matrix &p_ProjModelMat)
 					glActiveTexture(GL_TEXTURE0);
 					glBindTexture(GL_TEXTURE_2D, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].diffuseTexObj);
 					m_ModelShader.UniformXi(m_unif_DiffuseTexFlag, 1, 1, 0, 0, 0);
-					m_ModelShader.UniformXi(m_unif_DiffuseTexUnit, 1, 0, 0, 0, 0);
+					m_ModelShader.UniformXi(m_unif_DiffuseTex, 1, -1, 0, 0, 0);
 				}
 				else
 				{
