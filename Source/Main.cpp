@@ -153,6 +153,9 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//キー（キーボード）の情報を取得
 	KeyInfo KeyBoard = p_DeviceManager->GetKeyInfo();
 
+	//表示している中心座標を表示（1フレーム前の情報だけど、一番上に表示したいので良しとする）
+	ScreenString::DebugPrint(*p_Global, "X：%d, Y：%d, Z：%d", (int)p_Global->TranslateAmount.x, (int)p_Global->TranslateAmount.y, (int)p_Global->TranslateAmount.z);
+
 	///////////////////////////////////
 	// オブジェクト移動関係の処理
 
@@ -271,14 +274,14 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//3D空間にするための行列
 	Matrix Projection;
 
+	//アスペクト比（幅 ÷ 高さ）を算出、歪み補正する
+	GLfloat Aspect = (GLfloat)WindowSize.Width / WindowSize.Height;
+	ModelView.Scale(1.0f, Aspect, 1.0);
+
 	//カメラの映る位置に移動させる
 	ModelView.Translate(0.0, 0.0, -35.0f);
 	//マウスでのオブジェクトの移動
 	ModelView.Translate(p_Global->TranslateAmount.x / 6.0f, -p_Global->TranslateAmount.y / 6.0f, p_Global->TranslateAmount.z);
-
-	//アスペクト比（幅 ÷ 高さ）を算出、歪み補正する
-	GLfloat Aspect = (GLfloat)WindowSize.Width / WindowSize.Height;
-	ModelView.Scale(1.0f, Aspect, 1.0);
 
 	//マウスでのオブジェクトの回転
 	ModelView.Rotate(-p_Global->RotateAmount.y / RotateSpeedWeight, 1.0f, 0.0f, 0.0f);
@@ -286,7 +289,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 
 	//投資投影行列で使用する値をグローバル領域に保存
 	p_Global->NearClip = 1.0f;
-	p_Global->FarClip = 300.0f;
+	p_Global->FarClip = 3000.0f;
 	//透視投影行列を適用する
 	Projection.Perspective(-1.0f, 1.0f, -1.0f, 1.0f, p_Global->NearClip, p_Global->FarClip);
 

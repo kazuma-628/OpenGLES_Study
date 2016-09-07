@@ -10,8 +10,8 @@
 
 //define
 #define RotateSpeedWeight		2.0f		//回転速度の重み（値が大きいほど回転速度は遅くなる）
-#define InertiaRotateWeight		0.3f		//惰性回転量の重み（値が大きいほど惰性移動量は多くなる）
-#define InertiaTranslateWeight	0.3f		//惰性移動量の重み（値が小さいほど惰性回転量は多くなる）
+#define InertiaRotateWeight		0.3f		//惰性回転量の重み（値が大きいほど惰性回転量は多くなる）
+#define InertiaTranslateWeight	0.2f		//惰性移動量の重み（値が小さいほど惰性移動量は多くなる）
 
 //構造体
 typedef struct
