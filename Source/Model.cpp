@@ -386,7 +386,7 @@ void Model::DataDraw(Matrix &p_ProjModelMat)
 					glActiveTexture(GL_TEXTURE0);
 					glBindTexture(GL_TEXTURE_2D, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].diffuseTexObj);
 					m_ModelShader.UniformXi(m_unif_DiffuseTexFlag, 1, 1, 0, 0, 0);
-					m_ModelShader.UniformXi(m_unif_DiffuseTex, 1, -1, 0, 0, 0);
+					m_ModelShader.UniformXi(m_unif_DiffuseTex, 1, 0, 0, 0, 0);
 				}
 				else
 				{
