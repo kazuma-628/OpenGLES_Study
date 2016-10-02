@@ -1,0 +1,13 @@
+各ライブラリの情報です。
+
+・GLFW Version : 3.2
+http://www.glfw.org/
+
+・GLEW Version : 2.0.0
+http://glew.sourceforge.net/
+
+・FreeType Version : 2.6.5
+https://www.freetype.org/index.html
+
+・GLM Version : 0.9.8.1
+http://glm.g-truc.net/

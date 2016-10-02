@@ -1,5 +1,0 @@
-各ライブラリのバージョン情報です。
-
-GLEW Version : 2.0.0
-GLFW Version : 3.2
-FreeType Version : 2.6.5
