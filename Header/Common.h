@@ -22,12 +22,8 @@
 #include <string>
 //以下GLSL言語で使用する変数をC言語でも使用できるようにするヘッダー
 //#define GLM_FORCE_EXPLICIT_CTOR
-#include <vec2.hpp>
-#include <vec3.hpp>
-#include <vec4.hpp>
-#include <mat2x2.hpp>
-#include <mat3x3.hpp>
-#include <mat4x4.hpp>
+#include <glm.hpp>		//標準型ヘッダー（vec4, mat4 など）
+#include <ext.hpp>		//演算用拡張ヘッダー（ranslate, rotate, scale など）
 using namespace glm;	//glmライブラリの名前空間を適応
 
 ////////////////////////////////////////

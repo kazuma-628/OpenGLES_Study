@@ -94,7 +94,7 @@
 #include "./gtx/polar_coordinates.hpp"
 #include "./gtx/projection.hpp"
 #include "./gtx/quaternion.hpp"
-#include "./gtx/raw_data.hpp"
+//#include "./gtx/raw_data.hpp"
 #include "./gtx/rotate_vector.hpp"
 #include "./gtx/spline.hpp"
 #include "./gtx/std_based_type.hpp"
