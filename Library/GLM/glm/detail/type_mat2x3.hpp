@@ -33,7 +33,7 @@ namespace glm
 		GLM_FUNC_DECL tmat2x3(tmat2x3<T, Q> const & m);
 
 		GLM_FUNC_DECL GLM_CONSTEXPR_CTOR explicit tmat2x3(ctor);
-		GLM_FUNC_DECL explicit tmat2x3(T scalar);
+		GLM_FUNC_DECL GLM_EXPLICIT tmat2x3(T scalar);
 		GLM_FUNC_DECL tmat2x3(
 			T x0, T y0, T z0,
 			T x1, T y1, T z1);

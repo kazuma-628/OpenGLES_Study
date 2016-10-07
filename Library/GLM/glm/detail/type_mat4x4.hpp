@@ -32,7 +32,7 @@ namespace glm
 		GLM_FUNC_DECL tmat4x4(tmat4x4<T, Q> const & m);
 
 		GLM_FUNC_DECL explicit tmat4x4(ctor);
-		GLM_FUNC_DECL explicit tmat4x4(T const & x);
+		GLM_FUNC_DECL GLM_EXPLICIT tmat4x4(T const & x);
 		GLM_FUNC_DECL tmat4x4(
 			T const & x0, T const & y0, T const & z0, T const & w0,
 			T const & x1, T const & y1, T const & z1, T const & w1,
