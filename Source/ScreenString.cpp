@@ -330,7 +330,7 @@ void ScreenString::DebugDrawing(const GlobalData &p_Global)
 	GLfloat CoordRows = (GLfloat)DebugSumRows / p_Global.WindowSize.Height;
 
 	// 頂点座標
-	Vec2 vertex[] = 
+	vec2 vertex[] =
 	{
 		{ -1.0f	,					-(CoordRows * 2.0f - 1.0f) },
 		{ CoordWidth * 2.0f - 1.0f, -(CoordRows * 2.0f - 1.0f) },
@@ -339,7 +339,8 @@ void ScreenString::DebugDrawing(const GlobalData &p_Global)
 	};
 
 	//テクスチャ座標
-	Vec2 tex_coord[] = {
+	vec2 tex_coord[] =
+	{
 		{ 0.0f,		  CoordRows },
 		{ CoordWidth, CoordRows },
 		{ 0.0f,		  0.0f		},

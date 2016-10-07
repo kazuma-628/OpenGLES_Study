@@ -5,9 +5,9 @@
 
 MouseInfo DeviceManager::m_MouseInfo;		//マウスボタンの情報	
 KeyInfo DeviceManager::m_KeyInfo;			//キー（キーボード）の情報
-Vec2 DeviceManager::m_RightClickPos;		//マウスが右クリックされた時のカーソル座標
-Vec2 DeviceManager::m_LeftClickPos;			//マウスが左クリックされた時のカーソル座標
-Vec2 DeviceManager::m_MiddleClickPos;		//マウスが中央クリックされた時のカーソル座標
+vec2 DeviceManager::m_RightClickPos;		//マウスが右クリックされた時のカーソル座標
+vec2 DeviceManager::m_LeftClickPos;			//マウスが左クリックされた時のカーソル座標
+vec2 DeviceManager::m_MiddleClickPos;		//マウスが中央クリックされた時のカーソル座標
 
 //コンストラクタ
 DeviceManager::DeviceManager()
@@ -80,7 +80,7 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 	//座標管理用の変数宣言
 	//　座標取得APIの引数が[double]の為、無駄だが仕方なくこのような橋渡しをしている
 	//　（このようにしないと、コンパイラでワーニングが出るので）
-	Vec2 Pos;
+	vec2 Pos;
 	Pos.x = (GLfloat)PosX;
 	Pos.y = (GLfloat)PosY;
 
@@ -185,7 +185,7 @@ void DeviceManager::CursorPosCallback(GLFWwindow* p_window, double p_xpos, doubl
 	//座標用の変数宣言
 	//　コールバック用APIの引数が[double]の為、無駄だが仕方なくこのような橋渡しをしている
 	//　（このようにしないと、コンパイラでワーニングが出るので）
-	Vec2 Pos;
+	vec2 Pos;
 	Pos.x = (GLfloat)p_xpos;
 	Pos.y = (GLfloat)p_ypos;
 

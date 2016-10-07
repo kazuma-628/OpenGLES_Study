@@ -41,7 +41,7 @@ private:
 	// 頂点データ構造体
 	typedef struct
 	{
-		Vec3 Vector;
+		vec3 Vector;
 		bColor3 Color;
 	}Vec3_bColor3;
 

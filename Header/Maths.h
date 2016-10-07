@@ -27,7 +27,7 @@ public:
 	*	戻り値
 	*	　正常終了		：ベクトルの長さ
 	*-------------------------------------------------------------------------------*/
-	static float Length(const Vec3 &p_Vector);
+	static float Length(const vec3 &p_Vector);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -38,7 +38,7 @@ public:
 	*	　正常終了		：正規化されたベクトル
 	*	　異常終了		：全要素[0.0]
 	*-------------------------------------------------------------------------------*/
-	static Vec3 Normalize(const Vec3 &p_Vector);
+	static vec3 Normalize(const vec3 &p_Vector);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -49,7 +49,7 @@ public:
 	*	戻り値
 	*	　正常終了		：内積
 	*-------------------------------------------------------------------------------*/
-	static float Dot(const Vec3 &p_Vector1, const Vec3 &p_Vector2);
+	static float Dot(const vec3 &p_Vector1, const vec3 &p_Vector2);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -60,7 +60,7 @@ public:
 	*	戻り値
 	*	　正常終了		：外積
 	*-------------------------------------------------------------------------------*/
-	static Vec3 Cross(const Vec3 &p_Vector1, const Vec3 &p_Vector2);
+	static vec3 Cross(const vec3 &p_Vector1, const vec3 &p_Vector2);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -79,7 +79,7 @@ public:
 	*	　正常終了		：正規化されたベクトル
 	*	　異常終了		：全要素[0.0]
 	*-------------------------------------------------------------------------------*/
-	static Vec3 Normal(const Vec3 &p_Vector1, const Vec3 &p_Vector2, const Vec3 &p_Vector3);
+	static vec3 Normal(const vec3 &p_Vector1, const vec3 &p_Vector2, const vec3 &p_Vector3);
 
 private:
 

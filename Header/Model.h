@@ -134,9 +134,9 @@ private:
 	//マテリアル情報
 	typedef struct
 	{
-		Color3 ambient;				//アンビエント値
-		Color3 diffuse;				//ディフューズ値
-		Color3 specular;			//スペキュラ値
+		vec3 ambient;				//アンビエント値
+		vec3 diffuse;				//ディフューズ値
+		vec3 specular;				//スペキュラ値
 		GLfloat shininess;			//シャイネス値
 		GLfloat alpha;				//アルファ値
 		GLuint ambientTexObj;		//テクスチャオブジェクト（アンビエント） 
@@ -151,28 +151,28 @@ private:
 	// 頂点データ構造体
 	typedef struct
 	{
-		Vec2 Position;
+		vec2 Position;
 		bColor3 Color;
 	}Vec2_bColor3;
 
 	// 頂点データ構造体
 	typedef struct
 	{
-		Vec2 Position;
+		vec2 Position;
 		bColor4 Color;
 	}Vec2_bColor4;
 
 	// 頂点データ構造体
 	typedef struct
 	{
-		Vec3 Position;
+		vec3 Position;
 		bColor3 Color;
 	}Vec3_bColor3;
 
 	// 頂点データ構造体
 	typedef struct
 	{
-		Vec3 Position;
+		vec3 Position;
 		bColor4 Color;
 	}Vec3_bColor4;
 

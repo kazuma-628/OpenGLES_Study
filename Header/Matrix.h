@@ -11,7 +11,7 @@ class Matrix
 public:
 	//コンストラクタ
 	Matrix();
-	Matrix(const Mat4 &p_matrix);
+	Matrix(const mat4 &p_matrix);
 
 	//デストラクタ
 	~Matrix();
@@ -21,10 +21,10 @@ public:
 	*	　演算子のオーバーロード定義
 	*-------------------------------------------------------------------------------*/
 	friend Matrix operator*(const Matrix &p_left, const Matrix &p_right);
-	friend Matrix operator*(const Matrix &p_left, const Mat4 &p_right);
-	friend Matrix operator*(const Mat4 &p_left, const Matrix &p_right);
-	friend Matrix operator*(const Mat4 &p_left, const Mat4 &p_right);
-	void operator=(const Mat4 &p_matrix);
+	friend Matrix operator*(const Matrix &p_left, const mat4 &p_right);
+	friend Matrix operator*(const mat4 &p_left, const Matrix &p_right);
+	friend Matrix operator*(const mat4 &p_left, const mat4 &p_right);
+	void operator=(const mat4 &p_matrix);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -88,7 +88,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void LookAt(const Vec3 &p_eye, const Vec3 &p_look, const Vec3 &p_up);
+	void LookAt(const vec3 &p_eye, const vec3 &p_look, const vec3 &p_up);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -178,7 +178,7 @@ public:
 	*	戻り値
 	*	　行列の値
 	*-------------------------------------------------------------------------------*/
-	inline Mat4 GetMatrix()
+	inline mat4 GetMatrix()
 	{
 		//メンバに保存されているマトリックスを返却
 		return m_val;
@@ -210,6 +210,6 @@ private:
 	// [2][0] [2][1] [2][2] [2][3]
 	// [3][0] [3][1] [3][2] [3][3]
 	//
-	Mat4 m_val;
+	mat4 m_val;
 };
 #endif

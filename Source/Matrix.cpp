@@ -6,7 +6,7 @@ Matrix::Matrix()
 	//単位行列を生成する（初期化する）
 	Identity();
 }
-Matrix::Matrix(const Mat4 &p_matrix)
+Matrix::Matrix(const mat4 &p_matrix)
 {
 	//指定されたマトリクスを設定する
 	memmove(&this->m_val, &p_matrix, sizeof(this->m_val));
@@ -31,21 +31,21 @@ Matrix operator*(const Matrix &p_left, const Matrix &p_right)
 	//行列の乗算（OpenGLは行ベクトルではなく列ベクトルなことに注意、乗算は一般的な行列の乗算と違う）
 	for (int i = 0; i < 4; i++)
 	{
-		t_matrix.m_val.m[i][0] = p_left.m_val.m[0][0] * p_right.m_val.m[i][0] + p_left.m_val.m[1][0] * p_right.m_val.m[i][1]
-							   + p_left.m_val.m[2][0] * p_right.m_val.m[i][2] + p_left.m_val.m[3][0] * p_right.m_val.m[i][3];
-		t_matrix.m_val.m[i][1] = p_left.m_val.m[0][1] * p_right.m_val.m[i][0] + p_left.m_val.m[1][1] * p_right.m_val.m[i][1]
-							   + p_left.m_val.m[2][1] * p_right.m_val.m[i][2] + p_left.m_val.m[3][1] * p_right.m_val.m[i][3];
-		t_matrix.m_val.m[i][2] = p_left.m_val.m[0][2] * p_right.m_val.m[i][0] + p_left.m_val.m[1][2] * p_right.m_val.m[i][1] 
-							   + p_left.m_val.m[2][2] * p_right.m_val.m[i][2] + p_left.m_val.m[3][2] * p_right.m_val.m[i][3];
-		t_matrix.m_val.m[i][3] = p_left.m_val.m[0][3] * p_right.m_val.m[i][0] + p_left.m_val.m[1][3] * p_right.m_val.m[i][1] 
-							   + p_left.m_val.m[2][3] * p_right.m_val.m[i][2] + p_left.m_val.m[3][3] * p_right.m_val.m[i][3];
+		t_matrix.m_val[i][0] = p_left.m_val[0][0] * p_right.m_val[i][0] + p_left.m_val[1][0] * p_right.m_val[i][1]
+							 + p_left.m_val[2][0] * p_right.m_val[i][2] + p_left.m_val[3][0] * p_right.m_val[i][3];
+		t_matrix.m_val[i][1] = p_left.m_val[0][1] * p_right.m_val[i][0] + p_left.m_val[1][1] * p_right.m_val[i][1]
+							 + p_left.m_val[2][1] * p_right.m_val[i][2] + p_left.m_val[3][1] * p_right.m_val[i][3];
+		t_matrix.m_val[i][2] = p_left.m_val[0][2] * p_right.m_val[i][0] + p_left.m_val[1][2] * p_right.m_val[i][1] 
+							 + p_left.m_val[2][2] * p_right.m_val[i][2] + p_left.m_val[3][2] * p_right.m_val[i][3];
+		t_matrix.m_val[i][3] = p_left.m_val[0][3] * p_right.m_val[i][0] + p_left.m_val[1][3] * p_right.m_val[i][1] 
+							 + p_left.m_val[2][3] * p_right.m_val[i][2] + p_left.m_val[3][3] * p_right.m_val[i][3];
 		
 		}
 	return t_matrix;
 }
 
 //マトリクス同士の乗算
-Matrix operator*(const Matrix &p_left, const Mat4 &p_right)
+Matrix operator*(const Matrix &p_left, const mat4 &p_right)
 {
 	Matrix t_matrix = p_right;
 
@@ -55,7 +55,7 @@ Matrix operator*(const Matrix &p_left, const Mat4 &p_right)
 }
 
 //マトリクス同士の乗算
-Matrix operator*(const Mat4 &p_left, const Matrix &p_right)
+Matrix operator*(const mat4 &p_left, const Matrix &p_right)
 {
 	Matrix t_matrix = p_left;
 
@@ -65,7 +65,7 @@ Matrix operator*(const Mat4 &p_left, const Matrix &p_right)
 }
 
 //マトリクス同士の乗算
-Matrix operator*(const Mat4 &p_left, const Mat4 &p_right)
+Matrix operator*(const mat4 &p_left, const mat4 &p_right)
 {
 	Matrix t_matrix;
 	Matrix t_matrix_left = p_left;
@@ -77,7 +77,7 @@ Matrix operator*(const Mat4 &p_left, const Mat4 &p_right)
 }
 
 //マトリクスの代入
-void Matrix::operator=(const Mat4 &p_matrix)
+void Matrix::operator=(const mat4 &p_matrix)
 {
 	memmove(&this->m_val, &p_matrix, sizeof(this->m_val));
 }
@@ -102,10 +102,10 @@ void Matrix::Identity()
 	memset(&m_val, 0, sizeof(m_val));
 
 	//単位行列設定する
-	m_val.m[0][0] = 1.0f;
-	m_val.m[1][1] = 1.0f;
-	m_val.m[2][2] = 1.0f;
-	m_val.m[3][3] = 1.0f;
+	m_val[0][0] = 1.0f;
+	m_val[1][1] = 1.0f;
+	m_val[2][2] = 1.0f;
+	m_val[3][3] = 1.0f;
 
 }
 
@@ -130,9 +130,9 @@ void Matrix::Translate(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 	Matrix t_matrix;
 
 	//移動行列を適用
-	t_matrix.m_val.m[3][0] = p_x;
-	t_matrix.m_val.m[3][1] = p_y;
-	t_matrix.m_val.m[3][2] = p_z;
+	t_matrix.m_val[3][0] = p_x;
+	t_matrix.m_val[3][1] = p_y;
+	t_matrix.m_val[3][2] = p_z;
 
 	*this = *this * t_matrix;
 }
@@ -158,9 +158,9 @@ void Matrix::Scale(const GLfloat p_x, const GLfloat p_y, const GLfloat p_z)
 	Matrix t_matrix;
 
 	//拡大縮小行列を適用
-	t_matrix.m_val.m[0][0] = p_x;
-	t_matrix.m_val.m[1][1] = p_y;
-	t_matrix.m_val.m[2][2] = p_z;
+	t_matrix.m_val[0][0] = p_x;
+	t_matrix.m_val[1][1] = p_y;
+	t_matrix.m_val[2][2] = p_z;
 
 	*this = *this * t_matrix;
 }
@@ -191,17 +191,17 @@ void Matrix::Rotate(const GLfloat p_rotate, const GLfloat p_x, const GLfloat p_y
 	GLfloat t_c = cosf((float)DEGREE_TO_RADIAN(p_rotate));
 	GLfloat t_s = sinf((float)DEGREE_TO_RADIAN(p_rotate));
 
-	t_matrix.m_val.m[0][0] = (p_x * p_x) * (1.0f - t_c) + t_c;
-	t_matrix.m_val.m[0][1] = (p_x * p_y) * (1.0f - t_c) - p_z * t_s;
-	t_matrix.m_val.m[0][2] = (p_x * p_z) * (1.0f - t_c) + p_y * t_s;
+	t_matrix.m_val[0][0] = (p_x * p_x) * (1.0f - t_c) + t_c;
+	t_matrix.m_val[0][1] = (p_x * p_y) * (1.0f - t_c) - p_z * t_s;
+	t_matrix.m_val[0][2] = (p_x * p_z) * (1.0f - t_c) + p_y * t_s;
 
-	t_matrix.m_val.m[1][0] = (p_y * p_x) * (1.0f - t_c) + p_z * t_s;
-	t_matrix.m_val.m[1][1] = (p_y * p_y) * (1.0f - t_c) + t_c;
-	t_matrix.m_val.m[1][2] = (p_y * p_z) * (1.0f - t_c) - p_x * t_s;
+	t_matrix.m_val[1][0] = (p_y * p_x) * (1.0f - t_c) + p_z * t_s;
+	t_matrix.m_val[1][1] = (p_y * p_y) * (1.0f - t_c) + t_c;
+	t_matrix.m_val[1][2] = (p_y * p_z) * (1.0f - t_c) - p_x * t_s;
 
-	t_matrix.m_val.m[2][0] = (p_z * p_x) * (1.0f - t_c) - p_y * t_s;
-	t_matrix.m_val.m[2][1] = (p_z * p_y) * (1.0f - t_c) + p_x * t_s;
-	t_matrix.m_val.m[2][2] = (p_z * p_z) * (1.0f - t_c) + t_c;
+	t_matrix.m_val[2][0] = (p_z * p_x) * (1.0f - t_c) - p_y * t_s;
+	t_matrix.m_val[2][1] = (p_z * p_y) * (1.0f - t_c) + p_x * t_s;
+	t_matrix.m_val[2][2] = (p_z * p_z) * (1.0f - t_c) + t_c;
 
 	*this = *this * t_matrix;
 }
@@ -220,11 +220,11 @@ void Matrix::Rotate(const GLfloat p_rotate, const GLfloat p_x, const GLfloat p_y
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Matrix::LookAt(const Vec3 &p_eye, const Vec3 &p_look, const Vec3 &p_up)
+void Matrix::LookAt(const vec3 &p_eye, const vec3 &p_look, const vec3 &p_up)
 {
 	Matrix t_matrix;
 	
-	Vec3 d = { p_look.x - p_eye.x, p_look.y - p_eye.y, p_look.z - p_eye.z  };
+	vec3 d = { p_look.x - p_eye.x, p_look.y - p_eye.y, p_look.z - p_eye.z  };
 	//ベクトルが[0]はエラー
 	if (0 == d.x && 0 == d.y && 0 == d.z)
 	{
@@ -236,10 +236,10 @@ void Matrix::LookAt(const Vec3 &p_eye, const Vec3 &p_look, const Vec3 &p_up)
 		return;
 	}
 
-	Vec3 f = Math::Normalize( d );
-	Vec3 u = Math::Normalize(p_up);
+	vec3 f = Math::Normalize( d );
+	vec3 u = Math::Normalize(p_up);
 
-	Vec3 s = Math::Cross(f, u);
+	vec3 s = Math::Cross(f, u);
 	//ベクトルが[0]はエラー
 	if (0 == s.x && 0 == s.y && 0 == s.z)
 	{
@@ -254,18 +254,18 @@ void Matrix::LookAt(const Vec3 &p_eye, const Vec3 &p_look, const Vec3 &p_up)
 	s = Math::Normalize( s );
 	u = Math::Cross(s, f);
 
-	t_matrix.m_val.m[0][0] = s.x;
-	t_matrix.m_val.m[1][0] = s.y;
-	t_matrix.m_val.m[2][0] = s.z;
-	t_matrix.m_val.m[0][1] = u.x;
-	t_matrix.m_val.m[1][1] = u.y;
-	t_matrix.m_val.m[2][1] = u.z;
-	t_matrix.m_val.m[0][2] = -f.x;
-	t_matrix.m_val.m[1][2] = -f.y;
-	t_matrix.m_val.m[2][2] = -f.z;
-	t_matrix.m_val.m[3][0] = -(Math::Dot(s, p_eye));
-	t_matrix.m_val.m[3][1] = -(Math::Dot(u, p_eye));
-	t_matrix.m_val.m[3][2] = Math::Dot(f, p_eye);
+	t_matrix.m_val[0][0] = s.x;
+	t_matrix.m_val[1][0] = s.y;
+	t_matrix.m_val[2][0] = s.z;
+	t_matrix.m_val[0][1] = u.x;
+	t_matrix.m_val[1][1] = u.y;
+	t_matrix.m_val[2][1] = u.z;
+	t_matrix.m_val[0][2] = -f.x;
+	t_matrix.m_val[1][2] = -f.y;
+	t_matrix.m_val[2][2] = -f.z;
+	t_matrix.m_val[3][0] = -(Math::Dot(s, p_eye));
+	t_matrix.m_val[3][1] = -(Math::Dot(u, p_eye));
+	t_matrix.m_val[3][2] = Math::Dot(f, p_eye);
 
 	*this = *this * t_matrix;
 }
@@ -303,12 +303,12 @@ void  Matrix::Orthogonal(const GLfloat p_left, const GLfloat p_right,
 					  , p_left, p_right, p_bottom, p_top, p_near, p_far);
 	}
 
-	t_matrix.m_val.m[0][0] = 2.0f / dx;
-	t_matrix.m_val.m[1][1] = 2.0f / dy;
-	t_matrix.m_val.m[2][2] = -2.0f / dz;
-	t_matrix.m_val.m[3][0] = -(p_right + p_left) / dx;
-	t_matrix.m_val.m[3][1] = -(p_top + p_bottom) / dy;
-	t_matrix.m_val.m[3][2] = -(p_far + p_near) / dz;
+	t_matrix.m_val[0][0] = 2.0f / dx;
+	t_matrix.m_val[1][1] = 2.0f / dy;
+	t_matrix.m_val[2][2] = -2.0f / dz;
+	t_matrix.m_val[3][0] = -(p_right + p_left) / dx;
+	t_matrix.m_val[3][1] = -(p_top + p_bottom) / dy;
+	t_matrix.m_val[3][2] = -(p_far + p_near) / dz;
 
 	*this = *this * t_matrix;
 }
@@ -348,14 +348,14 @@ void Matrix::Perspective(const GLfloat p_left, const GLfloat p_right,
 					  , p_left, p_right, p_bottom, p_top, p_near, p_far);
 	}
 	
-	t_matrix.m_val.m[0][0] = 2.0f * p_near / dx;
-	t_matrix.m_val.m[1][1] = 2.0f * p_near / dy;
-	t_matrix.m_val.m[2][0] = (p_right + p_left) / dx;
-	t_matrix.m_val.m[2][1] = (p_top + p_bottom) / dy;
-	t_matrix.m_val.m[2][2] = -(p_far + p_near) / dz;
-	t_matrix.m_val.m[2][3] = -1.0f;
-	t_matrix.m_val.m[3][2] = -2.0f * p_far * p_near / dz;
-	t_matrix.m_val.m[3][3] = 0.0f;
+	t_matrix.m_val[0][0] = 2.0f * p_near / dx;
+	t_matrix.m_val[1][1] = 2.0f * p_near / dy;
+	t_matrix.m_val[2][0] = (p_right + p_left) / dx;
+	t_matrix.m_val[2][1] = (p_top + p_bottom) / dy;
+	t_matrix.m_val[2][2] = -(p_far + p_near) / dz;
+	t_matrix.m_val[2][3] = -1.0f;
+	t_matrix.m_val[3][2] = -2.0f * p_far * p_near / dz;
+	t_matrix.m_val[3][3] = 0.0f;
 
 	*this = *this * t_matrix;
 }
@@ -381,11 +381,11 @@ void Matrix::Perspective(const GLfloat p_near, const GLfloat p_far,
 
 	GLfloat t_f = 1.0f / (tanf((float)DEGREE_TO_RADIAN(p_fovY_degree)) / 2.0f);
 
-	t_matrix.m_val.m[0][0] = t_f / p_aspect;
-	t_matrix.m_val.m[1][1] = t_f;
-	t_matrix.m_val.m[2][2] = (p_far + p_near) / (p_near - p_far);
-	t_matrix.m_val.m[2][3] = -1;
-	t_matrix.m_val.m[3][2] = (2.0f * p_far * p_near) / (p_near - p_far);
+	t_matrix.m_val[0][0] = t_f / p_aspect;
+	t_matrix.m_val[1][1] = t_f;
+	t_matrix.m_val[2][2] = (p_far + p_near) / (p_near - p_far);
+	t_matrix.m_val[2][3] = -1;
+	t_matrix.m_val[3][2] = (2.0f * p_far * p_near) / (p_near - p_far);
 
 	*this = *this * t_matrix;
 }
@@ -422,7 +422,7 @@ void Matrix::Inverse(void)
 	{
 		for (j = 0; j < N; j++)
 		{
-			in_matrix[i][j] = (double)m_val.m[i][j];
+			in_matrix[i][j] = (double)m_val[i][j];
 		}
 	}
 
@@ -464,7 +464,7 @@ void Matrix::Inverse(void)
 	{
 		for (j = 0; j < N; j++)
 		{
-			m_val.m[i][j] = (GLfloat)out_matrix[i][j];
+			m_val[i][j] = (GLfloat)out_matrix[i][j];
 		}
 	}
 }
@@ -491,7 +491,7 @@ void Matrix::Transpose(void)
 
 	for (i = 0; i < N; i++) {
 		for (j = 0; j < N; j++) {
-			t_matrix.m_val.m[j][i] = m_val.m[i][j];
+			t_matrix.m_val[j][i] = m_val[i][j];
 		}
 	}
 

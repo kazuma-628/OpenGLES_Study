@@ -17,7 +17,7 @@ typedef struct
 	bool StateKeep;			//マウスをクリックするたびに「true」と「false」が交互に切り替わる（クリック状態をキープする）
 	int PushCount;			//マウスを押した（クリックした）合計回数
 							//　初期状態は[0]で、押した（クリックした）回数分、値が加算されていく
-	Vec2 ClickDiffPos;		//マウスがクリックされた座標からの差分座標（クリックされていない時は [0] ）
+	vec2 ClickDiffPos;		//マウスがクリックされた座標からの差分座標（クリックされていない時は [0] ）
 							//　例：[x:50][y:50]でクリックして、ドラッグ状態で[x:40][y:60]に移動させた場合、
 							//　　　格納される値は[x:-10][y:10]となる
 }MouseDetail;
@@ -28,8 +28,8 @@ typedef struct
 	MouseDetail Right;			//マウスの右クリックの情報
 	MouseDetail Left;			//マウスの左クリックの情報
 //	MouseDetail Middle;			//マウスの中央クリックの情報
-	Vec2 Position;				//マウスのカーソル座標
-	Vec2 ScrollAmount;			//スクロールの合計量、初期状態は[x:0（横[左右]スクロール）][y:0（縦[上下]スクロール）]で、
+	vec2 Position;				//マウスのカーソル座標
+	vec2 ScrollAmount;			//スクロールの合計量、初期状態は[x:0（横[左右]スクロール）][y:0（縦[上下]スクロール）]で、
 								//　スクロールした分だけ値が蓄積（加算/減算）されていく
 }MouseInfo;
 
@@ -187,9 +187,9 @@ private:
 	GLFWwindow* m_window;			//ウィンドウハンドル
 	static MouseInfo m_MouseInfo;	//マウスの情報
 	static KeyInfo m_KeyInfo;		//キー（キーボード）の情報
-	static Vec2 m_RightClickPos;	//マウスが右クリックされた時のカーソル座標
-	static Vec2 m_LeftClickPos;		//マウスが左クリックされた時のカーソル座標
-	static Vec2 m_MiddleClickPos;	//マウスが中央クリックされた時のカーソル座標
+	static vec2 m_RightClickPos;	//マウスが右クリックされた時のカーソル座標
+	static vec2 m_LeftClickPos;		//マウスが左クリックされた時のカーソル座標
+	static vec2 m_MiddleClickPos;	//マウスが中央クリックされた時のカーソル座標
 
 };
 

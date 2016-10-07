@@ -20,7 +20,7 @@ Math::~Math()
 *	戻り値
 *	　正常終了		：ベクトルの長さ	
 *-------------------------------------------------------------------------------*/
-float Math::Length(const Vec3 &p_Vector)
+float Math::Length(const vec3 &p_Vector)
 {
 	float length = 0.0f;	//ベクトルの長さ
 	
@@ -44,9 +44,9 @@ float Math::Length(const Vec3 &p_Vector)
 *	　正常終了		：正規化されたベクトル
 *	　異常終了		：全要素[0.0]
 *-------------------------------------------------------------------------------*/
-Vec3 Math::Normalize(const Vec3 &p_Vector)
+vec3 Math::Normalize(const vec3 &p_Vector)
 {
-	Vec3 normalize = { 0.0f };		//正規化されたベクトル
+	vec3 normalize = { 0.0f };		//正規化されたベクトル
 
 	//計算しやすいように代入（誤差を少なくするために[double]で計算）
 	double x = (double)(p_Vector.x);
@@ -86,7 +86,7 @@ Vec3 Math::Normalize(const Vec3 &p_Vector)
 *	戻り値
 *	　正常終了		：内積
 *-------------------------------------------------------------------------------*/
-float Math::Dot(const Vec3 &p_Vector1, const Vec3 &p_Vector2)
+float Math::Dot(const vec3 &p_Vector1, const vec3 &p_Vector2)
 {
 	float dot = 0.0f; //内積
 
@@ -114,9 +114,9 @@ float Math::Dot(const Vec3 &p_Vector1, const Vec3 &p_Vector2)
 *	戻り値
 *	　正常終了		：正規化されたベクトル
 *-------------------------------------------------------------------------------*/
-Vec3 Math::Cross(const Vec3 &p_Vector1, const Vec3 &p_Vector2)
+vec3 Math::Cross(const vec3 &p_Vector1, const vec3 &p_Vector2)
 {
-	Vec3 cross = { 0.0f };		//正規化されたベクトル
+	vec3 cross = { 0.0f };		//正規化されたベクトル
 
 	//計算しやすいように代入（誤差を少なくするために[double]で計算）
 	double x1 = (double)(p_Vector1.x);
@@ -153,9 +153,9 @@ Vec3 Math::Cross(const Vec3 &p_Vector1, const Vec3 &p_Vector2)
 *	　正常終了		：正規化されたベクトル
 *	　異常終了		：全要素[0.0]
 *-------------------------------------------------------------------------------*/
-Vec3 Math::Normal(const Vec3 &p_Vector1, const Vec3 &p_Vector2, const Vec3 &p_Vector3)
+vec3 Math::Normal(const vec3 &p_Vector1, const vec3 &p_Vector2, const vec3 &p_Vector3)
 {
-	Vec3 normal = { 0.0f };		//正規化されたベクトル
+	vec3 normal = { 0.0f };		//正規化されたベクトル
 
 	//計算しやすいように代入（誤差を少なくするために[double]で計算）
 	double x1 = (double)(p_Vector1.x);
@@ -171,8 +171,8 @@ Vec3 Math::Normal(const Vec3 &p_Vector1, const Vec3 &p_Vector2, const Vec3 &p_Ve
 	double z3 = (double)(p_Vector3.z);
 
 	//ベクトル[1][2] と ベクトル[2][3] を求める
-	Vec3 tmp_normal1 = { float(x2 - x1), float(y2 - y1), float(z2 - z1) };
-	Vec3 tmp_normal2 = { float(x3 - x2), float(y3 - y2), float(z3 - z2) };
+	vec3 tmp_normal1 = { float(x2 - x1), float(y2 - y1), float(z2 - z1) };
+	vec3 tmp_normal2 = { float(x3 - x2), float(y3 - y2), float(z3 - z2) };
 
 	//ベクトル[1][2] と ベクトル[2][3]の外積を求める
 	normal = Cross(tmp_normal1, tmp_normal2);
