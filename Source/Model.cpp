@@ -263,7 +263,7 @@ void Model::FileDataFree(void)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::DataDraw(Matrix &p_ProjModelMat)
+void Model::DataDraw(mat4 &p_ProjModelMat)
 {
 	if (0 == m_ModelInfo.FileFotmat)
 	{
@@ -289,7 +289,7 @@ void Model::DataDraw(Matrix &p_ProjModelMat)
 	m_ModelShader.UniformXi(m_unif_FileFotmat, 1, m_ModelInfo.FileFotmat, 0, 0, 0);
 
 	//「プロジェクション × モデルビュー」を乗算済みの行列を設定
-	m_ModelShader.UniformMatrixXfv(m_unif_ProjModelMat, 4, 1, GL_FALSE, p_ProjModelMat.GetMatrixFloat());
+	m_ModelShader.UniformMatrixXfv(m_unif_ProjModelMat, 4, 1, GL_FALSE, &p_ProjModelMat);
 
 	//////////////////////////////////
 	// 残りの変数の初期値を設定

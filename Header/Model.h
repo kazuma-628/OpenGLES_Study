@@ -5,7 +5,6 @@
 #include "Common.h"
 #include "OBJLoader.h"
 #include "ShaderManager.h"
-#include "Matrix.h"
 #include "Texture.h"
 
 //#define定義
@@ -74,7 +73,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void DataDraw(Matrix &p_ProjModelMat);
+	void DataDraw(mat4 &p_ProjModelMat);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明

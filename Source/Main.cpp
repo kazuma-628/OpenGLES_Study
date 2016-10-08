@@ -269,29 +269,28 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	// メインとなるモデルビューマトリクスの作成（大元のマトリクスデータ）
 
 	//オブジェクトを移動させるための行列
-	Matrix ModelView;
+	mat4 ModelView;
 
 	//3D空間にするための行列
-	Matrix Projection;
+	mat4 Projection;
 
-	//アスペクト比（幅 ÷ 高さ）を算出、歪み補正する
+	//アスペクト比（幅 ÷ 高さ）を算出
 	GLfloat Aspect = (GLfloat)WindowSize.Width / WindowSize.Height;
-	ModelView.Scale(1.0f, Aspect, 1.0);
 
 	//カメラの映る位置に移動させる
-	ModelView.Translate(0.0, 0.0, -35.0f);
+	ModelView *= translate(vec3(0.0f, 0.0f, -35.0f));
 	//マウスでのオブジェクトの移動
-	ModelView.Translate(p_Global->TranslateAmount.x / 6.0f, -p_Global->TranslateAmount.y / 6.0f, p_Global->TranslateAmount.z);
+	ModelView *= translate(vec3(p_Global->TranslateAmount.x / 6.0f, -p_Global->TranslateAmount.y / 6.0f, p_Global->TranslateAmount.z));
 
 	//マウスでのオブジェクトの回転
-	ModelView.Rotate(-p_Global->RotateAmount.y / RotateSpeedWeight, 1.0f, 0.0f, 0.0f);
-	ModelView.Rotate(-p_Global->RotateAmount.x / RotateSpeedWeight, 0.0f, 1.0f, 0.0f);
+	ModelView *= rotate((float)DEGREE_TO_RADIAN(p_Global->RotateAmount.y / RotateSpeedWeight), vec3(1.0f, 0.0f, 0.0f));
+	ModelView *= rotate((float)DEGREE_TO_RADIAN(p_Global->RotateAmount.x / RotateSpeedWeight), vec3(0.0f, 1.0f, 0.0f));
 
 	//投資投影行列で使用する値をグローバル領域に保存
 	p_Global->NearClip = 1.0f;
-	p_Global->FarClip = 3000.0f;
-	//透視投影行列を適用する
-	Projection.Perspective(-1.0f, 1.0f, -1.0f, 1.0f, p_Global->NearClip, p_Global->FarClip);
+	p_Global->FarClip = 1500.0f;
+	//透視投影行列を適用する（歪みも補正）
+	Projection = perspective(1.0f, Aspect, p_Global->NearClip, p_Global->FarClip);
 
 	///////////////////////////////////
 	// 各種情報を保存
@@ -300,8 +299,8 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	p_Global->Aspect = Aspect;
 
 	//各種行列を保存する
-	p_Global->ModelViewMatrix = ModelView.GetMatrix();
-	p_Global->ProjectionMatrix = Projection.GetMatrix();
+	p_Global->ModelViewMatrix = ModelView;
+	p_Global->ProjectionMatrix = Projection;
 
 	//ウィンドウサイズの変更チェック
 	if (p_Global->WindowSize.Width != WindowSize.Width || p_Global->WindowSize.Height != WindowSize.Height)

@@ -64,7 +64,7 @@ void HelloWorld::Drawing(const GlobalData &p_Global)
 	m_MainShader->UseProgram();
 
 	//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
-	Matrix ProjModel;
+	mat4 ProjModel;
 	ProjModel = p_Global.ProjectionMatrix * p_Global.ModelViewMatrix;
 
 	//シェーダーの変数を有効化
@@ -118,7 +118,7 @@ void HelloWorld::Drawing(const GlobalData &p_Global)
 	glViewport(0, 0, p_Global.WindowSize.Width, p_Global.WindowSize.Height);
 
 	//変数を転送
-	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, ProjModel.GetMatrixFloat());
+	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, &ProjModel);
 
 	// [glDrawArrays]を使用した描画（一番オーソドックス（初歩的）な描画方法）
 	m_MainShader->VertexAttribPointer(m_attr_pos, sizeof(vertex[0].Vector) / sizeof(vertex[0].Vector.x), GL_FLOAT, GL_FALSE, sizeof(Vec3_bColor3), (GLvoid*)&vertex[0].Vector);

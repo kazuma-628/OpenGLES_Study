@@ -4,7 +4,6 @@
 //include定義
 #include "Common.h"
 #include "ShaderManager.h"
-#include "Matrix.h"
 
 class HelloWorld
 {

@@ -185,6 +185,11 @@ void Matrix::Rotate(const GLfloat p_rotate, const GLfloat p_x, const GLfloat p_y
 	//[●][●][●][  ]
 	//[  ][  ][  ][  ]
 
+
+	//メモ：「マルチプラットフォームのためのOpenGLES入門」を参考にすると、
+	//		「Unity」と比べて「p_rotate」の符号が逆となっている。
+	//		本クラスは「2016/10/08時点」で不要となるので現状維持とする。
+
 	Matrix t_matrix;
 
 	//回転行列を適用

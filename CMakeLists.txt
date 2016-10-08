@@ -21,29 +21,29 @@ add_executable(
 	Resource/Texture/Sample.JPG
 
 #「Source File」を指定する
+#	Source/old_Matrix.cpp		# GLMライブラリへの移行に伴い廃止
+#	Source/old_Maths.cpp		# GLMライブラリへの移行に伴い廃止
 	Source/Main.cpp
 	Source/HelloWorld.cpp
 	Source/ShaderManager.cpp
-	Source/Matrix.cpp
 	Source/DeviceManager.cpp
 	Source/WindowManager.cpp
 	Source/Texture.cpp
 	Source/Model.cpp
-	Source/Maths.cpp
 	Source/ScreenString.cpp
 	Source/OBJLoader.cpp
 
 #「Header File」を指定する
+#	Header/old_Matrix.h			# GLMライブラリへの移行に伴い廃止
+#	Header/old_Maths.h			# GLMライブラリへの移行に伴い廃止
 	Header/Common.h
 	Header/Main.h
 	Header/HelloWorld.h
 	Header/ShaderManager.h
-	Header/Matrix.h
 	Header/DeviceManager.h
 	Header/WindowManager.h
 	Header/Texture.h
 	Header/Model.h
-	Header/Maths.h
 	Header/ScreenString.h
 	Header/OBJLoader.h
 
