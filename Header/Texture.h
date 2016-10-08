@@ -4,6 +4,7 @@
 //include定義
 #include "Common.h"
 #include <gdiplus.h>
+#include "Model.h"
 
 //#define定義
 #define TEXTURE_FILE_DIR	"../Resource/Texture/"	//テクスチャファイルの保存ディレクトリ

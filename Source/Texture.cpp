@@ -19,6 +19,7 @@ Texture::~Texture()
 *	　p_FileName	：[I/ ]　読み込みを行う拡張子付きの画像ファイル名
 *							 [Resource/Texture/]フォルダ以降のファイルパスを入力してください。
 *							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.png」）
+*							 ※ただし、モデルデータのテクスチャを読み込むときはマテリアルファイルに記載のテクスチャが読み込まれます。
 *	　p_PixelFotmat	：[I/ ]　画像ファイルのフォーマット
 *							 [PIXELFORMAT_24BIT_RGB] or [PIXELFORMAT_32BIT_RGBA] で指定（詳細は定義部分のコメント参照）
 *	　p_TextureData	：[ /O]　テクスチャデータ
@@ -30,7 +31,19 @@ Texture::~Texture()
 *-------------------------------------------------------------------------------*/
 void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureInfo *p_TextureData)
 {
-	printf("テクスチャ「%s」の読み込みを開始します...", p_FileName);
+	//モデルデータのテクスチャを読み込むかの判定
+	int ModelTexFlag = strncmp(p_FileName, MODEL_FILE_DIR, strlen(MODEL_FILE_DIR));
+
+	//モデルデータのテクスチャを読み込む場合は、
+	//モデルデータが格納されているディレクトリへのパスを読み飛ばしてファイル名を表示
+	if (0 == ModelTexFlag)
+	{
+		printf("テクスチャ「%s」の読み込みを開始します...", p_FileName + strlen(MODEL_FILE_DIR));
+	}
+	else
+	{
+		printf("テクスチャ「%s」の読み込みを開始します...", p_FileName);
+	}
 
 	//引数チェック
 	if (NULL == p_FileName || NULL == p_TextureData)
@@ -42,31 +55,56 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 		return;
 	}
 
+
 	//////////////////////////////////////////
 	// テクスチャファイルへのパス（ワイド文字）を作成
 
 	char *texture_dir_file_name = NULL;			//テクスチャファイルへのパス（マルチバイト文字）
 	wchar_t *w_texture_dir_file_name = NULL;	//テクスチャファイルへのパス（ワイド文字）
-	int StrLength = 0;		//読み込むテクスチャファイル名の長さ（バイト数）
+	int StrLength = 0;							//読み込むテクスチャファイル名の長さ（バイト数）
 
-	// 文字列の長さを取得してメモリ確保（終端を明確にするため +1 する。[\0]となる）
-	StrLength = strlen(TEXTURE_FILE_DIR) + strlen(p_FileName);
-	texture_dir_file_name = (char*)calloc(StrLength + 1, sizeof(char));
+	//モデルデータのテクスチャを読み込む場合とそれ以外で処理を分ける。
+	//（モデルデータのテクスチャはフルパスが入っているのでそのまま使用して、
+	//　それ以外はファイル名だけが入っているのでフルパスにする）
+	if (0 == ModelTexFlag)
+	{
+		//ロケールを日本に設定
+		setlocale(LC_CTYPE, "jpn");
 
-	//テクスチャファイルへのパスを生成する（マルチバイト文字）
-	sprintf(texture_dir_file_name, "%s%s", TEXTURE_FILE_DIR, p_FileName);
+		//マルチバイト文字の文字数を取得して、ワイド文字に変換した場合のバイト数を算出する
+		StrLength = _mbstrlen(p_FileName) * 2;
 
-	//ロケールを日本に設定
-	setlocale(LC_CTYPE, "jpn");
+		// 文字列の長さを取得してメモリ確保（終端を明確にするため +2(ワイド文字なので) する。[\0]となる）
+		w_texture_dir_file_name = (wchar_t*)calloc(StrLength + 2, sizeof(char));
 
-	//マルチバイト文字の文字数を取得して、ワイド文字に変換した場合のバイト数を算出する
-	StrLength = _mbstrlen(texture_dir_file_name) * 2;
+		//マルチバイト文字列 → ワイド文字列に変換（[\0]までコピー）
+		mbstowcs(w_texture_dir_file_name, p_FileName, _mbstrlen(p_FileName) + 1);
+	}
+	else
+	{
+		// 文字列の長さを取得してメモリ確保（終端を明確にするため +1 する。[\0]となる）
+		StrLength = strlen(TEXTURE_FILE_DIR) + strlen(p_FileName);
+		texture_dir_file_name = (char*)calloc(StrLength + 1, sizeof(char));
 
-	// 文字列の長さを取得してメモリ確保（終端を明確にするため +2(ワイド文字なので) する。[\0]となる）
-	w_texture_dir_file_name = (wchar_t*)calloc(StrLength + 2, sizeof(char));
+		//テクスチャファイルへのパスを生成する（マルチバイト文字）
+		sprintf(texture_dir_file_name, "%s%s", TEXTURE_FILE_DIR, p_FileName);
 
-	//マルチバイト文字列 → ワイド文字列に変換（[\0]までコピー）
-	mbstowcs(w_texture_dir_file_name, texture_dir_file_name, _mbstrlen(texture_dir_file_name) + 1);
+		//ロケールを日本に設定
+		setlocale(LC_CTYPE, "jpn");
+
+		//マルチバイト文字の文字数を取得して、ワイド文字に変換した場合のバイト数を算出する
+		StrLength = _mbstrlen(texture_dir_file_name) * 2;
+
+		// 文字列の長さを取得してメモリ確保（終端を明確にするため +2(ワイド文字なので) する。[\0]となる）
+		w_texture_dir_file_name = (wchar_t*)calloc(StrLength + 2, sizeof(char));
+
+		//マルチバイト文字列 → ワイド文字列に変換（[\0]までコピー）
+		mbstowcs(w_texture_dir_file_name, texture_dir_file_name, _mbstrlen(texture_dir_file_name) + 1);
+
+		//文字列変換したので不要なメモリを開放する
+		free(texture_dir_file_name);
+	}
+
 
 	//////////////////////////////////////////
 	// [GDI+]を使用してテクスチャを読み込み
@@ -80,7 +118,6 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 	Gdiplus::Bitmap* Texture = new Gdiplus::Bitmap(w_texture_dir_file_name);
 
 	//テクスチャを読み込んだのでファイルパスを保存していたメモリを開放する
-	free(texture_dir_file_name);
 	free(w_texture_dir_file_name);
 
 	//テクスチャデータ読み込み
@@ -88,9 +125,23 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 	if (0 != Texture->LockBits(0, Gdiplus::ImageLockModeRead, p_PixelFotmat, &BitmapData))
 	{
 		printf("失敗\n");
-		ERROR_MESSAGE("テクスチャファイルの読み込みに失敗しました。\n"\
-					  "「Resource/Texture/」フォルダに格納されていますか？\n"\
-					  "ファイル名が間違っていませんか？");
+
+		//モデルデータのテクスチャを読み込む場合とそれ以外で処理を分ける。
+		//（読み込み元となる基礎フォルダが違うのでエラーメッセージを切り替える）
+		if (0 == ModelTexFlag)
+		{
+			//「+3」は不要な「../」の部分を読み飛ばして表示するためのもの
+			ERROR_MESSAGE("テクスチャファイルの読み込みに失敗しました。\n"\
+						  "「%s」にファイルがありますか？\n"\
+						  "マテリアルファイルに記載してあるテクスチャファイルへのパスが間違っていませんか？"\
+						 , p_FileName + 3);
+		}
+		else
+		{
+			ERROR_MESSAGE("テクスチャファイルの読み込みに失敗しました。\n"\
+						  "「Resource/Texture/」フォルダに格納されていますか？\n"\
+						  "ファイル名が間違っていませんか？");
+		}
 		
 		//オブジェクト破棄
 		delete Texture;
