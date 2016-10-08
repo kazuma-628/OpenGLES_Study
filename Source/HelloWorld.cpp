@@ -21,7 +21,7 @@ HelloWorld::~HelloWorld()
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　メイン描画の準備をする
+*	　ハローワールド描画（OpenGLの基本的な描画）の準備をする
 *	引数
 *	　なし
 *	戻り値
@@ -39,20 +39,23 @@ void HelloWorld::Prepare()
 		//「Shader」フォルダに格納されている必要があります。
 		m_MainShader->CreateShaderProgram("HelloWorld.vert", "HelloWorld.frag", NULL, NULL, NULL, NULL);
 
-		//シェーダー内で使用する変数を取得します（頂点データ）
+		///////////////////////////////////////////////////
+		// シェーダー内で使用する変数のロケーションを取得
+
+		//頂点データ
 		m_attr_pos = m_MainShader->GetAttribLocation("attr_pos");
 
-		//シェーダー内で使用する変数を取得します（カラーデータ）
+		//カラーデータ
 		m_attr_color = m_MainShader->GetAttribLocation("attr_color");
 
-		//シェーダー内で使用する変数を取得します（座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス））
+		//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
 		m_ProjModel_matrix = m_MainShader->GetUniformLocation("ProjModel_matrix");
 	}
 }
 
 /*-------------------------------------------------------------------------------
 *	関数説明
-*	　メイン描画を開始する
+*	　ハローワールド描画（OpenGLの基本的な描画）を開始する
 *	引数
 *	　p_Global			：[I/ ]　グローバルデータ
 *	戻り値

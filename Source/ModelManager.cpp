@@ -37,8 +37,8 @@ ModelManager::ModelManager()
 		//「Shader」フォルダに格納されている必要があります。
 		m_ModelShader.CreateShaderProgram("ModelManager.vert", "ModelManager.frag", NULL, NULL, NULL, NULL);
 
-		///////////////////////////////
-		//シェーダー内で使用する変数のロケーションを取得
+		///////////////////////////////////////////////////
+		// シェーダー内で使用する変数のロケーションを取得
 		
 		//頂点座標
 		m_attr_Position = m_ModelShader.GetAttribLocation("attr_Position");
