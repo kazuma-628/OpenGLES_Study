@@ -1,32 +1,32 @@
-﻿#include "Model.h"
+﻿#include "ModelManager.h"
 
 /////////////////////////////////////////////
 //static変数の実体を定義
 
-ShaderManager Model::m_ModelShader;				//モデル描画用のシェーダーオブジェクト
+ShaderManager ModelManager::m_ModelShader;			//モデル描画用のシェーダーオブジェクト
 //ロケーション
-GLint Model::m_attr_Position = -1;				//頂点座標のロケーション
-GLint Model::m_attr_Normal = -1;				//法線ロケーション
-GLint Model::m_attr_Color = -1;					//カラーロケーション
-GLint Model::m_attr_TexCoord = -1;				//テクスチャ座標のロケーション
-GLint Model::m_unif_FileFotmat = -1;			//モデルデータのフォーマットのロケーション
-GLint Model::m_unif_ProjModelMat = -1;			//「プロジェクション × モデルビュー」を乗算済みの行列のロケーション
-GLint Model::m_unif_Ambient;					//アンビエント値のロケーション
-GLint Model::m_unif_Diffuse;					//ディフューズ値のロケーション
-GLint Model::m_unif_Specular;					//スペキュラ値のロケーション
-GLint Model::m_unif_Shininess;					//シャイネス値のロケーション
-GLint Model::m_unif_Alpha;						//アルファ値のロケーション
-GLint Model::m_unif_AmbientTexFlag = -1;		//テクスチャ（アンビエント） 有り・無しフラグのロケーション
-GLint Model::m_unif_DiffuseTexFlag = -1;		//テクスチャ（ディフューズ） 有り・無しフラグのロケーション
-GLint Model::m_unif_SpecularTexFlag = -1;		//テクスチャ（スペキュラ）有り・無しフラグのロケーション
-GLint Model::m_unif_BumpMapTexFlag = -1;		//テクスチャ（バンプマップ）有り・無しフラグのロケーション
-GLint Model::m_unif_AmbientTex = -1;			//テクスチャ（アンビエント） のロケーション
-GLint Model::m_unif_DiffuseTex = -1;			//テクスチャ（ディフューズ）のロケーション
-GLint Model::m_unif_SpecularTex = -1;			//テクスチャ（スペキュラ）のロケーション
-GLint Model::m_unif_BumpMapTex = -1;			//テクスチャ（バンプマップ）のロケーション
+GLint ModelManager::m_attr_Position = -1;			//頂点座標のロケーション
+GLint ModelManager::m_attr_Normal = -1;				//法線ロケーション
+GLint ModelManager::m_attr_Color = -1;				//カラーロケーション
+GLint ModelManager::m_attr_TexCoord = -1;			//テクスチャ座標のロケーション
+GLint ModelManager::m_unif_FileFotmat = -1;			//モデルデータのフォーマットのロケーション
+GLint ModelManager::m_unif_ProjModelMat = -1;		//「プロジェクション × モデルビュー」を乗算済みの行列のロケーション
+GLint ModelManager::m_unif_Ambient;					//アンビエント値のロケーション
+GLint ModelManager::m_unif_Diffuse;					//ディフューズ値のロケーション
+GLint ModelManager::m_unif_Specular;				//スペキュラ値のロケーション
+GLint ModelManager::m_unif_Shininess;				//シャイネス値のロケーション
+GLint ModelManager::m_unif_Alpha;					//アルファ値のロケーション
+GLint ModelManager::m_unif_AmbientTexFlag = -1;		//テクスチャ（アンビエント） 有り・無しフラグのロケーション
+GLint ModelManager::m_unif_DiffuseTexFlag = -1;		//テクスチャ（ディフューズ） 有り・無しフラグのロケーション
+GLint ModelManager::m_unif_SpecularTexFlag = -1;	//テクスチャ（スペキュラ）有り・無しフラグのロケーション
+GLint ModelManager::m_unif_BumpMapTexFlag = -1;		//テクスチャ（バンプマップ）有り・無しフラグのロケーション
+GLint ModelManager::m_unif_AmbientTex = -1;			//テクスチャ（アンビエント） のロケーション
+GLint ModelManager::m_unif_DiffuseTex = -1;			//テクスチャ（ディフューズ）のロケーション
+GLint ModelManager::m_unif_SpecularTex = -1;		//テクスチャ（スペキュラ）のロケーション
+GLint ModelManager::m_unif_BumpMapTex = -1;			//テクスチャ（バンプマップ）のロケーション
 
 //コンストラクタ
-Model::Model()
+ModelManager::ModelManager()
 {
 	memset(&m_ModelInfo, 0, sizeof(m_ModelInfo));
 
@@ -35,7 +35,7 @@ Model::Model()
 	{
 		//シェーダーの読み込みを行う
 		//「Shader」フォルダに格納されている必要があります。
-		m_ModelShader.CreateShaderProgram("Model.vert", "Model.frag", NULL, NULL, NULL, NULL);
+		m_ModelShader.CreateShaderProgram("ModelManager.vert", "ModelManager.frag", NULL, NULL, NULL, NULL);
 
 		///////////////////////////////
 		//シェーダー内で使用する変数のロケーションを取得
@@ -100,7 +100,7 @@ Model::Model()
 }
 
 //デストラクタ
-Model::~Model()
+ModelManager::~ModelManager()
 {
 	//既にモデルデータが読み込まれているかの確認
 	if (0 != m_ModelInfo.FileFotmat)
@@ -129,7 +129,7 @@ Model::~Model()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat)
+void ModelManager::FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat)
 {
 	printf("モデルデータ「%s」の読み込みを開始します...", p_FileName);
 
@@ -222,7 +222,7 @@ void Model::FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::FileDataFree(void)
+void ModelManager::FileDataFree(void)
 {
 	//データが格納されていれば破棄処理する
 	if (0 != m_ModelInfo.BufferObj_v)
@@ -263,7 +263,7 @@ void Model::FileDataFree(void)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::DataDraw(mat4 &p_ProjModelMat)
+void ModelManager::DataDraw(mat4 &p_ProjModelMat)
 {
 	if (0 == m_ModelInfo.FileFotmat)
 	{
@@ -442,7 +442,7 @@ void Model::DataDraw(mat4 &p_ProjModelMat)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::FileLoad_OBJ(const char* p_FileName, const char* p_DirFileName)
+void ModelManager::FileLoad_OBJ(const char* p_FileName, const char* p_DirFileName)
 {
 	//引数チェック
 	if (NULL == p_FileName || NULL == p_DirFileName)
@@ -609,7 +609,7 @@ void Model::FileLoad_OBJ(const char* p_FileName, const char* p_DirFileName)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::DataLoad_PiercedCube(void)
+void ModelManager::DataLoad_PiercedCube(void)
 {
 	// 頂点データ
 	Vec3_bColor3 vertex[] =
@@ -708,7 +708,7 @@ void Model::DataLoad_PiercedCube(void)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Model::DataLoad_PiercedCube2(void)
+void ModelManager::DataLoad_PiercedCube2(void)
 {
 	// 頂点データ
 	Vec3_bColor3 vertex[] =

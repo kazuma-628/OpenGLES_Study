@@ -1,5 +1,5 @@
-﻿#ifndef MODEL_H
-#define MODEL_H
+﻿#ifndef MODEL_MANAGER_H
+#define MODEL_MANAGER_H
 
 //include定義
 #include "Common.h"
@@ -20,16 +20,16 @@ typedef enum
 	ORIGINAL_FORMAT_PIERCED_CUBE,		//オリジナルフォーマットで穴あきのキューブデータ（エッジ有り）
 	ORIGINAL_FORMAT_PIERCED_CUBE2,		//オリジナルフォーマットで穴あきのキューブデータ（エッジ無し）
 }FileFotmat;
-
-class Model
+	
+class ModelManager
 {
 
 public:
 	//コンストラクタ
-	Model();
+	ModelManager();
 
 	//デストラクタ
-	~Model();
+	~ModelManager();
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明

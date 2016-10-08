@@ -5,7 +5,7 @@
 #include "HelloWorld.h"
 #include "DeviceManager.h"
 #include "WindowManager.h"
-#include "Model.h"
+#include "ModelManager.h"
 #include "ScreenString.h"
 
 //define

@@ -29,7 +29,7 @@ add_executable(
 	Source/DeviceManager.cpp
 	Source/WindowManager.cpp
 	Source/Texture.cpp
-	Source/Model.cpp
+	Source/ModelManager.cpp
 	Source/ScreenString.cpp
 	Source/OBJLoader.cpp
 
@@ -43,7 +43,7 @@ add_executable(
 	Header/DeviceManager.h
 	Header/WindowManager.h
 	Header/Texture.h
-	Header/Model.h
+	Header/ModelManager.h
 	Header/ScreenString.h
 	Header/OBJLoader.h
 
@@ -52,8 +52,8 @@ add_executable(
 	Shader/HelloWorld.vert
 	Shader/ScreenString.vert
 	Shader/ScreenString.frag
-	Shader/Model.vert
-	Shader/Model.frag
+	Shader/ModelManager.vert
+	Shader/ModelManager.frag
 )
 
 #############################################
