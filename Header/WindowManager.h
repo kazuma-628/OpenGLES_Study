@@ -72,9 +72,9 @@ public:
 	*	戻り値
 	*	　ウィンドウハンドル
 	*-------------------------------------------------------------------------------*/
-	inline Size GetWindowSize()
+	inline const Size* GetWindowSize()
 	{
-		return m_WindowSize;
+		return &m_WindowSize;
 	}
 
 	/*-------------------------------------------------------------------------------

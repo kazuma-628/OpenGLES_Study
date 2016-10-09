@@ -154,9 +154,9 @@ public:
 	*	戻り値
 	*	　マウスの情報
 	*-------------------------------------------------------------------------------*/
-	inline MouseInfo GetMouseInfo(void)
+	inline const MouseInfo* GetMouseInfo(void)
 	{
-		return m_MouseInfo;
+		return &m_MouseInfo;
 	}
 
 	/*-------------------------------------------------------------------------------
@@ -167,9 +167,9 @@ public:
 	*	戻り値
 	*	　キー（キーボード）の情報
 	*-------------------------------------------------------------------------------*/
-	inline KeyInfo GetKeyInfo(void)
+	inline const KeyInfo* GetKeyInfo(void)
 	{
-		return m_KeyInfo;
+		return &m_KeyInfo;
 	}
 
 private:
