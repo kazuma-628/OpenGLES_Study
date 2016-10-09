@@ -3,6 +3,7 @@
 
 #include "Common.h"
 #include "HelloWorld.h"
+#include "HelloModel.h"
 #include "DeviceManager.h"
 #include "WindowManager.h"
 #include "ModelManager.h"
@@ -24,6 +25,7 @@ typedef struct
 	bool ChangeWindowSize;			//【1イベント前】ウィンドウサイズに変更があったかを示す変数
 	vec3 InertiaTranslate;			// 惰性に伴う1イベント分の移動量（フリックするとフリック速度に応じた値が入り徐々に[0]になる、マウスを動かさなければ[0]）
 	vec3 InertiaRotate;				// 惰性に伴う1イベント分の回転量（フリックするとフリック速度に応じた値が入り徐々に[0]になる、マウスを動かさなければ[0]）
+	char DrawingClass[64];			// 今描画している(選択している)クラス名
 }TmpGlobalData;
 
 /*-------------------------------------------------------------------------------

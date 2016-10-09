@@ -16,14 +16,25 @@ add_executable(
 	Main
 
 #「Resource File」を指定する
+  # Icon
 	Resource/Icon/ExeIcon.rc
 	Resource/Icon/ExeIcon.ico
+  # Texture
 	Resource/Texture/Sample.JPG
+  # Model
+	# Handgun1
+	  Resource/Model/Handgun1/Copyright.txt
+	  Resource/Model/Handgun1/Handgun_obj.mtl
+#	  Resource/Model/Handgun1/Handgun_obj.obj				# ビルド対象外にする方法がわからないので暫定でコメントアウト
+	  Resource/Model/Handgun1/Texture/handgun_C.jpg
+	  Resource/Model/Handgun1/Texture/handgun_N.jpg
+  	  Resource/Model/Handgun1/Texture/handgun_S.jpg
 
 #「Source File」を指定する
 #	Source/old_Matrix.cpp		# GLMライブラリへの移行に伴い廃止
 #	Source/old_Maths.cpp		# GLMライブラリへの移行に伴い廃止
 	Source/Main.cpp
+	Source/HelloModel.cpp
 	Source/HelloWorld.cpp
 	Source/ShaderManager.cpp
 	Source/DeviceManager.cpp
@@ -38,6 +49,7 @@ add_executable(
 #	Header/old_Maths.h			# GLMライブラリへの移行に伴い廃止
 	Header/Common.h
 	Header/Main.h
+	Header/HelloModel.h
 	Header/HelloWorld.h
 	Header/ShaderManager.h
 	Header/DeviceManager.h
@@ -79,6 +91,8 @@ set_target_properties(
 #############################################
 source_group(Resource\\Icon REGULAR_EXPRESSION Resource/Icon)
 source_group(Resource\\Texture REGULAR_EXPRESSION Resource/Texture)
+source_group(Resource\\Model\\Handgun1 REGULAR_EXPRESSION Resource/Model/Handgun1)
+source_group(Resource\\Model\\Handgun1\\Texture REGULAR_EXPRESSION Resource/Model/Handgun1/Texture)
 source_group(Resource REGULAR_EXPRESSION Resource)
 source_group(Shader REGULAR_EXPRESSION Shader)
 source_group(Source REGULAR_EXPRESSION Source)

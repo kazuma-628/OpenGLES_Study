@@ -48,5 +48,6 @@ private:
 	GLint m_attr_pos;					//頂点データ
 	GLint m_attr_color;					//カラーデータ
 	GLint m_ProjModel_matrix;			//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
+	bool PrepareFlag;					//描画準備完了フラグ
 };
 #endif

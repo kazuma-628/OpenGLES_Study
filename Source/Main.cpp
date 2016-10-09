@@ -1,6 +1,6 @@
 ﻿/*------------------------------------------------------------------------------------------
 *　■プログラム説明■
-*	OpenGLESの勉強を始めようとする人向けのプロジェクトです。
+*　OpenGLESの勉強を始めようとする人向けのプロジェクトです。
 *　まだ作り始めであまり出来ることがありませんが、より便利になるよう様々な機能を提供していく予定です。
 *
 *	■主機能クラスについて
@@ -33,8 +33,9 @@
 *	　マニュアルは「Library/GLM/Manual.pdf」にあるので、必要に応じて読んで下さい。
 *
 *	■操作について
-*	　右クリック 及び 左クリック 及び スクロールの操作に対応しています。
+*	・右クリック 及び 左クリック 及び スクロールの操作に対応しています。
 *	　サンプルプログラムでは、「右クリック = 移動、左クリック = 回転、スクロール = 拡大、スペース = 初期位置」となっています。
+*	・描画データの選択(種類)はキーボードの「1 ～ 9」で切り替えることが出来ます。
 *------------------------------------------------------------------------------------------*/
 
 #include "Main.h"
@@ -69,6 +70,9 @@ void main(void)
 	//ハローワールド描画（OpenGLの基本的な描画）用のオブジェクト生成
 	HelloWorld *m_HelloWorld = new HelloWorld;
 
+	//ハローモデル描画（モデルデータのお試し描画）用のオブジェクト生成
+	HelloModel *m_HelloModel = new HelloModel;
+
 	//////////////////////////////////////////////////////
 	//	各オブジェクト初期化 及び 準備
 	
@@ -83,14 +87,14 @@ void main(void)
 	//※ ウィンドウを複数生成して、それぞれKey管理することはまだ対応していないので注意 ※
 	m_DeviceManager->Initialize( m_WindowManager->GetWindow() );
 
-	//ハローワールド描画（OpenGLの基本的な描画）準備
-	m_HelloWorld->Prepare();
-
 	//画面に文字列を表示する用のクラスの準備
 	ScreenString::Prepare(m_Global);
 
 	//////////////////////////////////////////////////////
 	//	描画メインループ
+
+	//初回起動時はハローワールド描画（OpenGLの基本的な描画）を選択しておく
+	strcpy(TmpGlobal.DrawingClass, typeid(*m_HelloWorld).name());
 
 	//ウィンドウが開いている間はループ
 	while (GL_FALSE == m_WindowManager->GetWindowShouldClose())
@@ -116,15 +120,38 @@ void main(void)
 			TmpGlobal.ChangeWindowSize = false;
 		}
 
+
 		/////////////////////////////
 		// 各種描画
+		// 選択されたキーによって描画を切り替える
+		// 毎回クラス名をコピー処理しているのと、
+		// 切替時に描画が2重で行われる不効率さがあるが現状維持とする。
 
-		//ハローワールド描画（OpenGLの基本的な描画）開始
-		m_HelloWorld->Drawing(m_Global);
+		//キー（キーボード）の情報を取得
+		const KeyInfo *KeyBoard = m_DeviceManager->GetKeyInfo();
+
+		//ハローワールド描画（OpenGLの基本的な描画）
+		if (true == KeyBoard->StateChange.Key_0 ||
+			0 == strncmp(typeid(*m_HelloWorld).name(), TmpGlobal.DrawingClass, strlen(typeid(*m_HelloWorld).name())))
+		{
+			//選択された描画クラスを記憶して描画開始
+			strcpy(TmpGlobal.DrawingClass, typeid(*m_HelloWorld).name());
+			m_HelloWorld->Drawing(m_Global);
+		}
+
+		//ハローモデル描画（モデルデータのお試し描画）
+		if (true == KeyBoard->StateChange.Key_1 ||
+				 0 == strncmp(typeid(*m_HelloModel).name(), TmpGlobal.DrawingClass, strlen(typeid(*m_HelloModel).name())))
+		{
+			//選択された描画クラスを記憶して描画開始
+			strcpy(TmpGlobal.DrawingClass, typeid(*m_HelloModel).name());
+			m_HelloModel->Drawing(m_Global);
+		}
 
 		//デバッグ表示の描画を実行する
 		//デバッグ表示が最前面に来るようにするため一番最後に描画する
 		ScreenString::DebugDrawing(m_Global);
+
 
 		/////////////////////////////
 		// 描画反映処理
@@ -143,6 +170,7 @@ void main(void)
 
 	//終了処理
 	delete m_HelloWorld;
+	delete m_HelloModel;
 	delete m_WindowManager;
 	delete m_DeviceManager;
 	ScreenString::Destroy();
@@ -167,7 +195,9 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	//キー（キーボード）の情報を取得
 	const KeyInfo *KeyBoard = p_DeviceManager->GetKeyInfo();
 
-	//表示している位置と回転の座標を表示（1フレーム前の情報だけど、一番上に表示したいので良しとする）
+	//今描画している(選択している)クラスと、表示している位置と回転の座標を表示
+	//（1フレーム前の情報だけど、一番上に表示したいので良しとする）
+	ScreenString::DebugPrint(*p_Global, "描画クラス：%s", TmpGlobal.DrawingClass + 6);		//「+6」は不要な「class 」の部分を読み飛ばして表示するためのもの
 	ScreenString::DebugPrint(*p_Global, "位置 X：%d, Y：%d, Z：%d"\
 							 ,(int)p_Global->TranslateAmount.x, (int)p_Global->TranslateAmount.y, (int)p_Global->TranslateAmount.z);
 	ScreenString::DebugPrint(*p_Global, "回転 X：%d, Y：%d, Z：%d"\
@@ -295,7 +325,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	GLfloat Aspect = (GLfloat)WindowSize->Width / WindowSize->Height;
 
 	//カメラの映る位置に移動させる
-	ModelView *= translate(vec3(0.0f, 0.0f, -35.0f));
+	ModelView *= translate(vec3(0.0f, 0.0f, -40.0f));
 	//マウスでのオブジェクトの移動
 	ModelView *= translate(vec3(p_Global->TranslateAmount.x / 6.0f, -p_Global->TranslateAmount.y / 6.0f, p_Global->TranslateAmount.z));
 
@@ -305,7 +335,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 
 	//投資投影行列で使用する値をグローバル領域に保存
 	p_Global->NearClip = 1.0f;
-	p_Global->FarClip = 1500.0f;
+	p_Global->FarClip = 1000.0f;
 	//透視投影行列を適用する（歪みも補正）
 	Projection = perspective(1.0f, Aspect, p_Global->NearClip, p_Global->FarClip);
 

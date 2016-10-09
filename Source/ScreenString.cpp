@@ -189,12 +189,12 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 		{
 		case L'　':
 			//全角空白相当を文字列の合計幅に加算
-			DebugSumWidth += DEBUG_ROWS_SPACING;
+			DebugSumWidth += DEBUG_ROWS_SPACING / 2;
 			break;
 
 		case L' ':
 			//半角空白相当を文字列の合計幅に加算
-			DebugSumWidth += DEBUG_ROWS_SPACING / 2;
+			DebugSumWidth += DEBUG_ROWS_SPACING / 4;
 			break;
 
 		case L'\n':
