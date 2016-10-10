@@ -28,32 +28,47 @@ uniform sampler2D unif_AmbientTex;			//テクスチャ（アンビエント）
 uniform sampler2D unif_DiffuseTex;			//テクスチャ（ディフューズ） 
 uniform sampler2D unif_SpecularTex;			//テクスチャ（スペキュラ）
 uniform sampler2D unif_BumpMapTex;			//テクスチャ（バンプマップ）
+uniform mediump mat4 unif_RotateMat;		//回転行列
 
 //出力
 out mediump vec4 FragColor;
 
 void main()
 {
-	//最終的な色情報
-	mediump vec4 FinalColor = vec4(0.0, 0.0, 0.0, 1.0);
+	//最終的な色情報（何か表示されるように赤にしておく）
+	mediump vec4 FinalColor = vec4(1.0, 0.0, 0.0, 1.0);
 
 	switch(unif_FileFotmat)
 	{
 		//OBJファイル
 		case FILE_FORMAT_OBJ:
 
-			//マテリアルファイルにテクスチャが指定されていた場合
+			//テクスチャ（ディフューズ）が指定されている場合
 			if(1 == unif_DiffuseTexFlag)
 			{
 				//テクスチャ情報を読み込む
-				FinalColor = texture(unif_DiffuseTex, vec2(f_attr_TexCoord.x, f_attr_TexCoord.y));
+				FinalColor = texture(unif_DiffuseTex, f_attr_TexCoord);
 			}
-			else
+
+			//テクスチャ（バンプマップ）が指定されている場合
+			if(1 == unif_BumpMapTexFlag)
 			{
-				//暫定として法線を元に色情報を決定
-				mediump float depth = dot(vec3(0.0, 0.0, 1.0), normalize(f_attr_Normal));
-				FinalColor = vec4(0.0, depth, 0.0, 1.0);				
+				//バンプマッピングするための値を算出
+				mediump float BumpVal = dot(vec3(0.0, 0.0, 1.0), normalize(texture(unif_BumpMapTex, f_attr_TexCoord).rgb * 2.0 - 1.0));
+
+				//色を計算
+				FinalColor *= BumpVal;
 			}
+
+			//法線情報から明るさを設定
+			mediump float Brightness = dot(vec3(0.0, 0.0, 1.0), normalize((unif_RotateMat * vec4(f_attr_Normal, 1.0)).xyz));
+			
+			//[0]になると暗いので悪いので、少し明るくしてクランプしておく
+			Brightness = clamp(Brightness + 0.3, 0.3, 1.0);
+
+			//色を計算
+			FinalColor *= Brightness;
+
 			break;
 
 		//オリジナルフォーマットで穴あきのキューブデータ（エッジ有り）

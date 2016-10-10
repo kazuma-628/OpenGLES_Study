@@ -12,6 +12,7 @@ GLint ModelManager::m_attr_TexCoord = -1;			//テクスチャ座標のロケー�
 GLint ModelManager::m_unif_FileFotmat = -1;			//モデルデータのフォーマットのロケーション
 GLint ModelManager::m_unif_ModelViewMat = -1;		//モデルビューマトリクスのロケーション
 GLint ModelManager::m_unif_ProjectionMat = -1;		//プロジェクションマトリクスのロケーション
+GLint ModelManager::m_unif_RotateMat = -1;			//回転行列のロケーション
 GLint ModelManager::m_unif_Ambient;					//アンビエント値のロケーション
 GLint ModelManager::m_unif_Diffuse;					//ディフューズ値のロケーション
 GLint ModelManager::m_unif_Specular;				//スペキュラ値のロケーション
@@ -61,6 +62,9 @@ ModelManager::ModelManager()
 
 		//プロジェクションマトリクス
 		m_unif_ProjectionMat = m_ModelShader.GetUniformLocation("unif_ProjectionMat");
+
+		//回転行列
+		m_unif_RotateMat = m_ModelShader.GetUniformLocation("unif_RotateMat");
 
 		//アンビエント値
 		m_unif_Ambient = m_ModelShader.GetUniformLocation("unif_Ambient");
@@ -297,6 +301,12 @@ void ModelManager::DataDraw(const mat4 &p_ModelViewMat, const mat4 &p_Projection
 	//プロジェクションマトリクスを設定
 	m_ModelShader.UniformMatrixXfv(m_unif_ProjectionMat, 4, 1, GL_FALSE, &p_ProjectionMat);
 
+	//モデルビューマトリクスから回転成分を算出する
+	mat4 RotateMat = inverseTranspose(p_ModelViewMat);
+
+	//回転行列を設定
+	m_ModelShader.UniformMatrixXfv(m_unif_RotateMat, 4, 1, GL_FALSE, &RotateMat);
+
 	//////////////////////////////////
 	// 残りの変数の初期値を設定
 
@@ -386,17 +396,56 @@ void ModelManager::DataDraw(const mat4 &p_ModelViewMat, const mat4 &p_Projection
 			//OBJファイル
 			case FILE_FORMAT_OBJ:
 			{
-				//テクスチャを貼る
-				if (0 != m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].diffuseTexObj)
+				//テクスチャ（アンビエント）がある場合は設定する
+				if (0 != m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].ambientTexObj)
 				{
 					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].ambientTexObj);
+					m_ModelShader.UniformXi(m_unif_AmbientTexFlag, 1, 1, 0, 0, 0);
+					m_ModelShader.UniformXi(m_unif_AmbientTex, 1, 0, 0, 0, 0);
+				}
+				else
+				{
+					m_ModelShader.UniformXi(m_unif_AmbientTexFlag, 1, 0, 0, 0, 0);
+				}
+
+				//テクスチャ（ディフューズ）がある場合は設定する
+				if (0 != m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].diffuseTexObj)
+				{
+					glActiveTexture(GL_TEXTURE1);
 					glBindTexture(GL_TEXTURE_2D, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].diffuseTexObj);
 					m_ModelShader.UniformXi(m_unif_DiffuseTexFlag, 1, 1, 0, 0, 0);
-					m_ModelShader.UniformXi(m_unif_DiffuseTex, 1, 0, 0, 0, 0);
+					m_ModelShader.UniformXi(m_unif_DiffuseTex, 1, 1, 0, 0, 0);
 				}
 				else
 				{
 					m_ModelShader.UniformXi(m_unif_DiffuseTexFlag, 1, 0, 0, 0, 0);
+				}
+
+				//テクスチャ（スペキュラ）がある場合は設定する
+				if (0 != m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].specularTexObj)
+				{
+					glActiveTexture(GL_TEXTURE2);
+					glBindTexture(GL_TEXTURE_2D, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].specularTexObj);
+					m_ModelShader.UniformXi(m_unif_SpecularTexFlag, 1, 1, 0, 0, 0);
+					m_ModelShader.UniformXi(m_unif_SpecularTex, 1, 2, 0, 0, 0);
+				}
+				else
+				{
+					m_ModelShader.UniformXi(m_unif_SpecularTexFlag, 1, 0, 0, 0, 0);
+				}
+
+				//テクスチャ（バンプマップ）がある場合は設定する
+				if (0 != m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].bumpMapTexObj)
+				{
+					glActiveTexture(GL_TEXTURE3);
+					glBindTexture(GL_TEXTURE_2D, m_ModelInfo.Material[m_ModelInfo.DrawElements[cnt].MaterialIndex].bumpMapTexObj);
+					m_ModelShader.UniformXi(m_unif_BumpMapTexFlag, 1, 1, 0, 0, 0);
+					m_ModelShader.UniformXi(m_unif_BumpMapTex, 1, 3, 0, 0, 0);
+				}
+				else
+				{
+					m_ModelShader.UniformXi(m_unif_BumpMapTexFlag, 1, 0, 0, 0, 0);
 				}
 
 				//カラー関連の係数設定
@@ -432,6 +481,9 @@ void ModelManager::DataDraw(const mat4 &p_ModelViewMat, const mat4 &p_Projection
 	//バッファーを無効化
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	//テクスチャユニットフォデフォルトに戻す
+	glActiveTexture(GL_TEXTURE0);
 
 	//テクスチャを解除
 	glBindTexture(GL_TEXTURE_2D, 0);

@@ -214,6 +214,7 @@ private:
 	static GLint m_unif_FileFotmat;			//モデルデータのフォーマットのロケーション
 	static GLint m_unif_ModelViewMat;		//モデルビューマトリクスのロケーション
 	static GLint m_unif_ProjectionMat;		//プロジェクションマトリクスのロケーション
+	static GLint m_unif_RotateMat;			//回転行列のロケーション
 	static GLint m_unif_Ambient;			//アンビエント値のロケーション
 	static GLint m_unif_Diffuse;			//ディフューズ値のロケーション
 	static GLint m_unif_Specular;			//スペキュラ値のロケーション
