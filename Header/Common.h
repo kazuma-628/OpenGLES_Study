@@ -118,8 +118,8 @@ typedef struct
 // 構造体
 typedef struct
 {
-	mat4 ModelViewMatrix;		//モデルビューマトリクス（大元のマトリクスデータ）
-	mat4 ProjectionMatrix;		//プロジェクションマトリクス（大元のマトリクスデータ）
+	mat4 ModelViewMat;			//モデルビューマトリクス（大元のマトリクスデータ）
+	mat4 ProjectionMat;			//プロジェクションマトリクス（大元のマトリクスデータ）
 	GLfloat NearClip;			//プロジェクションマトリクス生成時に使用したNear値（大元のマトリクスデータ）
 	GLfloat FarClip;			//プロジェクションマトリクス生成時に使用したFar値（大元のマトリクスデータ）
 	Size WindowSize;			//ウィンドウの全体サイズ

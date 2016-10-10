@@ -9,7 +9,8 @@ in mediump vec3 attr_Normal;			//法線
 in mediump vec4 attr_Color;				//カラー
 in mediump vec2 attr_TexCoord;			//テクスチャ座標
 
-uniform mediump mat4 unif_ProjModelMat;	//「プロジェクション × モデルビュー」を乗算済みの行列
+uniform mediump mat4 unif_ModelViewMat;		//モデルビューマトリクス
+uniform mediump mat4 unif_ProjectionMat;	//プロジェクションマトリクス
 
 //出力
 out mediump vec3 f_attr_Normal;			//法線
@@ -24,5 +25,5 @@ void main()
 	f_attr_TexCoord = attr_TexCoord;		//テクスチャ座標
 
 	//頂点設定
-	gl_Position = unif_ProjModelMat * attr_Position;
+	gl_Position = unif_ProjectionMat * unif_ModelViewMat * attr_Position;
 }

@@ -10,7 +10,8 @@ GLint ModelManager::m_attr_Normal = -1;				//法線ロケーション
 GLint ModelManager::m_attr_Color = -1;				//カラーロケーション
 GLint ModelManager::m_attr_TexCoord = -1;			//テクスチャ座標のロケーション
 GLint ModelManager::m_unif_FileFotmat = -1;			//モデルデータのフォーマットのロケーション
-GLint ModelManager::m_unif_ProjModelMat = -1;		//「プロジェクション × モデルビュー」を乗算済みの行列のロケーション
+GLint ModelManager::m_unif_ModelViewMat = -1;		//モデルビューマトリクスのロケーション
+GLint ModelManager::m_unif_ProjectionMat = -1;		//プロジェクションマトリクスのロケーション
 GLint ModelManager::m_unif_Ambient;					//アンビエント値のロケーション
 GLint ModelManager::m_unif_Diffuse;					//ディフューズ値のロケーション
 GLint ModelManager::m_unif_Specular;				//スペキュラ値のロケーション
@@ -55,8 +56,11 @@ ModelManager::ModelManager()
 		//モデルデータのフォーマット
 		m_unif_FileFotmat = m_ModelShader.GetUniformLocation("unif_FileFotmat");
 
-		//「プロジェクション × モデルビュー」を乗算済みの行列
-		m_unif_ProjModelMat = m_ModelShader.GetUniformLocation("unif_ProjModelMat");
+		//モデルビューマトリクス
+		m_unif_ModelViewMat = m_ModelShader.GetUniformLocation("unif_ModelViewMat");
+
+		//プロジェクションマトリクス
+		m_unif_ProjectionMat = m_ModelShader.GetUniformLocation("unif_ProjectionMat");
 
 		//アンビエント値
 		m_unif_Ambient = m_ModelShader.GetUniformLocation("unif_Ambient");
@@ -257,11 +261,12 @@ void ModelManager::FileDataFree(void)
 *	　※本関数では描画のみしか実行しません
 *　　　「glClearColor, glClear, glViewport」などの設定は関数コール前に必要に応じて行ってください。
 *	引数
-*	　p_ProjModelMat	：[I/ ]　「プロジェクション × モデルビュー」を乗算済みの行列
+*	　p_ModelViewMat	：[I/ ]　描画に使用するモデルビューマトリクス
+*	　p_ProjectionMat	：[I/ ]　描画に使用するプロジェクションマトリクス
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ModelManager::DataDraw(mat4 &p_ProjModelMat)
+void ModelManager::DataDraw(const mat4 &p_ModelViewMat, const mat4 &p_ProjectionMat)
 {
 	if (0 == m_ModelInfo.FileFotmat)
 	{
@@ -286,8 +291,11 @@ void ModelManager::DataDraw(mat4 &p_ProjModelMat)
 	//モデルデータのフォーマットを設定
 	m_ModelShader.UniformXi(m_unif_FileFotmat, 1, m_ModelInfo.FileFotmat, 0, 0, 0);
 
-	//「プロジェクション × モデルビュー」を乗算済みの行列を設定
-	m_ModelShader.UniformMatrixXfv(m_unif_ProjModelMat, 4, 1, GL_FALSE, &p_ProjModelMat);
+	//モデルビューマトリクスを設定
+	m_ModelShader.UniformMatrixXfv(m_unif_ModelViewMat, 4, 1, GL_FALSE, &p_ModelViewMat);
+
+	//プロジェクションマトリクスを設定
+	m_ModelShader.UniformMatrixXfv(m_unif_ProjectionMat, 4, 1, GL_FALSE, &p_ProjectionMat);
 
 	//////////////////////////////////
 	// 残りの変数の初期値を設定

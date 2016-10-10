@@ -69,11 +69,12 @@ public:
 	*	　※本関数では描画のみしか実行しません
 	*　　　「glClearColor, glClear, glViewport」などの設定は関数コール前に必要に応じて行ってください。
 	*	引数
-	*	　p_ProjModelMat	：[I/ ]　「プロジェクション × モデルビュー」を乗算済みの行列
+	*	　p_ModelViewMat	：[I/ ]　描画に使用するモデルビューマトリクス
+	*	　p_ProjectionMat	：[I/ ]　描画に使用するプロジェクションマトリクス
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void DataDraw(mat4 &p_ProjModelMat);
+	void DataDraw(const mat4 &p_ModelViewMat, const mat4 &p_ProjectionMat);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -211,7 +212,8 @@ private:
 	static GLint m_attr_Color;				//カラーロケーション
 	static GLint m_attr_TexCoord;			//テクスチャ座標のロケーション
 	static GLint m_unif_FileFotmat;			//モデルデータのフォーマットのロケーション
-	static GLint m_unif_ProjModelMat;		//「プロジェクション × モデルビュー」を乗算済みの行列のロケーション
+	static GLint m_unif_ModelViewMat;		//モデルビューマトリクスのロケーション
+	static GLint m_unif_ProjectionMat;		//プロジェクションマトリクスのロケーション
 	static GLint m_unif_Ambient;			//アンビエント値のロケーション
 	static GLint m_unif_Diffuse;			//ディフューズ値のロケーション
 	static GLint m_unif_Specular;			//スペキュラ値のロケーション

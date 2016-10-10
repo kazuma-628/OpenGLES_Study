@@ -316,28 +316,28 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	// メインとなるモデルビューマトリクスの作成（大元のマトリクスデータ）
 
 	//オブジェクトを移動させるための行列
-	mat4 ModelView;
+	mat4 ModelViewMat;
 
 	//3D空間にするための行列
-	mat4 Projection;
+	mat4 ProjectionMat;
 
 	//アスペクト比（幅 ÷ 高さ）を算出
 	GLfloat Aspect = (GLfloat)WindowSize->Width / WindowSize->Height;
 
 	//カメラの映る位置に移動させる
-	ModelView *= translate(vec3(0.0f, 0.0f, -40.0f));
+	ModelViewMat *= translate(vec3(0.0f, 0.0f, -40.0f));
 	//マウスでのオブジェクトの移動
-	ModelView *= translate(vec3(p_Global->TranslateAmount.x / 6.0f, -p_Global->TranslateAmount.y / 6.0f, p_Global->TranslateAmount.z));
+	ModelViewMat *= translate(vec3(p_Global->TranslateAmount.x / 6.0f, -p_Global->TranslateAmount.y / 6.0f, p_Global->TranslateAmount.z));
 
 	//マウスでのオブジェクトの回転
-	ModelView *= rotate((float)DEGREE_TO_RADIAN(p_Global->RotateAmount.y / RotateSpeedWeight), vec3(1.0f, 0.0f, 0.0f));
-	ModelView *= rotate((float)DEGREE_TO_RADIAN(p_Global->RotateAmount.x / RotateSpeedWeight), vec3(0.0f, 1.0f, 0.0f));
+	ModelViewMat *= rotate((float)DEGREE_TO_RADIAN(p_Global->RotateAmount.y / RotateSpeedWeight), vec3(1.0f, 0.0f, 0.0f));
+	ModelViewMat *= rotate((float)DEGREE_TO_RADIAN(p_Global->RotateAmount.x / RotateSpeedWeight), vec3(0.0f, 1.0f, 0.0f));
 
 	//投資投影行列で使用する値をグローバル領域に保存
 	p_Global->NearClip = 1.0f;
 	p_Global->FarClip = 1000.0f;
 	//透視投影行列を適用する（歪みも補正）
-	Projection = perspective(1.0f, Aspect, p_Global->NearClip, p_Global->FarClip);
+	ProjectionMat = perspective(1.0f, Aspect, p_Global->NearClip, p_Global->FarClip);
 
 	///////////////////////////////////
 	// 各種情報を保存
@@ -346,8 +346,8 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	p_Global->Aspect = Aspect;
 
 	//各種行列を保存する
-	p_Global->ModelViewMatrix = ModelView;
-	p_Global->ProjectionMatrix = Projection;
+	p_Global->ModelViewMat = ModelViewMat;
+	p_Global->ProjectionMat = ProjectionMat;
 
 	//ウィンドウサイズの変更チェック
 	if (p_Global->WindowSize.Width != WindowSize->Width || p_Global->WindowSize.Height != WindowSize->Height)

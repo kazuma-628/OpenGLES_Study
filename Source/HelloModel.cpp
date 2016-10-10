@@ -51,17 +51,11 @@ void HelloModel::Drawing(const GlobalData &p_Global)
 	//描画準備
 	Prepare();
 
-	//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
-	mat4 ProjModel;
-	
 	//モデルビューマトリクスをコピー
-	ProjModel = p_Global.ModelViewMatrix;
-
+	mat4 ModelViewMat = p_Global.ModelViewMat;;
+	
 	//モデルデータを拡大（元データが小さいので）
-	ProjModel *= scale(vec3(15.0f, 15.0f, 15.0f));
-
-	//プロジェクションマトリクスと乗算
-	ProjModel = p_Global.ProjectionMatrix * ProjModel;
+	ModelViewMat *= scale(vec3(15.0f, 15.0f, 15.0f));
 
 	//背景色指定
 	glClearColor(0.0f, 0.0f, 0.9f, 1.0f);
@@ -73,7 +67,7 @@ void HelloModel::Drawing(const GlobalData &p_Global)
 	glViewport(0, 0, p_Global.WindowSize.Width, p_Global.WindowSize.Height);
 
 	//モデルデータの描画
-	m_Model->DataDraw(ProjModel);
+	m_Model->DataDraw(ModelViewMat, p_Global.ProjectionMat);
 
 	return;
 }
