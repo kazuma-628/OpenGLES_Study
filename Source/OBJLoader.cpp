@@ -671,6 +671,7 @@ bool OBJMESH::LoadMTLFile( const char* filename )
 			float r, g, b;
 			file >> r >> g >> b;
 			t_materials[iMtlCount].ambient = OBJVEC3( r, g, b );
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 		// Diffuse Color
 		else if ( 0 == strcmp( buf, "Kd" ) )
@@ -678,6 +679,7 @@ bool OBJMESH::LoadMTLFile( const char* filename )
 			float r, g, b;
 			file >> r >> g >> b;
 			t_materials[iMtlCount].diffuse = OBJVEC3( r, g, b );
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 		// Specular Color
 		else if ( 0 == strcmp( buf, "Ks" ) )
@@ -685,17 +687,20 @@ bool OBJMESH::LoadMTLFile( const char* filename )
 			float r, g, b;
 			file >> r >> g >> b;
 			t_materials[iMtlCount].specular = OBJVEC3( r, g, b );
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 		// Alpha
 		else if ( 0 == strcmp( buf, "d" ) ||
 				  0 == strcmp( buf, "Tr" ) )
 		{
 			file >> t_materials[iMtlCount].alpha;
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 		// Shininess
 		else if ( 0 == strcmp( buf, "Ns" ) )
 		{
 			file >> t_materials[iMtlCount].shininess;
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 		// Ambient Map
 		else if ( 0 == strcmp( buf, "map_Ka" ) )
@@ -765,8 +770,12 @@ bool OBJMESH::LoadMTLFile( const char* filename )
 			//ファイル名を保持したメモリを破棄
 			delete[] mapBumpNameFullPath;
 		}
+		else
+		{
+			//関係ない行は読み飛ばす
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
+		}
 
-		file.ignore( OBJ_BUFFER_LENGTH, '\n' );
 	}
 
 	//　ファイルを閉じる
