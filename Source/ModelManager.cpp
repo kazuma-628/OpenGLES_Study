@@ -294,15 +294,15 @@ void ModelManager::DataDraw(mat4 &p_ProjModelMat)
 
 	//法線
 	m_ModelShader.DisableVertexAttribArray(m_attr_Normal);
-	m_ModelShader.VertexAttribXf(m_attr_Normal, 3, 0, 0, 0, 0);
+	m_ModelShader.VertexAttribXf(m_attr_Normal, 3, 0.0f, 0.0f, 0.0f, 0.0f);
 
 	//カラー
 	m_ModelShader.DisableVertexAttribArray(m_attr_Color);
-	m_ModelShader.VertexAttribXf(m_attr_Color, 4, 0, 0, 0, 0);
+	m_ModelShader.VertexAttribXf(m_attr_Color, 4, 0.0f, 0.0f, 0.0f, 0.0f);
 
 	//テクスチャ座標
 	m_ModelShader.DisableVertexAttribArray(m_attr_TexCoord);
-	m_ModelShader.VertexAttribXf(m_attr_TexCoord, 2, 0, 0, 0, 0);
+	m_ModelShader.VertexAttribXf(m_attr_TexCoord, 2, 0.0f, 0.0f, 0.0f, 0.0f);
 
 	//カラー関連の係数
 	m_ModelShader.UniformXi(m_unif_Ambient, 1, 0, 0, 0, 0);
