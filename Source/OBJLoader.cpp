@@ -383,6 +383,7 @@ bool OBJMESH::LoadOBJFile(const char *filename)
 		//　コメント
 		if ( 0 == strcmp( buf, "#" ) )
 		{
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 
 		//　頂点座標
@@ -402,6 +403,8 @@ bool OBJMESH::LoadOBJFile(const char *filename)
 
 			//　バウンディングボックスの算出
 			m_Box.Merge( v );
+
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 
 		//　テクスチャ座標
@@ -410,6 +413,8 @@ bool OBJMESH::LoadOBJFile(const char *filename)
 			float u, v;
 			file >> u >> v;
 			texcoords.push_back( OBJVEC2( u, v ) );
+
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 
 		//　法線ベクトル
@@ -418,6 +423,8 @@ bool OBJMESH::LoadOBJFile(const char *filename)
 			float x, y, z;
 			file >> x >> y >> z;
 			normals.push_back( OBJVEC3( x, y, z) );
+
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 
 		//　面
@@ -508,6 +515,8 @@ bool OBJMESH::LoadOBJFile(const char *filename)
 				}
 
 			}
+
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 
 		//　マテリアルファイル
@@ -571,7 +580,12 @@ bool OBJMESH::LoadOBJFile(const char *filename)
 			}
 		}
 
-		file.ignore( OBJ_BUFFER_LENGTH, '\n' );
+		else
+		{
+			//関係ない行は読み飛ばす
+			file.ignore(OBJ_BUFFER_LENGTH, '\n');
+		}
+
 	}
 
 	//　サブセット
@@ -671,6 +685,7 @@ bool OBJMESH::LoadMTLFile( const char* filename )
 			float r, g, b;
 			file >> r >> g >> b;
 			t_materials[iMtlCount].ambient = OBJVEC3( r, g, b );
+
 			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 		// Diffuse Color
@@ -679,6 +694,7 @@ bool OBJMESH::LoadMTLFile( const char* filename )
 			float r, g, b;
 			file >> r >> g >> b;
 			t_materials[iMtlCount].diffuse = OBJVEC3( r, g, b );
+
 			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 		// Specular Color
@@ -687,6 +703,7 @@ bool OBJMESH::LoadMTLFile( const char* filename )
 			float r, g, b;
 			file >> r >> g >> b;
 			t_materials[iMtlCount].specular = OBJVEC3( r, g, b );
+
 			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 		// Alpha
@@ -694,12 +711,14 @@ bool OBJMESH::LoadMTLFile( const char* filename )
 				  0 == strcmp( buf, "Tr" ) )
 		{
 			file >> t_materials[iMtlCount].alpha;
+
 			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 		// Shininess
 		else if ( 0 == strcmp( buf, "Ns" ) )
 		{
 			file >> t_materials[iMtlCount].shininess;
+
 			file.ignore(OBJ_BUFFER_LENGTH, '\n');
 		}
 		// Ambient Map
