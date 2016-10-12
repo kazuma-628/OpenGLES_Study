@@ -58,6 +58,7 @@ typedef struct
 	KeyState StateKeep;			//キーを押すたびに「true」と「false」が交互に切り替わる（キー状態をキープする）
 	KeyState PushCount;			//キーを押した合計回数
 								//　初期状態は[0]で、押した回数分、値が加算されていく
+	char LastKey;				//一番最後に押したキー（アルファベット・数字のみ）が「1文字」として格納される（例:[B],[5]）
 }KeyInfo;
 
 

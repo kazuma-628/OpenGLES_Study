@@ -310,21 +310,21 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 		{ "9", GLFW_KEY_KP_9, &m_KeyInfo.StateChange.Key_9, &m_KeyInfo.StateKeep.Key_9, &m_KeyInfo.PushCount.Key_9 },
 
 		//記号など(16個）
-		{ "/", GLFW_KEY_KP_DIVIDE,        &m_KeyInfo.StateChange.Key_DIVIDE,   &m_KeyInfo.StateKeep.Key_DIVIDE,   &m_KeyInfo.PushCount.Key_DIVIDE   },
-		{ "*", GLFW_KEY_KP_MULTIPLY,      &m_KeyInfo.StateChange.Key_MULTIPLY, &m_KeyInfo.StateKeep.Key_MULTIPLY, &m_KeyInfo.PushCount.Key_MULTIPLY },
-		{ "-", GLFW_KEY_KP_SUBTRACT,      &m_KeyInfo.StateChange.Key_SUBTRACT, &m_KeyInfo.StateKeep.Key_SUBTRACT, &m_KeyInfo.PushCount.Key_SUBTRACT },
-		{ "+", GLFW_KEY_KP_ADD,           &m_KeyInfo.StateChange.Key_ADD,      &m_KeyInfo.StateKeep.Key_ADD,      &m_KeyInfo.PushCount.Key_ADD      },
-		{ "Shift", GLFW_KEY_LEFT_SHIFT,   &m_KeyInfo.StateChange.Key_SHIFT,    &m_KeyInfo.StateKeep.Key_SHIFT,    &m_KeyInfo.PushCount.Key_SHIFT    },
-		{ "Shift", GLFW_KEY_RIGHT_SHIFT,  &m_KeyInfo.StateChange.Key_SHIFT,    &m_KeyInfo.StateKeep.Key_SHIFT,    &m_KeyInfo.PushCount.Key_SHIFT    },
-		{ "Ctrl", GLFW_KEY_LEFT_CONTROL,  &m_KeyInfo.StateChange.Key_CONTROL,  &m_KeyInfo.StateKeep.Key_CONTROL,  &m_KeyInfo.PushCount.Key_CONTROL  },
-		{ "Ctrl", GLFW_KEY_RIGHT_CONTROL, &m_KeyInfo.StateChange.Key_CONTROL,  &m_KeyInfo.StateKeep.Key_CONTROL,  &m_KeyInfo.PushCount.Key_CONTROL  },
-		{ "Alt", GLFW_KEY_LEFT_ALT,       &m_KeyInfo.StateChange.Key_ALT,      &m_KeyInfo.StateKeep.Key_ALT,      &m_KeyInfo.PushCount.Key_ALT      },
-		{ "Alt", GLFW_KEY_RIGHT_ALT,      &m_KeyInfo.StateChange.Key_ALT,      &m_KeyInfo.StateKeep.Key_ALT,      &m_KeyInfo.PushCount.Key_ALT      },
-		{ " (スペース)", GLFW_KEY_SPACE,  &m_KeyInfo.StateChange.Key_SPACE,    &m_KeyInfo.StateKeep.Key_SPACE,    &m_KeyInfo.PushCount.Key_SPACE    },
-		{ "→", GLFW_KEY_RIGHT,           &m_KeyInfo.StateChange.Key_RIGHT,    &m_KeyInfo.StateKeep.Key_RIGHT,    &m_KeyInfo.PushCount.Key_RIGHT    },
-		{ "←", GLFW_KEY_LEFT,            &m_KeyInfo.StateChange.Key_LEFT,     &m_KeyInfo.StateKeep.Key_LEFT,     &m_KeyInfo.PushCount.Key_LEFT     },
-		{ "↓", GLFW_KEY_DOWN,            &m_KeyInfo.StateChange.Key_DOWN,     &m_KeyInfo.StateKeep.Key_DOWN,     &m_KeyInfo.PushCount.Key_DOWN     },
-		{ "↑", GLFW_KEY_UP,              &m_KeyInfo.StateChange.Key_UP,       &m_KeyInfo.StateKeep.Key_UP,       &m_KeyInfo.PushCount.Key_UP       },
+		{ "/",		GLFW_KEY_KP_DIVIDE,		&m_KeyInfo.StateChange.Key_DIVIDE,   &m_KeyInfo.StateKeep.Key_DIVIDE,   &m_KeyInfo.PushCount.Key_DIVIDE   },
+		{ "*",		GLFW_KEY_KP_MULTIPLY,	&m_KeyInfo.StateChange.Key_MULTIPLY, &m_KeyInfo.StateKeep.Key_MULTIPLY, &m_KeyInfo.PushCount.Key_MULTIPLY },
+		{ "-",		GLFW_KEY_KP_SUBTRACT,	&m_KeyInfo.StateChange.Key_SUBTRACT, &m_KeyInfo.StateKeep.Key_SUBTRACT, &m_KeyInfo.PushCount.Key_SUBTRACT },
+		{ "+",		GLFW_KEY_KP_ADD,		&m_KeyInfo.StateChange.Key_ADD,      &m_KeyInfo.StateKeep.Key_ADD,      &m_KeyInfo.PushCount.Key_ADD      },
+		{ "Shift",	GLFW_KEY_LEFT_SHIFT,	&m_KeyInfo.StateChange.Key_SHIFT,    &m_KeyInfo.StateKeep.Key_SHIFT,    &m_KeyInfo.PushCount.Key_SHIFT    },
+		{ "Shift",	GLFW_KEY_RIGHT_SHIFT,	&m_KeyInfo.StateChange.Key_SHIFT,    &m_KeyInfo.StateKeep.Key_SHIFT,    &m_KeyInfo.PushCount.Key_SHIFT    },
+		{ "Ctrl",	GLFW_KEY_LEFT_CONTROL,	&m_KeyInfo.StateChange.Key_CONTROL,  &m_KeyInfo.StateKeep.Key_CONTROL,  &m_KeyInfo.PushCount.Key_CONTROL  },
+		{ "Ctrl",	GLFW_KEY_RIGHT_CONTROL,	&m_KeyInfo.StateChange.Key_CONTROL,  &m_KeyInfo.StateKeep.Key_CONTROL,  &m_KeyInfo.PushCount.Key_CONTROL  },
+		{ "Alt",	GLFW_KEY_LEFT_ALT,		&m_KeyInfo.StateChange.Key_ALT,      &m_KeyInfo.StateKeep.Key_ALT,      &m_KeyInfo.PushCount.Key_ALT      },
+		{ "Alt",	GLFW_KEY_RIGHT_ALT,		&m_KeyInfo.StateChange.Key_ALT,      &m_KeyInfo.StateKeep.Key_ALT,      &m_KeyInfo.PushCount.Key_ALT      },
+		{ " ",		GLFW_KEY_SPACE,			&m_KeyInfo.StateChange.Key_SPACE,    &m_KeyInfo.StateKeep.Key_SPACE,    &m_KeyInfo.PushCount.Key_SPACE    },
+		{ "→",		GLFW_KEY_RIGHT,			&m_KeyInfo.StateChange.Key_RIGHT,    &m_KeyInfo.StateKeep.Key_RIGHT,    &m_KeyInfo.PushCount.Key_RIGHT    },
+		{ "←",		GLFW_KEY_LEFT,			&m_KeyInfo.StateChange.Key_LEFT,     &m_KeyInfo.StateKeep.Key_LEFT,     &m_KeyInfo.PushCount.Key_LEFT     },
+		{ "↓",		GLFW_KEY_DOWN,			&m_KeyInfo.StateChange.Key_DOWN,     &m_KeyInfo.StateKeep.Key_DOWN,     &m_KeyInfo.PushCount.Key_DOWN     },
+		{ "↑",		GLFW_KEY_UP,			&m_KeyInfo.StateChange.Key_UP,       &m_KeyInfo.StateKeep.Key_UP,       &m_KeyInfo.PushCount.Key_UP       },
 	};
 	
 	//押された or 離されば場合のみ情報更新（押し続けの時はスルーする）
@@ -342,13 +342,28 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 				//押された場合
 				if (GLFW_PRESS == p_action)
 				{
-					printf("[%s]キーが押されました\n", KeySummary[index].KeyChar);
+					//スペースキーは少しわかりづらいので補助文字を入れて表示する
+					if (' ' == *KeySummary[index].KeyChar)
+					{
+						printf("[ (スペース)]キーが押されました\n");
+					}
+					else
+					{
+						printf("[%s]キーが押されました\n", KeySummary[index].KeyChar);
+					}
 
 					//[StateKeep]には、押すたびに「true」と「false」を交互に切り替える
 					*KeySummary[index].StateKeep = !*KeySummary[index].StateKeep;
 
 					//[PushCount]には、押すたびに値を加算していく
 					*(KeySummary[index].PushCount)++;
+
+					//アルファベットもしくは数字が押された場合文字をラストキーとしてコピーする
+					//（[46]は[KeySummary]に定義したアルファベットと数字までのテーブルを指す）
+					if(46 > index)	
+					{
+						m_KeyInfo.LastKey = *KeySummary[index].KeyChar;
+					}
 				}
 				break;
 			}

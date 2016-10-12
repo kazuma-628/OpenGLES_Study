@@ -87,18 +87,20 @@ void main(void)
 	//※ ウィンドウを複数生成して、それぞれKey管理することはまだ対応していないので注意 ※
 	m_DeviceManager->Initialize( m_WindowManager->GetWindow() );
 
+	//キー（キーボード）の情報を取得
+	const KeyInfo *KeyBoard = m_DeviceManager->GetKeyInfo();
+
 	//画面に文字列を表示する用のクラスの準備
 	ScreenString::Prepare(m_Global);
+
 
 	//////////////////////////////////////////////////////
 	//	描画メインループ
 
-	//初回起動時はハローワールド描画（OpenGLの基本的な描画）を選択しておく
-	strcpy(TmpGlobal.DrawingClass, typeid(*m_HelloWorld).name());
-
 	//ウィンドウが開いている間はループ
 	while (GL_FALSE == m_WindowManager->GetWindowShouldClose())
 	{
+
 		/////////////////////////////
 		// 各種情報の更新
 
@@ -127,24 +129,19 @@ void main(void)
 		// 毎回クラス名をコピー処理しているのと、
 		// 切替時に描画が2重で行われる不効率さがあるが現状維持とする。
 
-		//キー（キーボード）の情報を取得
-		const KeyInfo *KeyBoard = m_DeviceManager->GetKeyInfo();
-
-		//ハローワールド描画（OpenGLの基本的な描画）
-		if (true == KeyBoard->StateChange.Key_0 ||
-			0 == strncmp(typeid(*m_HelloWorld).name(), TmpGlobal.DrawingClass, strlen(typeid(*m_HelloWorld).name())))
+		//ハローワールド描画（OpenGLの基本的な描画）→　初回描画アイテム
+		if ('0' == TmpGlobal.LastKey || '0' == KeyBoard->LastKey || 0 == TmpGlobal.LastKey)
 		{
-			//選択された描画クラスを記憶して描画開始
-			strcpy(TmpGlobal.DrawingClass, typeid(*m_HelloWorld).name());
-			m_HelloWorld->Drawing(m_Global);
+			TmpGlobal.LastKey = KeyBoard->LastKey;							//選択したキーを保存
+			strcpy(TmpGlobal.DrawClass, typeid(*m_HelloWorld).name());		//選択した描画クラス名を保存
+			m_HelloWorld->Drawing(m_Global);								//描画実行
 		}
-
+		
 		//ハローモデル描画（モデルデータのお試し描画）
-		if (true == KeyBoard->StateChange.Key_1 ||
-				 0 == strncmp(typeid(*m_HelloModel).name(), TmpGlobal.DrawingClass, strlen(typeid(*m_HelloModel).name())))
+		if ('1' == KeyBoard->LastKey || '1' == TmpGlobal.LastKey)
 		{
-			//選択された描画クラスを記憶して描画開始
-			strcpy(TmpGlobal.DrawingClass, typeid(*m_HelloModel).name());
+			TmpGlobal.LastKey = KeyBoard->LastKey;
+			strcpy(TmpGlobal.DrawClass, typeid(*m_HelloModel).name());
 			m_HelloModel->Drawing(m_Global);
 		}
 
@@ -197,7 +194,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 
 	//今描画している(選択している)クラスと、表示している位置と回転の座標を表示
 	//（1フレーム前の情報だけど、一番上に表示したいので良しとする）
-	ScreenString::DebugPrint(*p_Global, "描画クラス：%s", TmpGlobal.DrawingClass + 6);		//「+6」は不要な「class 」の部分を読み飛ばして表示するためのもの
+	ScreenString::DebugPrint(*p_Global, "描画クラス：%s", TmpGlobal.DrawClass + 6);		//「+6」は不要な「class 」の部分を読み飛ばして表示するためのもの
 	ScreenString::DebugPrint(*p_Global, "位置 X：%d, Y：%d, Z：%d"\
 							 ,(int)p_Global->TranslateAmount.x, (int)p_Global->TranslateAmount.y, (int)p_Global->TranslateAmount.z);
 	ScreenString::DebugPrint(*p_Global, "回転 X：%d, Y：%d, Z：%d"\

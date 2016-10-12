@@ -13,6 +13,7 @@
 #define RotateSpeedWeight		2.0f		//回転速度の重み（値が大きいほど回転速度は遅くなる）
 #define InertiaRotateWeight		0.3f		//惰性回転量の重み（値が大きいほど惰性回転量は多くなる）
 #define InertiaTranslateWeight	0.2f		//惰性移動量の重み（値が小さいほど惰性移動量は多くなる）
+#define CLASS_NAME_MAX			64			//クラス名の最大文字数
 
 //構造体
 typedef struct
@@ -25,7 +26,8 @@ typedef struct
 	bool ChangeWindowSize;			//【1イベント前】ウィンドウサイズに変更があったかを示す変数
 	vec3 InertiaTranslate;			// 惰性に伴う1イベント分の移動量（フリックするとフリック速度に応じた値が入り徐々に[0]になる、マウスを動かさなければ[0]）
 	vec3 InertiaRotate;				// 惰性に伴う1イベント分の回転量（フリックするとフリック速度に応じた値が入り徐々に[0]になる、マウスを動かさなければ[0]）
-	char DrawingClass[64];			// 今描画している(選択している)クラス名
+	char LastKey;					// 最後に選択したキー（描画アイテムに関連付けられているもののみ更新される）
+	char DrawClass[CLASS_NAME_MAX];	// 今描画している(選択している)クラス名
 }TmpGlobalData;
 
 /*-------------------------------------------------------------------------------
