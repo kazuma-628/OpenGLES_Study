@@ -1,36 +1,18 @@
-#############################################
+##############################################################
 #「CMakeの最低バージョン」を指定する
-#############################################
+
 cmake_minimum_required(VERSION 2.8)
 
-#############################################
+##############################################################
 #「ソリューション名 と 言語」を指定する
-#############################################
+
 project(OpenGLES_Study CXX)
 
-#############################################
-#「プロジェクト名」と「読み込むソース」を指定する
-#############################################
-add_executable(
-# 「プロジェクト名」を指定する
-	Main
-
-#「Resource File」を指定する
-  # Icon
-	Resource/Icon/ExeIcon.rc
-	Resource/Icon/ExeIcon.ico
-  # Texture
-	Resource/Texture/Sample.JPG
-  # Model
-	# Handgun1
-	  Resource/Model/Handgun1/Copyright.txt
-	  Resource/Model/Handgun1/Handgun_obj.mtl
-#	  Resource/Model/Handgun1/Handgun_obj.obj				# ビルド対象外にする方法がわからないので暫定でコメントアウト
-	  Resource/Model/Handgun1/Texture/handgun_C.jpg
-	  Resource/Model/Handgun1/Texture/handgun_N.jpg
-  	  Resource/Model/Handgun1/Texture/handgun_S.jpg
+##############################################################
+#「ソリューションに追加するファイル」を指定する
 
 #「Source File」を指定する
+set(SOURCE
 #	Source/old_Matrix.cpp		# GLMライブラリへの移行に伴い廃止
 #	Source/old_Maths.cpp		# GLMライブラリへの移行に伴い廃止
 	Source/Main.cpp
@@ -43,8 +25,10 @@ add_executable(
 	Source/ModelManager.cpp
 	Source/ScreenString.cpp
 	Source/OBJLoader.cpp
+)
 
 #「Header File」を指定する
+set(HEADER
 #	Header/old_Matrix.h			# GLMライブラリへの移行に伴い廃止
 #	Header/old_Maths.h			# GLMライブラリへの移行に伴い廃止
 	Header/Common.h
@@ -58,8 +42,10 @@ add_executable(
 	Header/ModelManager.h
 	Header/ScreenString.h
 	Header/OBJLoader.h
+)
 
 #「Shader File」を指定する
+set(SHADER
 	Shader/HelloWorld.frag
 	Shader/HelloWorld.vert
 	Shader/ScreenString.vert
@@ -68,14 +54,52 @@ add_executable(
 	Shader/ModelManager.frag
 )
 
-#############################################
+#「Model File」を指定する
+set(MODEL
+	Resource/Model/Handgun1/Copyright.txt
+	Resource/Model/Handgun1/Handgun_obj.mtl
+	Resource/Model/Handgun1/Handgun_obj.obj
+	Resource/Model/Handgun1/Texture/handgun_C.jpg
+	Resource/Model/Handgun1/Texture/handgun_N.jpg
+	Resource/Model/Handgun1/Texture/handgun_S.jpg
+)
+
+#「Texture File」を指定する
+set(TEXTURE
+	Resource/Texture/Sample.JPG
+)
+
+#「Other File」を指定する
+set(OTHER
+  # Icon
+	Resource/Icon/ExeIcon.rc
+	Resource/Icon/ExeIcon.ico
+)
+
+##############################################################
+#「実行可能ファイル（プロジェクト名 と ソース）」を指定する
+
+add_executable(
+# 「プロジェクト名」を指定する
+	Main
+
+#「Resource File」を指定する
+	${SOURCE}
+	${HEADER}
+	${SHADER}
+	${MODEL}
+	${TEXTURE}
+	${OTHER}
+)
+
+##############################################################
 #「プリプロセッサ」を指定する
-#############################################
+
 add_definitions(-DGLEW_STATIC)
 
-#############################################
+##############################################################
 #「実行ファイル生成場所」を指定する（デバッグのみ）
-#############################################
+
 set_target_properties(
 # 「ターゲット（プロジェクト名）」を指定する
 	Main
@@ -86,9 +110,28 @@ set_target_properties(
 	RUNTIME_OUTPUT_NAME_DEBUG OpenGLES_Study
 )
 
-#############################################
+##############################################################
+#「ビルド対象外のファイル」を指定する（自動的にビルド対象になるアイテムのみ）
+
+#「モデルデータ」分ループ
+foreach(ModelFile ${MODEL})
+
+	#「.obj」ファイル（モデルデータ）をビルド対象外にする
+	if(${ModelFile} MATCHES ".obj$")
+
+		#ダミーのカスタムビルドを設定してビルド対象外に設定する
+		add_custom_command(
+			OUTPUT Dummy.txt
+			COMMAND echo "Dummy Command Run"
+			MAIN_DEPENDENCY ${ModelFile}
+			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+		)
+	endif(${ModelFile} MATCHES ".obj$")
+endforeach(ModelFile)
+
+##############################################################
 #「Visual Studio上でのフォルダ」を指定する
-#############################################
+
 source_group(Resource\\Icon REGULAR_EXPRESSION Resource/Icon)
 source_group(Resource\\Texture REGULAR_EXPRESSION Resource/Texture)
 source_group(Resource\\Model\\Handgun1 REGULAR_EXPRESSION Resource/Model/Handgun1)
@@ -98,9 +141,9 @@ source_group(Shader REGULAR_EXPRESSION Shader)
 source_group(Source REGULAR_EXPRESSION Source)
 source_group(Header REGULAR_EXPRESSION Header)
 
-#############################################
+##############################################################
 #「インクルードするヘッダーの場所」を指定する
-#############################################
+
 include_directories(
 	${CMAKE_SOURCE_DIR}/Header
 	${CMAKE_SOURCE_DIR}/Library/GLEW/include/GL
@@ -109,9 +152,8 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/Library/GLM/glm
 )
 
-#############################################
+##############################################################
 #「ライブラリ」を指定する（バージョンごとに切り替える）
-#############################################
 
 #Visual Studio 2010
 if(${CMAKE_GENERATOR} MATCHES "Visual Studio 10")
