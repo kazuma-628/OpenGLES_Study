@@ -15,6 +15,7 @@
 　私が作成したVisual Studioのバージョンと、皆様の使用しているVisual Studioのバージョンが一致しないと、
 　正しくコンパイルされないことが多々発生します。
 　そうした問題を解消するのが「CMake」です。
+　ダウンロードURL：https://cmake.org/download/
 
 -----------------------------------------------------------------------------------
 １、CMakeでソリューションを生成します。
@@ -29,7 +30,7 @@
 　[Specify the generator for this profect]に「お使いのVisual Studioバージョン」を設定します
 　この時「Visual Studio XX XXXX」を選ぶようにして、
 　「ARM や Win64」の選択肢を選ばないようにしてください。
-　また、対応しているVisual Studioのバージョンは「2010 ～ 2015」です。
+　また、対応しているVisual Studioのバージョンは「2013以降」です。
 　※画面下部の選択肢は何もせずにそのままでOKです。
 　「Finish」を押して正常終了すれば「Configuring done」が表示されます。
 　

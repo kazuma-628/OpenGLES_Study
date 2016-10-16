@@ -155,36 +155,6 @@ include_directories(
 ##############################################################
 #「ライブラリ」を指定する（バージョンごとに切り替える）
 
-#Visual Studio 2010
-if(${CMAKE_GENERATOR} MATCHES "Visual Studio 10")
-	target_link_libraries(
-	#使用する元の「プロジェクト名」を指定する
-		Main
-
-	#「ライブラリ」を指定する
-		opengl32.lib
-		gdiplus.lib
-		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
-		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2010/glfw3.lib
-		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype265MT.lib
-	)
-endif(${CMAKE_GENERATOR} MATCHES "Visual Studio 10")
-
-#Visual Studio 2012
-if(${CMAKE_GENERATOR} MATCHES "Visual Studio 11")
-	target_link_libraries(
-	#使用する元の「プロジェクト名」を指定する
-		Main
-
-	#「ライブラリ」を指定する
-		opengl32.lib
-		gdiplus.lib
-		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
-		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2012/glfw3.lib
-		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype265MT.lib
-	)
-endif(${CMAKE_GENERATOR} MATCHES "Visual Studio 11")
-
 #Visual Studio 2013
 if(${CMAKE_GENERATOR} MATCHES "Visual Studio 12")
 	target_link_libraries(
@@ -198,10 +168,9 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 12")
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2013/glfw3.lib
 		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype265MT.lib
 	)
-endif(${CMAKE_GENERATOR} MATCHES "Visual Studio 12")
 
 #Visual Studio 2015
-if(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
+elseif(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
 	target_link_libraries(
 	#使用する元の「プロジェクト名」を指定する
 		Main
@@ -213,4 +182,9 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2015/glfw3.lib
 		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype265MT.lib
 	)
-endif(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
+
+#サポートしていない「Vusual Studio(2012以前)」バージョンの場合はエラーメッセージを表示
+else(${CMAKE_GENERATOR} MATCHES "Visual Studio 12")
+	message(FATAL_ERROR "Unsupported \"Visual Studio\" version \n Please use the \"Visual Studio 2013(2015)\" version or later version")
+endif(${CMAKE_GENERATOR} MATCHES "Visual Studio 12")
+
