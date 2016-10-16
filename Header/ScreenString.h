@@ -9,7 +9,7 @@
 
 //Defien
 #define FT_FONT_FILE		"../Resource/Font/GenEiGothicN/GenEiGothicN-Bold.otf"		//FreeTypeで使用するフォントファイル
-#define DEBUG_FONT_SIZE		18			//デバッグ表示のフォントサイズ指定（ピクセル単位）
+#define DEBUG_FONT_SIZE		16			//デバッグ表示のフォントサイズ指定（ピクセル単位）
 #define DEBUG_ROWS_SPACING	(DEBUG_FONT_SIZE + (unsigned int)ceil((DEBUG_FONT_SIZE / 3.0)))	//デバッグ用の文字と文字との縦方向の間隔（ピクセル単位）　※こちらは普段変更しない定義
 #define WIDTH_SPACING		3			//文字と文字との横方向の間隔（ピクセル単位）
 class ScreenString
