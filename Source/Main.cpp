@@ -132,7 +132,7 @@ void main(void)
 		//ハローワールド描画（OpenGLの基本的な描画）→　初回描画アイテム
 		if ('0' == TmpGlobal.LastKey || '0' == KeyBoard->LastKey || 0 == TmpGlobal.LastKey)
 		{
-			TmpGlobal.LastKey = KeyBoard->LastKey;							//選択したキーを保存
+			TmpGlobal.LastKey = '0';										//選択したキーを保存
 			strcpy(TmpGlobal.DrawClass, typeid(*m_HelloWorld).name());		//選択した描画クラス名を保存
 			m_HelloWorld->Drawing(m_Global);								//描画実行
 		}
@@ -140,7 +140,7 @@ void main(void)
 		//ハローモデル描画（モデルデータのお試し描画）
 		if ('1' == KeyBoard->LastKey || '1' == TmpGlobal.LastKey)
 		{
-			TmpGlobal.LastKey = KeyBoard->LastKey;
+			TmpGlobal.LastKey = '1';
 			strcpy(TmpGlobal.DrawClass, typeid(*m_HelloModel).name());
 			m_HelloModel->Drawing(m_Global);
 		}

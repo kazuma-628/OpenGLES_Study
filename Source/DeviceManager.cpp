@@ -336,9 +336,6 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 			//該当するキーがあれば
 			if (KeySummary[index].KeyDefine == p_key)
 			{
-				//[StateChange]には、押されていると「true」 or 押されていないと「false」を設定
-				*KeySummary[index].StateChange = p_action == GLFW_PRESS ? true : false;
-
 				//押された場合
 				if (GLFW_PRESS == p_action)
 				{
@@ -352,18 +349,29 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 						printf("[%s]キーが押されました\n", KeySummary[index].KeyChar);
 					}
 
+					//[StateChange]には、押されていると「true」を設定
+					*KeySummary[index].StateChange = true;
+
 					//[StateKeep]には、押すたびに「true」と「false」を交互に切り替える
 					*KeySummary[index].StateKeep = !*KeySummary[index].StateKeep;
 
 					//[PushCount]には、押すたびに値を加算していく
 					*(KeySummary[index].PushCount)++;
 
-					//アルファベットもしくは数字が押された場合文字をラストキーとしてコピーする
+					//[LastKey]には、アルファベット・数字が押された場合のみその文字を設定する
 					//（[46]は[KeySummary]に定義したアルファベットと数字までのテーブルを指す）
 					if(46 > index)	
 					{
 						m_KeyInfo.LastKey = *KeySummary[index].KeyChar;
 					}
+				}
+				else if (GLFW_RELEASE == p_action)
+				{
+					//[StateChange]には、押されていないと「false」を設定
+					*KeySummary[index].StateChange = false;
+
+					//[LastKey]には、キーが離されたときに初期値を設定する
+					m_KeyInfo.LastKey = 0;
 				}
 				break;
 			}
