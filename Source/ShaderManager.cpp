@@ -873,7 +873,7 @@ void ShaderManager::UniformXiv(const GLint p_index, const GLint p_scalar, const 
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ShaderManager::UniformMatrixXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLboolean p_transpose, const mat4 *p_value)
+void ShaderManager::UniformMatrixXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLboolean p_transpose, const GLfloat *p_value)
 {
 	if (-1 == m_UniformInfo[p_index].Location)
 	{
@@ -886,15 +886,15 @@ void ShaderManager::UniformMatrixXfv(const GLint p_index, const GLint p_scalar, 
 	{
 		if (2 == p_scalar)
 		{
-			glUniformMatrix2fv(m_UniformInfo[p_index].Location, p_count, p_transpose, (GLfloat*)p_value);
+			glUniformMatrix2fv(m_UniformInfo[p_index].Location, p_count, p_transpose, p_value);
 		}
 		else if (3 == p_scalar)
 		{
-			glUniformMatrix3fv(m_UniformInfo[p_index].Location, p_count, p_transpose, (GLfloat*)p_value);
+			glUniformMatrix3fv(m_UniformInfo[p_index].Location, p_count, p_transpose, p_value);
 		}
 		else if (4 == p_scalar)
 		{
-			glUniformMatrix4fv(m_UniformInfo[p_index].Location, p_count, p_transpose, (GLfloat*)p_value);
+			glUniformMatrix4fv(m_UniformInfo[p_index].Location, p_count, p_transpose, p_value);
 		}
 		else
 		{
