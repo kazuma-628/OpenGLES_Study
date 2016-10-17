@@ -3,9 +3,10 @@
 
 //include定義
 #include "Common.h"
+#include "BaseDraw.h"
 #include "ShaderManager.h"
 
-class HelloWorld
+class HelloWorld : public BaseDraw
 {
 
 public:
@@ -19,11 +20,11 @@ public:
 	*	関数説明
 	*	　ハローワールド描画（OpenGLの基本的な描画）の準備をする
 	*	引数
-	*	　なし
+	*	　p_Global			：[I/ ]　グローバルデータ
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Prepare();
+	void Prepare(const GlobalData &p_Global);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -48,6 +49,5 @@ private:
 	GLint m_attr_pos;					//頂点データ
 	GLint m_attr_color;					//カラーデータ
 	GLint m_ProjModel_matrix;			//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
-	bool PrepareFlag;					//描画準備完了フラグ
 };
 #endif

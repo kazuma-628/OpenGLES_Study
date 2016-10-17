@@ -5,7 +5,6 @@ HelloWorld::HelloWorld()
 {
 	//変数初期化
 	m_MainShader = NULL;
-	PrepareFlag = false;
 
 	m_attr_pos = -1;
 	m_attr_color = -1;
@@ -24,14 +23,14 @@ HelloWorld::~HelloWorld()
 *	関数説明
 *	　ハローワールド描画（OpenGLの基本的な描画）の準備をする
 *	引数
-*	　なし
+*	　p_Global			：[I/ ]　グローバルデータ
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void HelloWorld::Prepare()
+void HelloWorld::Prepare(const GlobalData &p_Global)
 {
 	//描画準備が未完了の場合
-	if (false == PrepareFlag)
+	if (false == PrepareCompFlag)
 	{
 		//データが作成されていなければ
 		if (NULL == m_MainShader)
@@ -57,7 +56,7 @@ void HelloWorld::Prepare()
 		}
 
 		//描画準備完了とする
-		PrepareFlag = true;
+		PrepareCompFlag = true;
 	}
 }
 
@@ -71,9 +70,6 @@ void HelloWorld::Prepare()
 *-------------------------------------------------------------------------------*/
 void HelloWorld::Drawing(const GlobalData &p_Global)
 {
-	//描画準備
-	Prepare();
-
 	// シェーダープログラムの利用を開始する
 	m_MainShader->UseProgram();
 

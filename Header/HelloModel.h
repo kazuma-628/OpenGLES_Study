@@ -3,9 +3,10 @@
 
 //include定義
 #include "Common.h"
+#include "BaseDraw.h"
 #include "ModelManager.h"
 
-class HelloModel
+class HelloModel : public BaseDraw
 {
 
 public:
@@ -19,11 +20,11 @@ public:
 	*	関数説明
 	*	　ハローモデル描画（モデルデータのお試し描画）の準備をする
 	*	引数
-	*	　なし
+	*	　p_Global			：[I/ ]　グローバルデータ
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void Prepare();
+	void Prepare(const GlobalData &p_Global);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -38,6 +39,5 @@ public:
 private:
 
 	ModelManager *m_Model;		//モデル管理オブジェクト
-	bool PrepareFlag;			//描画準備完了フラグ
 };
 #endif

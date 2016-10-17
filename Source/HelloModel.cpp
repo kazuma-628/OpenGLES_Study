@@ -4,7 +4,6 @@
 HelloModel::HelloModel()
 {
 	m_Model = NULL;
-	PrepareFlag = false;
 }
 
 //デストラクタ
@@ -17,14 +16,14 @@ HelloModel::~HelloModel()
 *	関数説明
 *	　ハローモデル描画（モデルデータのお試し描画）の準備をする
 *	引数
-*	　なし
+*	　p_Global			：[I/ ]　グローバルデータ
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void HelloModel::Prepare()
+void HelloModel::Prepare(const GlobalData &p_Global)
 {
 	//描画準備が未完了の場合
-	if (false == PrepareFlag)
+	if (false == PrepareCompFlag)
 	{
 		//モデル管理オブジェクトが未生成の場合は、生成後にモデルデータの読み込みを行う
 		if (NULL == m_Model)
@@ -34,7 +33,7 @@ void HelloModel::Prepare()
 		}
 
 		//描画準備完了とする
-		PrepareFlag = true;
+		PrepareCompFlag = true;
 	}
 }
 
@@ -48,9 +47,6 @@ void HelloModel::Prepare()
 *-------------------------------------------------------------------------------*/
 void HelloModel::Drawing(const GlobalData &p_Global)
 {
-	//描画準備
-	Prepare();
-
 	//モデルビューマトリクスをコピー
 	mat4 ModelViewMat = p_Global.ModelViewMat;;
 	

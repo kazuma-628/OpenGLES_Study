@@ -25,6 +25,7 @@ set(SOURCE
 	Source/ModelManager.cpp
 	Source/ScreenString.cpp
 	Source/OBJLoader.cpp
+	Source/BaseDraw.cpp
 )
 
 #「Header File」を指定する
@@ -42,6 +43,7 @@ set(HEADER
 	Header/ModelManager.h
 	Header/ScreenString.h
 	Header/OBJLoader.h
+	Header/BaseDraw.h
 )
 
 #「Shader File」を指定する

@@ -64,14 +64,23 @@ void main(void)
 	//グローバルデータ生成
 	GlobalData m_Global = { 0 };
 
+
 	//////////////////////////////////////////////////////
-	//	各描画オブジェクト生成
+	//	各描画オブジェクト生成 と 描画開始キー設定
 
-	//ハローワールド描画（OpenGLの基本的な描画）用のオブジェクト生成
-	HelloWorld *m_HelloWorld = new HelloWorld;
+	//描画するクラスの管理リスト
+	const DarwClassInfo DrawClass[] =
+	{
+		// { 描画を開始(選択)するキー, 描画するクラス }
+		//	（英数字(大文字)のみ）
 
-	//ハローモデル描画（モデルデータのお試し描画）用のオブジェクト生成
-	HelloModel *m_HelloModel = new HelloModel;
+		{ '0', new HelloWorld },		//ハローワールド描画（OpenGLの基本的な描画）
+		{ '1', new HelloModel },		//ハローモデル描画（モデルデータのお試し描画）
+	};
+
+	//描画するクラスの最大数
+	int DrawClassMax = sizeof(DrawClass) / sizeof(DrawClass[0]);
+
 
 	//////////////////////////////////////////////////////
 	//	各オブジェクト初期化 及び 準備
@@ -89,6 +98,9 @@ void main(void)
 
 	//キー（キーボード）の情報を取得
 	const KeyInfo *KeyBoard = m_DeviceManager->GetKeyInfo();
+
+	//初回描画アイテムを設定（リストの一番最初）
+	TmpGlobal.LastKey = DrawClass[0].Key;
 
 	//画面に文字列を表示する用のクラスの準備
 	ScreenString::Prepare(m_Global);
@@ -110,41 +122,50 @@ void main(void)
 		//描画に必要な各種情報を設定/更新
 		SetVarietyOfInformation(m_WindowManager, m_DeviceManager, &m_Global);
 
+
+		/////////////////////////////
+		// 資源の再作成
+
 		//ウィンドウサイズに変更があった場合
 		if (true == TmpGlobal.ChangeWindowSize)
 		{
-			/////////////////////////////
-			// 資源の再作成
+			//描画リスト分ループ
+			for (int index = 0; index < DrawClassMax; index++)
+			{
+				//描画の再準備（資源の再作成）フラグを立てる
+				//個々の描画準備のときにフラグをチェックして必要であれば再準備処理する
+				DrawClass[index].Class->SetRePrepareFlag(true);
+			}
 
+			//資源の再作成
 			ScreenString::RePrepare(m_Global);
-
-			//再作成完了
-			TmpGlobal.ChangeWindowSize = false;
 		}
 
 
 		/////////////////////////////
 		// 各種描画
 		// 選択されたキーによって描画を切り替える
-		// 毎回クラス名をコピー処理しているのと、
 		// 切替時に描画が2重で行われる不効率さがあるが現状維持とする。
 
-		//ハローワールド描画（OpenGLの基本的な描画）→　初回描画アイテム
-		if ('0' == TmpGlobal.LastKey || '0' == KeyBoard->LastKey || 0 == TmpGlobal.LastKey)
+		//描画リスト分ループ
+		for (int index = 0; index < DrawClassMax; index++)
 		{
-			TmpGlobal.LastKey = '0';										//選択したキーを保存
-			strcpy(TmpGlobal.DrawClass, typeid(*m_HelloWorld).name());		//選択した描画クラス名を保存
-			m_HelloWorld->Drawing(m_Global);								//描画実行
+			if (DrawClass[index].Key == KeyBoard->LastKey || DrawClass[index].Key == TmpGlobal.LastKey)
+			{
+				//選択したキーを保存
+				TmpGlobal.LastKey = DrawClass[index].Key;
+
+				//選択した描画クラス名を保存
+				strcpy(TmpGlobal.DrawClass, typeid(*DrawClass[index].Class).name());
+
+				//描画準備
+				DrawClass[index].Class->Prepare(m_Global);
+
+				//描画実行
+				DrawClass[index].Class->Drawing(m_Global);
+			}
 		}
 		
-		//ハローモデル描画（モデルデータのお試し描画）
-		if ('1' == KeyBoard->LastKey || '1' == TmpGlobal.LastKey)
-		{
-			TmpGlobal.LastKey = '1';
-			strcpy(TmpGlobal.DrawClass, typeid(*m_HelloModel).name());
-			m_HelloModel->Drawing(m_Global);
-		}
-
 		//デバッグ表示の描画を実行する
 		//デバッグ表示が最前面に来るようにするため一番最後に描画する
 		ScreenString::DebugDrawing(m_Global);
@@ -162,12 +183,17 @@ void main(void)
 		}
 	}
 
+
 	//////////////////////////////////////////////////////
 	//	生成したオブジェクトの破棄
 
-	//終了処理
-	delete m_HelloWorld;
-	delete m_HelloModel;
+	//描画リスト分ループ
+	for (int index = 0; index < DrawClassMax; index++)
+	{
+		//各描画オブジェクトを破棄
+		delete DrawClass[index].Class;
+	}
+
 	delete m_WindowManager;
 	delete m_DeviceManager;
 	ScreenString::Destroy();

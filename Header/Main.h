@@ -30,6 +30,13 @@ typedef struct
 	char DrawClass[CLASS_NAME_MAX];	// 今描画している(選択している)クラス名
 }TmpGlobalData;
 
+//描画するクラスの情報
+typedef struct
+{
+	char Key;				//描画を開始(選択)するキー
+	BaseDraw *Class;		//描画するクラス
+}DarwClassInfo;
+
 /*-------------------------------------------------------------------------------
 *	関数説明
 *	　描画に必要な各種情報を設定/更新する
