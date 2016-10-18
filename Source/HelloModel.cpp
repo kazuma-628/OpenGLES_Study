@@ -9,7 +9,7 @@ HelloModel::HelloModel()
 //デストラクタ
 HelloModel::~HelloModel()
 {
-	delete m_Model;
+	SAFE_DELETE(m_Model);
 }
 
 /*-------------------------------------------------------------------------------

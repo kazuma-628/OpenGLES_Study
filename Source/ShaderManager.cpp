@@ -287,7 +287,7 @@ void ShaderManager::CreateShaderProgram(const char* p_vertex_file_name,
 			//エラーメッセージ表示
 			printf("\nリンクエラーの情報は以下です。\n");
 			printf("%s", message);
-			free((void*)message);
+			SAFE_FREE(message);
 
 			//破棄処理する
 			DeleteShaderProgram();
@@ -347,38 +347,14 @@ void ShaderManager::DeleteShaderProgram(void)
 	}
 
 	//////////////////////////////////////
-	// 読み込んだシェーダーファイル名が保存されている場合は破棄する
+	// 読み込んだシェーダーファイル名を破棄する
 
-	if (NULL != m_vertex_file_name)
-	{
-		free(m_vertex_file_name);
-		m_vertex_file_name = NULL;
-	}
-	if (NULL != m_fragment_file_name)
-	{
-		free(m_fragment_file_name);
-		m_fragment_file_name = NULL;
-	}
-	if (NULL != m_geometry_file_name)
-	{
-		free(m_geometry_file_name);
-		m_geometry_file_name = NULL;
-	}
-	if (NULL != m_tess_control_file_name)
-	{
-		free(m_tess_control_file_name);
-		m_tess_control_file_name = NULL;
-	}
-	if (NULL != m_tess_evaluation_file_name)
-	{
-		free(m_tess_evaluation_file_name);
-		m_tess_control_file_name = NULL;
-	}
-	if (NULL != m_AllShaderFileName)
-	{
-		free(m_AllShaderFileName);
-		m_AllShaderFileName = NULL;
-	}
+	SAFE_FREE(m_vertex_file_name);
+	SAFE_FREE(m_fragment_file_name);
+	SAFE_FREE(m_geometry_file_name);
+	SAFE_FREE(m_tess_control_file_name);
+	SAFE_FREE(m_tess_evaluation_file_name);
+	SAFE_FREE(m_AllShaderFileName);
 
 	//////////////////////////////////////
 	// アトリビュート・ユニフォーム変数の管理用データを破棄する
@@ -391,7 +367,7 @@ void ShaderManager::DeleteShaderProgram(void)
 			break;
 		}
 		//変数名保存用のメモリを開放
-		free(m_AttribInfo[index].Name);
+		SAFE_FREE(m_AttribInfo[index].Name);
 	}
 	//0で初期化
 	memset(m_AttribInfo, 0, sizeof(m_AttribInfo));
@@ -406,7 +382,7 @@ void ShaderManager::DeleteShaderProgram(void)
 			break;
 		}
 		//変数名保存用のメモリを開放
-		free(m_UniformInfo[index].Name);
+		SAFE_FREE(m_UniformInfo[index].Name);
 	}
 	//0で初期化
 	memset(m_UniformInfo, 0, sizeof(m_UniformInfo));
@@ -953,7 +929,7 @@ GLuint ShaderManager::CreateShader(const char* p_file_name, const GLuint p_gl_xx
 		ERROR_MESSAGE("シェーダーオブジェクトの作成に失敗しました");
 
 		//メモリ解放
-		free(shader_source);
+		SAFE_FREE(shader_source);
 
 		return 0;
 	}
@@ -986,7 +962,7 @@ GLuint ShaderManager::CreateShader(const char* p_file_name, const GLuint p_gl_xx
 			printf("%s", message);
 			
 			//メモリ解放
-			free((void*)message);
+			SAFE_FREE(message);
 			glDeleteShader(shader);
 			shader = 0;
 
@@ -1000,7 +976,7 @@ GLuint ShaderManager::CreateShader(const char* p_file_name, const GLuint p_gl_xx
 	}
 
 	//シェーダーソース用のメモリ解放
-	free((void*)shader_source);
+	SAFE_FREE(shader_source);
 
 	return shader;
 }
@@ -1042,7 +1018,7 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 					  "ファイル名が間違っていませんか？");
 
 		//シェーダーファイルへのパス名破棄
-		free(shader_dir_file_name);
+		SAFE_FREE(shader_dir_file_name);
 
 		return NULL;
 	}
@@ -1057,7 +1033,7 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 		ERROR_MESSAGE("空ファイルです。");
 
 		//シェーダーファイルへのパス名破棄
-		free(shader_dir_file_name);
+		SAFE_FREE(shader_dir_file_name);
 		//ファイルクローズ
 		fclose(fp);
 
@@ -1074,7 +1050,7 @@ char* ShaderManager::ShaderFileLoad(const char* p_file_name)
 	//ファイルクローズ
 	fclose(fp);
 	//シェーダーファイルへのパス名破棄
-	free(shader_dir_file_name);
+	SAFE_FREE(shader_dir_file_name);
 
 	printf("完了\n");
 

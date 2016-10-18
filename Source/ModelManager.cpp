@@ -213,11 +213,8 @@ void ModelManager::FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat)
 			break;
 	}
 
-	if (NULL == model_dir_file_name)
-	{
-		//メモリ解放
-		free(model_dir_file_name);
-	}
+	//メモリ解放
+	SAFE_FREE(model_dir_file_name);
 }
 
 /*-------------------------------------------------------------------------------
@@ -752,8 +749,8 @@ void ModelManager::DataLoad_PiercedCube(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	//メモリ解放
-	free(PiercedCube_vertex);
-	free(PiercedCube_index);
+	SAFE_FREE(PiercedCube_vertex);
+	SAFE_FREE(PiercedCube_index);
 
 	printf("完了\n");
 }
@@ -839,8 +836,8 @@ void ModelManager::DataLoad_PiercedCube2(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	//メモリ解放
-	free(PiercedCube_vertex);
-	free(PiercedCube_index);
+	SAFE_FREE(PiercedCube_vertex);
+	SAFE_FREE(PiercedCube_index);
 
 	printf("完了\n");
 }

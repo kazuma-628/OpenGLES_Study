@@ -102,7 +102,7 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 		mbstowcs(w_texture_dir_file_name, texture_dir_file_name, _mbstrlen(texture_dir_file_name) + 1);
 
 		//文字列変換したので不要なメモリを開放する
-		free(texture_dir_file_name);
+		SAFE_FREE(texture_dir_file_name);
 	}
 
 
@@ -118,7 +118,7 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 	Gdiplus::Bitmap* Texture = new Gdiplus::Bitmap(w_texture_dir_file_name);
 
 	//テクスチャを読み込んだのでファイルパスを保存していたメモリを開放する
-	free(w_texture_dir_file_name);
+	SAFE_FREE(w_texture_dir_file_name);
 
 	//テクスチャデータ読み込み
 	Gdiplus::BitmapData BitmapData;
@@ -144,7 +144,7 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 		}
 		
 		//オブジェクト破棄
-		delete Texture;
+		SAFE_DELETE(Texture);
 		
 		return;
 	}
@@ -168,7 +168,7 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 					  "p_PixelFotmat = %d", p_PixelFotmat);
 
 		//オブジェクト破棄
-		delete Texture;
+		SAFE_DELETE(Texture);
 		
 		return;
 	}
@@ -184,7 +184,7 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 
 	//読み込んだテクスチャ情報/データを破棄する
 	Texture->UnlockBits(&BitmapData);
-	delete Texture;
+	SAFE_DELETE(Texture);
 
 	//GDI+の終了
 	Gdiplus::GdiplusShutdown(token);
@@ -202,11 +202,8 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 *-------------------------------------------------------------------------------*/
 void Texture::FileDataFree(TextureInfo *p_TextureData)
 {
-	//データが格納されていれば開放する
-	if (NULL != p_TextureData->data)
-	{
-		free(p_TextureData->data);
-	}
+	//メモリを開放する
+	SAFE_FREE(p_TextureData->data);
 
 	p_TextureData = NULL;
 }

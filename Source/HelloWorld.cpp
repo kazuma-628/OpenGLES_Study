@@ -16,7 +16,7 @@ HelloWorld::HelloWorld()
 HelloWorld::~HelloWorld()
 {
 	//Mainシェーダー管理用のオブジェクト破棄
-	delete m_MainShader;
+	SAFE_DELETE(m_MainShader);
 }
 
 /*-------------------------------------------------------------------------------

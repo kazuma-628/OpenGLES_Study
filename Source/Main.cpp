@@ -191,11 +191,13 @@ void main(void)
 	for (int index = 0; index < DrawClassMax; index++)
 	{
 		//各描画オブジェクトを破棄
-		delete DrawClass[index].Class;
+		//「SAFE_DELETE」マクロを使用すべきだが、
+		//「const」修飾子がついているのでなので特別に「delete」直呼び許可
+		delete DrawClass[index].Class;	//
 	}
 
-	delete m_WindowManager;
-	delete m_DeviceManager;
+	SAFE_DELETE(m_WindowManager);
+	SAFE_DELETE(m_DeviceManager);
 	ScreenString::Destroy();
 }
 

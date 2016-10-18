@@ -33,6 +33,9 @@ using namespace glm;	//glmライブラリの名前空間を適応
 #define WINDOW_HEIGHT				768						//ウィンドウサイズ（高さ）
 #define GL_GET_ERROR()				GL_NO_ERROR	//glGetError()	//gl関連のエラーを取得したい場合はコメントの文と入れ替える
 #define PI							3.141592653589793
+//セーフティー処理のマクロ
+#define SAFE_FREE(ptr)				free(ptr);	ptr = NULL		//「free」したら必ず「NULL」を代入するマクロ
+#define SAFE_DELETE(ptr)			delete ptr;	ptr = NULL		//「delete」したら必ず「NULL」を代入するマクロ
 
 ////////////////////////////////////////
 // デバッグ情報表示関係の処理など（Define定義・関数定義）

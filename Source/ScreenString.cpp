@@ -103,7 +103,7 @@ void ScreenString::RePrepare(const GlobalData &p_Global)
 void ScreenString::Destroy(void)
 {
 	//文字列描画シェーダー管理用のオブジェクト破棄
-	delete m_StringShader;
+	SAFE_DELETE(m_StringShader);
 
 	//FreeTypeのデータを破棄
 	FT_Done_Face(m_ft_Face);
@@ -263,7 +263,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 	}
 
 	//メモリ解放
-	free(w_String);
+	SAFE_FREE(w_String);
 	
 	//デバッグ表示がコールされるたびに改行を行う
 	//改行のため文字列の合計高さを加算
