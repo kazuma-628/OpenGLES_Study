@@ -33,8 +33,6 @@ using namespace glm;	//glmライブラリの名前空間を適応
 #define WINDOW_HEIGHT				768						//ウィンドウサイズ（高さ）
 #define GL_GET_ERROR()				GL_NO_ERROR	//glGetError()	//gl関連のエラーを取得したい場合はコメントの文と入れ替える
 #define PI							3.141592653589793
-#define RADIAN_TO_DEGREE(radian)	(radian * 180.0 / PI)	//「ラジアン → 度」変換
-#define DEGREE_TO_RADIAN(degree)	(degree * PI / 180.0)	//「度 → ラジアン」変換
 
 ////////////////////////////////////////
 // デバッグ情報表示関係の処理など（Define定義・関数定義）

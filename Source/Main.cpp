@@ -353,8 +353,8 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	ModelViewMat *= translate(vec3(p_Global->TranslateAmount.x / 6.0f, -p_Global->TranslateAmount.y / 6.0f, p_Global->TranslateAmount.z));
 
 	//マウスでのオブジェクトの回転
-	ModelViewMat *= rotate((float)DEGREE_TO_RADIAN(p_Global->RotateAmount.y / RotateSpeedWeight), vec3(1.0f, 0.0f, 0.0f));
-	ModelViewMat *= rotate((float)DEGREE_TO_RADIAN(p_Global->RotateAmount.x / RotateSpeedWeight), vec3(0.0f, 1.0f, 0.0f));
+	ModelViewMat *= rotate(radians(p_Global->RotateAmount.y / RotateSpeedWeight), vec3(1.0f, 0.0f, 0.0f));
+	ModelViewMat *= rotate(radians(p_Global->RotateAmount.x / RotateSpeedWeight), vec3(0.0f, 1.0f, 0.0f));
 
 	//投資投影行列で使用する値をグローバル領域に保存
 	p_Global->NearClip = 1.0f;
