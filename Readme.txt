@@ -30,7 +30,8 @@
 　[Specify the generator for this profect]に「お使いのVisual Studioバージョン」を設定します
 　この時「Visual Studio XX XXXX」を選ぶようにして、
 　「ARM や Win64」の選択肢を選ばないようにしてください。
-　また、対応しているVisual Studioのバージョンは「2013以降」です。
+　また、対応しているVisual Studioのバージョンは「2015以降」です。
+　（C++11で書かれたコードがあるので、VisualStudioは2015以降が必須です）
 　※画面下部の選択肢は何もせずにそのままでOKです。
 　「Finish」を押して正常終了すれば「Configuring done」が表示されます。
 　

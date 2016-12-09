@@ -125,7 +125,7 @@ void HelloWorld::Drawing(const GlobalData &p_Global)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//ビューポートを設定する
-	glViewport(0, 0, p_Global.WindowSize.Width, p_Global.WindowSize.Height);
+	glViewport(0, 0, p_Global.WindowSize.x, p_Global.WindowSize.y);
 
 	//変数を転送
 	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, (GLfloat*)&ProjModelMat);

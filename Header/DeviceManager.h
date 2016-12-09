@@ -4,8 +4,6 @@
 //include定義
 #include "Common.h"
 
-//Define定義
-
 
 /////////////////////////////////////////////
 //	マウス関連の構造体定義
@@ -156,9 +154,9 @@ public:
 	*	戻り値
 	*	　マウスの情報
 	*-------------------------------------------------------------------------------*/
-	inline const MouseInfo* GetMouseInfo(void)
+	inline const MouseInfo& GetMouseInfo(void) const
 	{
-		return &m_MouseInfo;
+		return m_MouseInfo;
 	}
 
 	/*-------------------------------------------------------------------------------
@@ -169,9 +167,9 @@ public:
 	*	戻り値
 	*	　キー（キーボード）の情報
 	*-------------------------------------------------------------------------------*/
-	inline const KeyInfo* GetKeyInfo(void)
+	inline const KeyInfo& GetKeyInfo(void) const
 	{
-		return &m_KeyInfo;
+		return m_KeyInfo;
 	}
 
 private:
@@ -186,12 +184,11 @@ private:
 		bool *PushCount;		//「KeyInfo」の「PushCount」メンバと同等（詳細は左記メンバ参照のこと）
 	}KeyInfoSummary;
 
-	GLFWwindow* m_window;			//ウィンドウハンドル
-	static MouseInfo m_MouseInfo;	//マウスの情報
-	static KeyInfo m_KeyInfo;		//キー（キーボード）の情報
-	static vec2 m_RightClickPos;	//マウスが右クリックされた時のカーソル座標
-	static vec2 m_LeftClickPos;		//マウスが左クリックされた時のカーソル座標
-	static vec2 m_MiddleClickPos;	//マウスが中央クリックされた時のカーソル座標
+	MouseInfo m_MouseInfo = { 0 };	//マウスの情報
+	KeyInfo m_KeyInfo = { 0 };		//キー（キーボード）の情報
+	vec2 m_RightClickPos = { 0 };	//マウスが右クリックされた時のカーソル座標
+	vec2 m_LeftClickPos = { 0 };	//マウスが左クリックされた時のカーソル座標
+	vec2 m_MiddleClickPos = { 0 };	//マウスが中央クリックされた時のカーソル座標
 
 };
 

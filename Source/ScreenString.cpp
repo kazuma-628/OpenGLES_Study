@@ -85,7 +85,7 @@ void ScreenString::Prepare(const GlobalData &p_Global)
 void ScreenString::RePrepare(const GlobalData &p_Global)
 {
 	//サイズを変更して初期化する
-	DebugString.assign(p_Global.WindowSize.Height * p_Global.WindowSize.Width, 0);
+	DebugString.assign(p_Global.WindowSize.x * p_Global.WindowSize.y, 0);
 
 	//本当はここで[shrink_to_fit]を呼び、余分なメモリ解放するべき
 	//（VisualStudio2013(C++11)からしか対応してないので、ひとまず互換性を優先して放置）
@@ -220,7 +220,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 			bitmap = m_ft_Face->glyph->bitmap;
 
 			//文字がウィンドウの幅を超えるのであれば改行する
-			if (DebugSumWidth + bitmap.width >= (unsigned int)p_Global.WindowSize.Width)
+			if (DebugSumWidth + bitmap.width >= (unsigned int)p_Global.WindowSize.x)
 			{
 				//改行のため文字列の合計高さを加算
 				DebugSumRows += DEBUG_ROWS_SPACING;
@@ -243,12 +243,12 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 					//文字を格納する場所を計算する
 					int PixelPos =
 						//高さの計算
-						(((DebugSumRows + Rows) + (DEBUG_FONT_SIZE - m_ft_Face->glyph->bitmap_top)) * p_Global.WindowSize.Width)
+						(((DebugSumRows + Rows) + (DEBUG_FONT_SIZE - m_ft_Face->glyph->bitmap_top)) * p_Global.WindowSize.x)
 						// 幅の計算
 						+ (DebugSumWidth + Width);
 
 					//ウィンドウサイズサイズ内のみ表示する
-					if (PixelPos < p_Global.WindowSize.Width * p_Global.WindowSize.Height)
+					if (PixelPos < p_Global.WindowSize.x * p_Global.WindowSize.y)
 					{
 						//ピクセルデータを格納する
 						DebugString[PixelPos] = bitmap.buffer[(Rows * bitmap.width) + Width];
@@ -314,7 +314,7 @@ void ScreenString::DebugDrawing(const GlobalData &p_Global)
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	//テクスチャデータアップロード
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, p_Global.WindowSize.Width, p_Global.WindowSize.Height, 0, GL_RED, GL_UNSIGNED_BYTE, (void*)&DebugString[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, p_Global.WindowSize.x, p_Global.WindowSize.y, 0, GL_RED, GL_UNSIGNED_BYTE, (void*)&DebugString[0]);
 
 	//パラメータ設定
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -326,8 +326,8 @@ void ScreenString::DebugDrawing(const GlobalData &p_Global)
 	// 頂点の設定
 
 	//フォントの描画エリアの最大幅・高さを、[pixel単位]から[0～1]に変換（シェーダーでの頂点指定用）
-	GLfloat CoordWidth = (GLfloat)DebugMaxWidth / p_Global.WindowSize.Width;
-	GLfloat CoordRows = (GLfloat)DebugSumRows / p_Global.WindowSize.Height;
+	GLfloat CoordWidth = (GLfloat)DebugMaxWidth / p_Global.WindowSize.x;
+	GLfloat CoordRows = (GLfloat)DebugSumRows / p_Global.WindowSize.y;
 
 	// 頂点座標
 	vec2 vertex[] =
@@ -351,7 +351,7 @@ void ScreenString::DebugDrawing(const GlobalData &p_Global)
 	// 描画設定・描画
 
 	//ビューポートを設定する
-	glViewport(0, 0, p_Global.WindowSize.Width, p_Global.WindowSize.Height);
+	glViewport(0, 0, p_Global.WindowSize.x, p_Global.WindowSize.y);
 
 	//ブレンドを有効にする
 	glEnable(GL_BLEND);

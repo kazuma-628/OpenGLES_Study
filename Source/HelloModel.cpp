@@ -60,7 +60,7 @@ void HelloModel::Drawing(const GlobalData &p_Global)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//ビューポートを設定する
-	glViewport(0, 0, p_Global.WindowSize.Width, p_Global.WindowSize.Height);
+	glViewport(0, 0, p_Global.WindowSize.x, p_Global.WindowSize.y);
 
 	//モデルデータの描画
 	m_Model->DataDraw(ModelViewMat, p_Global.ProjectionMat);

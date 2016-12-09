@@ -4,6 +4,8 @@
 //include定義
 #include "Common.h"
 
+class DeviceManager;
+
 class WindowManager
 {
 
@@ -25,7 +27,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void CreateNewWindow(const int p_Width, const int p_Height, const char* p_Title);
+	void CreateNewWindow(const int p_Width, const int p_Height, const string &p_Title);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -59,9 +61,9 @@ public:
 	*	戻り値
 	*	　ウィンドウハンドル
 	*-------------------------------------------------------------------------------*/
-	inline GLFWwindow* const GetWindow()
+	inline const GLFWwindow& GetWindow() const
 	{
-		return m_window;
+		return *m_window;
 	}
 
 	/*-------------------------------------------------------------------------------
@@ -72,9 +74,9 @@ public:
 	*	戻り値
 	*	　ウィンドウハンドル
 	*-------------------------------------------------------------------------------*/
-	inline const Size* GetWindowSize()
+	inline const ivec2& GetWindowSize() const
 	{
-		return &m_WindowSize;
+		return m_WindowSize;
 	}
 
 	/*-------------------------------------------------------------------------------
@@ -86,14 +88,27 @@ public:
 	*	　閉じられている：GL_TRUE
 	*	　閉じられていない：GL_FALSE
 	*-------------------------------------------------------------------------------*/
-	inline int GetWindowShouldClose()
+	inline const int GetWindowShouldClose() const
 	{
 		return glfwWindowShouldClose(m_window);
 	}
 
-private:
+	/*-------------------------------------------------------------------------------
+	*	関数説明
+	*	　ウィンドウに紐付いているデバイスマネージャーを取得する（マウスやキーボードの情報）
+	*	引数
+	*	　なし
+	*	戻り値
+	*	　なし
+	*-------------------------------------------------------------------------------*/
+	inline shared_ptr<DeviceManager> GetDevice() const
+	{
+		return m_Device;
+	}
 
-	GLFWwindow* m_window;		//生成したウィンドウハンドル
-	static Size m_WindowSize;	//生成したウィンドウのサイズ（幅,高さ）
+private:
+	GLFWwindow* m_window = nullptr;		//生成したウィンドウハンドル
+	ivec2 m_WindowSize = { 0, 0 };		//生成したウィンドウのサイズ（幅,高さ）
+	shared_ptr<DeviceManager> m_Device = nullptr;		//デバイス管理用のオブジェクト
 };
 #endif

@@ -20,6 +20,8 @@
 #include <vector> 
 #include <fstream>
 #include <string>
+#include <memory>
+using namespace std;	//stdライブラリの名前空間を適応
 //以下GLSL言語で使用する変数をC言語でも使用できるようにするヘッダー
 //#define GLM_FORCE_EXPLICIT_CTOR
 #include <glm.hpp>		//標準型ヘッダー（vec4, mat4 など）
@@ -107,14 +109,6 @@ typedef struct
 }bColor4;
 
 ////////////////////////////////////
-// ザイズ構造体
-typedef struct
-{
-	GLsizei  Width;
-	GLsizei  Height;
-}Size;
-
-////////////////////////////////////
 
 // 構造体
 typedef struct
@@ -123,7 +117,7 @@ typedef struct
 	mat4 ProjectionMat;			//プロジェクションマトリクス（大元のマトリクスデータ）
 	GLfloat NearClip;			//プロジェクションマトリクス生成時に使用したNear値（大元のマトリクスデータ）
 	GLfloat FarClip;			//プロジェクションマトリクス生成時に使用したFar値（大元のマトリクスデータ）
-	Size WindowSize;			//ウィンドウの全体サイズ
+	ivec2 WindowSize;			//ウィンドウの全体サイズ
 	GLfloat Aspect;				//アスペクト比（幅 ÷ 高さ）（横の大きさを[?]とした時、縦の大きさは[? * Aspect]となる）
 	vec3 TranslateAmount;		//初期位置（X,Y,Z）からの移動量
 	vec3 RotateAmount;			//初期位置（X,Y,Z）からの回転量

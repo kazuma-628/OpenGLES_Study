@@ -47,6 +47,6 @@ typedef struct
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_DeviceManager, GlobalData *p_Global);
+void SetVarietyOfInformation(const WindowManager &p_WindowManager, GlobalData *p_Global);
 
 #endif

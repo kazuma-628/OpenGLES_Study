@@ -1,15 +1,11 @@
 ﻿#include "WindowManager.h"
-
-/////////////////////////////////////////////
-//static変数の実体を定義
-
-Size WindowManager::m_WindowSize;			//マウスボタンの情報
+#include "DeviceManager.h"
 
 //コンストラクタ
 WindowManager::WindowManager()
 {
-	m_window = NULL;
-	memset(&m_WindowSize, 0, sizeof(m_WindowSize));
+	//デバイス管理用のオブジェクト生成
+	m_Device = make_shared<DeviceManager>();
 }
 
 //デストラクタ
@@ -29,13 +25,13 @@ WindowManager::~WindowManager()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const char* p_Title)
+void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const string &p_Title)
 {
 	//引数チェック
-	if (0 == p_Width || 0 == p_Height || NULL == p_Title)
+	if (0 == p_Width || 0 == p_Height)
 	{
 		ERROR_MESSAGE("ウィンドウを作成する 引数エラー\n" \
-			"p_Width = %d, p_Height = %d, p_Title = %x\n", p_Width, p_Height, (unsigned int)p_Title);
+			"p_Width = %d, p_Height = %d\n", p_Width, p_Height);
 		return;
 	}
 
@@ -70,7 +66,7 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 
 	//ここでウィンドウサイズも指定しています。サイズを変更したい場合はDefine値を変更してください。
 	printf("ウィンドウ（%d × %d）の生成を開始します... ", p_Width, p_Height);
-	GLFWwindow *const window = glfwCreateWindow(p_Width, p_Height, p_Title, NULL, NULL);
+	GLFWwindow *const window = glfwCreateWindow(p_Width, p_Height, p_Title.c_str(), NULL, NULL);
 
 	//ウィンドウが生成できているかチェック
 	if (NULL == window)
@@ -102,6 +98,9 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 
 	glfwSetWindowSizeCallback(window, WindowManager::WindowSizeCallback);
 
+	// GLFWのハンドルに自分自身を登録（マルチウィンドウを実現するため）
+	glfwSetWindowUserPointer(window, this);
+
 	//////////////////////////////////////////////////////
 	//	GLEW初期化
 
@@ -125,8 +124,15 @@ void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const
 	m_window = window;
 
 	//生成した時のウィンドウの幅高さを保存
-	m_WindowSize.Width = p_Width;
-	m_WindowSize.Height = p_Height;
+	m_WindowSize.x = p_Width;
+	m_WindowSize.y = p_Height;
+
+	//////////////////////////////////////////////////////
+	//	デバイス管理オブジェクトの初期化
+
+	//デバイス管理用のオブジェクト初期化（マウスやキーボード制御のコールバックなどを登録）
+	//この関数コールの前にウィンドウが生成されている必要がある
+	m_Device->Initialize(m_window);
 }
 
 /*-------------------------------------------------------------------------------
@@ -159,8 +165,11 @@ void WindowManager::WindowSizeCallback(GLFWwindow* p_window, int p_Width, int p_
 	//最小化した時は更新しない（無駄な処理が走るので...）
 	if (false == glfwGetWindowAttrib(p_window, GLFW_ICONIFIED))
 	{
+		// ポインタからウィンドウクラスのインスタンスを取り出す
+		WindowManager *Windonw = static_cast<WindowManager*>(glfwGetWindowUserPointer(p_window));
+
 		//生成した時のウィンドウの幅高さを保存
-		m_WindowSize.Width = p_Width;
-		m_WindowSize.Height = p_Height;
+		Windonw->m_WindowSize.x = p_Width;
+		Windonw->m_WindowSize.y = p_Width;
 	}
 }

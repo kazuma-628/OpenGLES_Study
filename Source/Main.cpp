@@ -56,10 +56,7 @@ void main(void)
 	//	各オブジェクト生成
 
 	//ウィンドウ管理用のオブジェクト生成
-	WindowManager *m_WindowManager = new WindowManager;
-
-	//デバイス管理用のオブジェクト生成
-	DeviceManager *m_DeviceManager = new DeviceManager;
+	WindowManager *m_Window = new WindowManager;
 
 	//グローバルデータ生成
 	GlobalData m_Global = { 0 };
@@ -86,18 +83,9 @@ void main(void)
 	//	各オブジェクト初期化 及び 準備
 	
 	//ウインドウを作成
-	//※ ウィンドウを複数生成することにはまだ対応していないので注意 ※
-	m_WindowManager->CreateNewWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGLES_Study");
+	m_Window->CreateNewWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGLES_Study");
 	//ウィンドウサイズをグローバル領域に保存
-	m_Global.WindowSize = *m_WindowManager->GetWindowSize();
-
-	//デバイス管理用のオブジェクト初期化（マウスやキーボード制御のコールバックなどを登録）
-	//この関数コールの前にウィンドウが生成されている必要がある
-	//※ ウィンドウを複数生成して、それぞれKey管理することはまだ対応していないので注意 ※
-	m_DeviceManager->Initialize( m_WindowManager->GetWindow() );
-
-	//キー（キーボード）の情報を取得
-	const KeyInfo *KeyBoard = m_DeviceManager->GetKeyInfo();
+	m_Global.WindowSize = m_Window->GetWindowSize();
 
 	//初回描画アイテムを設定（リストの一番最初）
 	TmpGlobal.LastKey = DrawClass[0].Key;
@@ -110,7 +98,7 @@ void main(void)
 	//	描画メインループ
 
 	//ウィンドウが開いている間はループ
-	while (GL_FALSE == m_WindowManager->GetWindowShouldClose())
+	while (GL_FALSE == m_Window->GetWindowShouldClose())
 	{
 
 		/////////////////////////////
@@ -120,7 +108,7 @@ void main(void)
 		glfwPollEvents();
 
 		//描画に必要な各種情報を設定/更新
-		SetVarietyOfInformation(m_WindowManager, m_DeviceManager, &m_Global);
+		SetVarietyOfInformation(*m_Window, &m_Global);
 
 
 		/////////////////////////////
@@ -150,7 +138,8 @@ void main(void)
 		//描画リスト分ループ
 		for (int index = 0; index < DrawClassMax; index++)
 		{
-			if (DrawClass[index].Key == KeyBoard->LastKey || DrawClass[index].Key == TmpGlobal.LastKey)
+			if (DrawClass[index].Key == m_Window->GetDevice()->GetKeyInfo().LastKey ||
+				DrawClass[index].Key == TmpGlobal.LastKey)
 			{
 				//選択したキーを保存
 				TmpGlobal.LastKey = DrawClass[index].Key;
@@ -174,7 +163,7 @@ void main(void)
 		/////////////////////////////
 		// 描画反映処理
 
-		m_WindowManager->DrawingOnWindow();
+		m_Window->DrawingOnWindow();
 
 		//GLエラーチェック
 		if (GL_NO_ERROR != GL_GET_ERROR())
@@ -196,8 +185,7 @@ void main(void)
 		delete DrawClass[index].Class;	//
 	}
 
-	SAFE_DELETE(m_WindowManager);
-	SAFE_DELETE(m_DeviceManager);
+	SAFE_DELETE(m_Window);
 	ScreenString::Destroy();
 }
 
@@ -211,14 +199,14 @@ void main(void)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_DeviceManager, GlobalData *p_Global)
+void SetVarietyOfInformation(const WindowManager &p_WindowManager, GlobalData *p_Global)
 {
 	//ウィンドウサイズの取得
-	const Size *WindowSize = p_WindowManager->GetWindowSize();
+	const ivec2 WindowSize = p_WindowManager.GetWindowSize();
 	//マウスの情報を取得
-	const MouseInfo *MouseButton = p_DeviceManager->GetMouseInfo();
+	const MouseInfo MouseButton = p_WindowManager.GetDevice()->GetMouseInfo();
 	//キー（キーボード）の情報を取得
-	const KeyInfo *KeyBoard = p_DeviceManager->GetKeyInfo();
+	const KeyInfo KeyBoard = p_WindowManager.GetDevice()->GetKeyInfo();
 
 	//今描画している(選択している)クラスと、表示している位置と回転の座標を表示
 	//（1フレーム前の情報だけど、一番上に表示したいので良しとする）
@@ -232,29 +220,29 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	// オブジェクト移動関係の処理
 
 	//スペースで初期位置に戻す
-	if (true == KeyBoard->StateChange.Key_SPACE)
+	if (true == KeyBoard.StateChange.Key_SPACE)
 	{
 		memset(&p_Global->TranslateAmount, 0, sizeof(p_Global->TranslateAmount));
 		memset(&p_Global->RotateAmount, 0, sizeof(p_Global->RotateAmount));
 	}
 
 	//平行移動用の変数にマウス情報の座標を加える
-	if (GLFW_PRESS == MouseButton->Left.StateChange)
+	if (GLFW_PRESS == MouseButton.Left.StateChange)
 	{
 		//デバッグ表示する
-		ScreenString::DebugPrint(*p_Global, "左クリック：%d, %d", (int)MouseButton->Position.x, (int)MouseButton->Position.y);
-		p_Global->TranslateAmount.x += MouseButton->Position.x - TmpGlobal.OldPosition.x;
-		p_Global->TranslateAmount.y += MouseButton->Position.y - TmpGlobal.OldPosition.y;
+		ScreenString::DebugPrint(*p_Global, "左クリック：%d, %d", (int)MouseButton.Position.x, (int)MouseButton.Position.y);
+		p_Global->TranslateAmount.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
+		p_Global->TranslateAmount.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
 	}
 	else
 	{
 		//左クリックされていない状態 かつ 1イベント前では左クリックされていた場合
 		//（要するにフリックされた）
-		if (TmpGlobal.OldLeftState != MouseButton->Left.StateChange)
+		if (TmpGlobal.OldLeftState != MouseButton.Left.StateChange)
 		{
 			//フリック速度に応じた1イベント分の惰性量を算出
-			TmpGlobal.InertiaTranslate.x = MouseButton->Position.x - TmpGlobal.OldPosition.x;
-			TmpGlobal.InertiaTranslate.y = MouseButton->Position.y - TmpGlobal.OldPosition.y;
+			TmpGlobal.InertiaTranslate.x = MouseButton.Position.x - TmpGlobal.OldPosition.x;
+			TmpGlobal.InertiaTranslate.y = MouseButton.Position.y - TmpGlobal.OldPosition.y;
 		}
 
 		//X方向の惰性がある場合
@@ -275,36 +263,36 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	}
 
 	//更にキーボードの情報を加える
-	if (GLFW_PRESS == KeyBoard->StateChange.Key_W)
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_W)
 	{
 		p_Global->TranslateAmount.y += 2.0f;
 	}
-	if (GLFW_PRESS == KeyBoard->StateChange.Key_S)
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_S)
 	{
 		p_Global->TranslateAmount.y -= 2.0f;
 	}
-	if (GLFW_PRESS == KeyBoard->StateChange.Key_A)
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_A)
 	{
 		p_Global->TranslateAmount.x += 2.0f;
 	}
-	if (GLFW_PRESS == KeyBoard->StateChange.Key_D)
+	if (GLFW_PRESS == KeyBoard.StateChange.Key_D)
 	{
 		p_Global->TranslateAmount.x -= 2.0f;
 	}
 
 	//スクロールはボタンが押されていなくても適応する
-	p_Global->TranslateAmount.z += MouseButton->ScrollAmount.y - TmpGlobal.OldScrollAmount.y;
+	p_Global->TranslateAmount.z += MouseButton.ScrollAmount.y - TmpGlobal.OldScrollAmount.y;
 
 	///////////////////////////////////
 	// オブジェクト回転関係の処理
 
 	//回転用の変数にマウス情報の座標を加える
 	//本来であれば360度回転したら変数を初期化した方が良いが、サンプルなので割愛
-	if (GLFW_PRESS == MouseButton->Right.StateChange)
+	if (GLFW_PRESS == MouseButton.Right.StateChange)
 	{
-		ScreenString::DebugPrint(*p_Global, "右クリック：%d, %d", (int)MouseButton->Position.x, (int)MouseButton->Position.y);
-		p_Global->RotateAmount.x += MouseButton->Position.x - TmpGlobal.OldPosition.x;
-		p_Global->RotateAmount.y += MouseButton->Position.y - TmpGlobal.OldPosition.y;
+		ScreenString::DebugPrint(*p_Global, "右クリック：%d, %d", (int)MouseButton.Position.x, (int)MouseButton.Position.y);
+		p_Global->RotateAmount.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
+		p_Global->RotateAmount.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
 		//360度を超えたら0度に戻す（360度と0度は同じなので）
 		p_Global->RotateAmount.x = fmodf(p_Global->RotateAmount.x, 360.0 * RotateSpeedWeight);
 		p_Global->RotateAmount.y = fmodf(p_Global->RotateAmount.y, 360.0 * RotateSpeedWeight);
@@ -313,11 +301,11 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	{
 		//右クリックされていない状態 かつ 1イベント前では右クリックされていた場合
 		//（要するにフリックされた）
-		if (TmpGlobal.OldRightState != MouseButton->Right.StateChange)
+		if (TmpGlobal.OldRightState != MouseButton.Right.StateChange)
 		{
 			//フリック速度に応じた1イベント分の惰性量を算出
-			TmpGlobal.InertiaRotate.x = MouseButton->Position.x - TmpGlobal.OldPosition.x;
-			TmpGlobal.InertiaRotate.y = MouseButton->Position.y - TmpGlobal.OldPosition.y;
+			TmpGlobal.InertiaRotate.x = MouseButton.Position.x - TmpGlobal.OldPosition.x;
+			TmpGlobal.InertiaRotate.y = MouseButton.Position.y - TmpGlobal.OldPosition.y;
 		}
 
 		//X方向の惰性がある場合
@@ -347,7 +335,7 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	mat4 ProjectionMat;
 
 	//アスペクト比（幅 ÷ 高さ）を算出
-	GLfloat Aspect = (GLfloat)WindowSize->Width / WindowSize->Height;
+	GLfloat Aspect = (GLfloat)WindowSize.x / WindowSize.y;
 
 	//カメラの映る位置に移動させる
 	ModelViewMat *= translate(vec3(0.0f, 0.0f, -40.0f));
@@ -375,20 +363,20 @@ void SetVarietyOfInformation(WindowManager *p_WindowManager, DeviceManager *p_De
 	p_Global->ProjectionMat = ProjectionMat;
 
 	//ウィンドウサイズの変更チェック
-	if (p_Global->WindowSize.Width != WindowSize->Width || p_Global->WindowSize.Height != WindowSize->Height)
+	if (p_Global->WindowSize.x != WindowSize.x || p_Global->WindowSize.y != WindowSize.y)
 	{
 		//ウィンドウマネージャーで通知するのではなく、実際に変更と判断してから通知する
-		printf("ウィンドウサイズが変更されました → （%d × %d）\n", WindowSize->Width, WindowSize->Height);
+		printf("ウィンドウサイズが変更されました → （%d × %d）\n", WindowSize.x, WindowSize.y);
 
 		TmpGlobal.ChangeWindowSize = true;
 	}
 	//ウィンドウサイズ保存
-	p_Global->WindowSize = *WindowSize;
+	p_Global->WindowSize = WindowSize;
 
 	//1イベント前の情報を保存する
-	TmpGlobal.OldPosition = MouseButton->Position;
-	TmpGlobal.OldScrollAmount = MouseButton->ScrollAmount;
-	TmpGlobal.OldLeftState = MouseButton->Left.StateChange;
-	TmpGlobal.OldRightState = MouseButton->Right.StateChange;
+	TmpGlobal.OldPosition = MouseButton.Position;
+	TmpGlobal.OldScrollAmount = MouseButton.ScrollAmount;
+	TmpGlobal.OldLeftState = MouseButton.Left.StateChange;
+	TmpGlobal.OldRightState = MouseButton.Right.StateChange;
 }
 
