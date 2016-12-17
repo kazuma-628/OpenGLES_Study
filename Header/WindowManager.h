@@ -27,7 +27,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void CreateNewWindow(const int p_Width, const int p_Height, const string &p_Title);
+	void CreateNewWindow(const uint16_t p_Width, const uint16_t p_Height, const string &p_Title);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明

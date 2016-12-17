@@ -25,7 +25,7 @@ WindowManager::~WindowManager()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void WindowManager::CreateNewWindow(const int p_Width, const int p_Height, const string &p_Title)
+void WindowManager::CreateNewWindow(const uint16_t p_Width, const uint16_t p_Height, const string &p_Title)
 {
 	//引数チェック
 	if (0 == p_Width || 0 == p_Height)
