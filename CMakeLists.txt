@@ -151,7 +151,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/Library/GLEW/include/GL
 	${CMAKE_SOURCE_DIR}/Library/GLFW/include/GLFW
 	${CMAKE_SOURCE_DIR}/Library/FreeType/include
-	${CMAKE_SOURCE_DIR}/Library/GLM/glm
+	${CMAKE_SOURCE_DIR}/Library/GLM/
 )
 
 ##############################################################

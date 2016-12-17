@@ -24,8 +24,8 @@
 using namespace std;	//stdライブラリの名前空間を適応
 //以下GLSL言語で使用する変数をC言語でも使用できるようにするヘッダー
 //#define GLM_FORCE_EXPLICIT_CTOR
-#include <glm.hpp>		//標準型ヘッダー（vec4, mat4 など）
-#include <ext.hpp>		//演算用拡張ヘッダー（ranslate, rotate, scale など）
+#include <glm/glm.hpp>		//標準型ヘッダー（vec4, mat4 など）
+#include <glm/ext.hpp>		//演算用拡張ヘッダー（ranslate, rotate, scale など）
 using namespace glm;	//glmライブラリの名前空間を適応
 
 ////////////////////////////////////////

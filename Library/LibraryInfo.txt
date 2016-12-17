@@ -9,5 +9,5 @@ http://glew.sourceforge.net/
 ÅEFreeType Version : 2.6.5
 https://www.freetype.org/index.html
 
-ÅEGLM Version : 0.9.8.1
+ÅEGLM Version : 0.9.8.3
 http://glm.g-truc.net/
