@@ -1,6 +1,6 @@
 各ライブラリの情報です。
 
-・GLFW Version : 3.2
+・GLFW Version : 3.2.1
 http://www.glfw.org/
 
 ・GLEW Version : 2.0.0
