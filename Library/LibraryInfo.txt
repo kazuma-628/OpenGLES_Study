@@ -11,3 +11,6 @@ https://www.freetype.org/index.html
 
 ÅEGLM Version : 0.9.8.3
 http://glm.g-truc.net/
+
+ÅEGLI Version : 0.8.2.0 
+http://gli.g-truc.net/
