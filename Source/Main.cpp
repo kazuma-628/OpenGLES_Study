@@ -205,7 +205,7 @@ void main(void)
 void SetVarietyOfInformation(const WindowManager &p_WindowManager, GlobalData *p_Global)
 {
 	//ウィンドウサイズの取得
-	const ivec2 WindowSize = p_WindowManager.GetWindowSize();
+	const uvec2 WindowSize = p_WindowManager.GetWindowSize();
 	//マウスの情報を取得
 	const MouseInfo MouseButton = p_WindowManager.GetDevice()->GetMouseInfo();
 	//キー（キーボード）の情報を取得

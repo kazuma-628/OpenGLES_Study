@@ -74,7 +74,7 @@ public:
 	*	戻り値
 	*	　ウィンドウハンドル
 	*-------------------------------------------------------------------------------*/
-	inline const ivec2& GetWindowSize() const
+	inline const uvec2& GetWindowSize() const
 	{
 		return m_WindowSize;
 	}
@@ -108,7 +108,7 @@ public:
 
 private:
 	GLFWwindow* m_window = nullptr;		//生成したウィンドウハンドル
-	ivec2 m_WindowSize = { 0, 0 };		//生成したウィンドウのサイズ（幅,高さ）
+	uvec2 m_WindowSize = { 0, 0 };		//生成したウィンドウのサイズ（幅,高さ）
 	shared_ptr<DeviceManager> m_Device = nullptr;		//デバイス管理用のオブジェクト
 };
 #endif

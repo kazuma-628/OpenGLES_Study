@@ -118,7 +118,7 @@ typedef struct
 	mat4 ProjectionMat;			//プロジェクションマトリクス（大元のマトリクスデータ）
 	GLfloat NearClip;			//プロジェクションマトリクス生成時に使用したNear値（大元のマトリクスデータ）
 	GLfloat FarClip;			//プロジェクションマトリクス生成時に使用したFar値（大元のマトリクスデータ）
-	ivec2 WindowSize;			//ウィンドウの全体サイズ
+	uvec2 WindowSize;			//ウィンドウの全体サイズ
 	GLfloat Aspect;				//アスペクト比（幅 ÷ 高さ）（横の大きさを[?]とした時、縦の大きさは[? * Aspect]となる）
 	vec3 TranslateAmount;		//初期位置（X,Y,Z）からの移動量
 	vec3 RotateAmount;			//初期位置（X,Y,Z）からの回転量
