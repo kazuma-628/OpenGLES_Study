@@ -50,7 +50,7 @@ void Texture::FileDataLoad(const string &p_FileName, const bool p_FullPathFlag, 
 	}
 
 	//引数チェック
-	if (0 == p_FileName.length())
+	if (true == p_FileName.empty())
 	{
 		printf("失敗\n");
 		ERROR_MESSAGE("テクスチャデータの読み込み 引数エラー\n" \

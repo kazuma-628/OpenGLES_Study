@@ -174,7 +174,7 @@ void ModelManager::FileDataLoad(const string &p_FileName, ModelFormat p_ModelFor
 	string model_dir_file_name;			//モデルファイルへのパス
 
 	//モデルファイルが指定されている場合（独自フォーマットの場合は作成しない）
-	if (0 != p_FileName.length())
+	if (false == p_FileName.empty())
 	{
 		//モデルファイルへのパスを生成する（マルチバイト文字）
 		model_dir_file_name = MODEL_FILE_DIR + p_FileName;
@@ -502,7 +502,7 @@ void ModelManager::DataDraw(const mat4 &p_ModelViewMat, const mat4 &p_Projection
 void ModelManager::FileLoad_OBJ(const string &p_DirFileName)
 {
 	//引数チェック
-	if (0 == p_DirFileName.length())
+	if (true == p_DirFileName.empty())
 	{
 		printf("失敗\n");
 		ERROR_MESSAGE("OBJファイルの読み込み 引数エラー\n" \
@@ -625,7 +625,7 @@ void ModelManager::FileLoad_OBJ(const string &p_DirFileName)
 		for (uint32_t index = 0; index < MaterialCnt; index++)
 		{
 			//テクスチャが指定されていれば読み込む
-			if (0 != MaterialTex[index].Name.length())
+			if (false == MaterialTex[index].Name.empty())
 			{
 				//テクスチャ読み込み（ディレクトリ構造を含まない文字列でデバッグ表示する）
 				printf("モデルデータ「%s」用の\n　", p_DirFileName.substr(p_DirFileName.rfind("/") + 1).c_str());
