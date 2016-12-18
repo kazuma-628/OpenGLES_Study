@@ -170,6 +170,6 @@ void WindowManager::WindowSizeCallback(GLFWwindow* p_window, int p_Width, int p_
 
 		//生成した時のウィンドウの幅高さを保存
 		Windonw->m_WindowSize.x = p_Width;
-		Windonw->m_WindowSize.y = p_Width;
+		Windonw->m_WindowSize.y = p_Height;
 	}
 }

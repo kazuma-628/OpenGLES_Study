@@ -127,6 +127,9 @@ void main(void)
 
 			//資源の再作成
 			ScreenString::RePrepare(m_Global);
+
+			//フラグを落とす
+			TmpGlobal.ChangeWindowSize = false;
 		}
 
 

@@ -9,7 +9,7 @@ HelloModel::HelloModel()
 //デストラクタ
 HelloModel::~HelloModel()
 {
-	if (nullptr == m_Model)
+	if (nullptr != m_Model)
 	{
 		m_Model->FileDataFree();
 	}
