@@ -3,15 +3,11 @@
 
 //include定義
 #include "Common.h"
-#include "ShaderManager.h"
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
-//Defien
-#define FT_FONT_FILE		"../Resource/Font/GenEiGothicN/GenEiGothicN-Bold.otf"		//FreeTypeで使用するフォントファイル
-#define DEBUG_FONT_SIZE		16			//デバッグ表示のフォントサイズ指定（ピクセル単位）
-#define DEBUG_ROWS_SPACING	(DEBUG_FONT_SIZE + (unsigned int)ceil((DEBUG_FONT_SIZE / 3.0)))	//デバッグ用の文字と文字との縦方向の間隔（ピクセル単位）　※こちらは普段変更しない定義
-#define WIDTH_SPACING		3			//文字と文字との横方向の間隔（ピクセル単位）
+class ShaderManager;
+
 class ScreenString
 {
 
@@ -68,7 +64,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	static void DebugPrint(const GlobalData &p_Global, const char* p_String, ...);
+	static void DebugPrint(const GlobalData &p_Global, const char *p_String, ...);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -83,8 +79,12 @@ public:
 	static void DebugDrawing(const GlobalData &p_Global);
 
 private:
+	static const string FT_FONT_FILE;			//FreeTypeで使用するフォントファイル
+	static const uint16_t DEBUG_FONT_SIZE;		//デバッグ表示のフォントサイズ指定（ピクセル単位）
+	static const uint16_t DEBUG_ROWS_SPACING;	//デバッグ用の文字と文字との縦方向の間隔（ピクセル単位）　※こちらは普段変更しない定義
+	static const uint16_t WIDTH_SPACING;		//文字と文字との横方向の間隔（ピクセル単位）
 
-	static ShaderManager *m_StringShader;		//文字列描画シェーダーオブジェクト
+	static shared_ptr<ShaderManager> m_StringShader;	//文字列描画シェーダーオブジェクト
 	static GLint m_attr_pos;					//頂点座標
 	static GLint m_unif_tex;					//テクスチャ
 	static GLint m_attr_tex_coord;				//テクスチャ座標
@@ -94,9 +94,9 @@ private:
 	static FT_Library m_ft_Library;				//FreeTypeライブラリ
 	static FT_Face m_ft_Face;					//FreeTypeのフォントフェース
 
-	static std::vector<GLchar> DebugString;		//デバッグ表示用の文字列データ
+	static vector<GLchar> DebugString;		//デバッグ表示用の文字列データ
 
-	static unsigned int DebugMaxWidth;			//デバッグ表示用の文字列の合計最大幅
-	static unsigned int DebugSumRows;			//デバッグ表示用の文字列の合計高さ（＝最大高さ）
+	static uint32_t DebugMaxWidth;			//デバッグ表示用の文字列の合計最大幅
+	static uint32_t DebugSumRows;			//デバッグ表示用の文字列の合計高さ（＝最大高さ）
 };
 #endif

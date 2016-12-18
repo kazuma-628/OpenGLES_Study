@@ -1,9 +1,15 @@
 ﻿#include "ScreenString.h"
+#include "ShaderManager.h"
 
 /////////////////////////////////////////////
 //static変数の実体を定義
 
-ShaderManager *(ScreenString::m_StringShader) = NULL;	//文字列描画シェーダー
+const string ScreenString::FT_FONT_FILE = "../Resource/Font/GenEiGothicN/GenEiGothicN-Bold.otf";				//FreeTypeで使用するフォントファイル;
+const uint16_t ScreenString::DEBUG_FONT_SIZE = 16;	//デバッグ表示のフォントサイズ指定（ピクセル単位）
+const uint16_t ScreenString::DEBUG_ROWS_SPACING = DEBUG_FONT_SIZE + (uint16_t)ceil((DEBUG_FONT_SIZE / 3.0));	//デバッグ用の文字と文字との縦方向の間隔（ピクセル単位）　※こちらは普段変更しない定義
+const uint16_t ScreenString::WIDTH_SPACING = 3;		//文字と文字との横方向の間隔（ピクセル単位）
+
+shared_ptr<ShaderManager> ScreenString::m_StringShader = nullptr;	//文字列描画シェーダー
 GLint ScreenString::m_attr_pos = -1;					//頂点座標
 GLint ScreenString::m_unif_tex = -1;					//テクスチャ
 GLint ScreenString::m_attr_tex_coord = -1;				//テクスチャ座標
@@ -13,10 +19,10 @@ GLint ScreenString::m_unif_back_color = -1;				//背景カラー
 FT_Library ScreenString::m_ft_Library = { 0 };			//FreeTypeライブラリ
 FT_Face ScreenString::m_ft_Face = { 0 };				//FreeTypeのフォントフェース
 
-std::vector<GLchar> ScreenString::DebugString;			//デバッグ表示用の文字列データ
+vector<GLchar> ScreenString::DebugString;				//デバッグ表示用の文字列データ
 
-unsigned int ScreenString::DebugMaxWidth = 0;			//デバッグ表示用の文字列の最大幅
-unsigned int ScreenString::DebugSumRows = 0;			//デバッグ表示用の文字列の合計高さ（＝最大高さ）
+uint32_t ScreenString::DebugMaxWidth = 0;				//デバッグ表示用の文字列の最大幅
+uint32_t ScreenString::DebugSumRows = 0;				//デバッグ表示用の文字列の合計高さ（＝最大高さ）
 
 //コンストラクタ
 ScreenString::ScreenString()
@@ -41,10 +47,10 @@ ScreenString::~ScreenString()
 void ScreenString::Prepare(const GlobalData &p_Global)
 {
 	//データが作成されていなければ
-	if (NULL == m_StringShader)
+	if (nullptr == m_StringShader)
 	{
 		//文字列描画シェーダー管理用のオブジェクト生成
-		m_StringShader = new ShaderManager;
+		m_StringShader = make_shared<ShaderManager>();
 
 		//シェーダーの読み込みを行う
 		m_StringShader->CreateShaderProgram("ScreenString.vert", "ScreenString.frag", NULL, NULL, NULL, NULL);
@@ -68,7 +74,7 @@ void ScreenString::Prepare(const GlobalData &p_Global)
 		FT_Init_FreeType(&m_ft_Library);
 
 		//フォントファイルを読み込む
-		FT_New_Face(m_ft_Library, FT_FONT_FILE, 0, &m_ft_Face);
+		FT_New_Face(m_ft_Library, FT_FONT_FILE.c_str(), 0, &m_ft_Face);
 
 		RePrepare(p_Global);
 	}
@@ -86,9 +92,8 @@ void ScreenString::RePrepare(const GlobalData &p_Global)
 {
 	//サイズを変更して初期化する
 	DebugString.assign(p_Global.WindowSize.x * p_Global.WindowSize.y, 0);
-
-	//本当はここで[shrink_to_fit]を呼び、余分なメモリ解放するべき
-	//（VisualStudio2013(C++11)からしか対応してないので、ひとまず互換性を優先して放置）
+	//余分なメモリ解放
+	DebugString.shrink_to_fit();
 }
 
 
@@ -102,9 +107,6 @@ void ScreenString::RePrepare(const GlobalData &p_Global)
 *-------------------------------------------------------------------------------*/
 void ScreenString::Destroy(void)
 {
-	//文字列描画シェーダー管理用のオブジェクト破棄
-	SAFE_DELETE(m_StringShader);
-
 	//FreeTypeのデータを破棄
 	FT_Done_Face(m_ft_Face);
 	FT_Done_FreeType(m_ft_Library);
@@ -125,13 +127,13 @@ void ScreenString::Destroy(void)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, ...)
+void ScreenString::DebugPrint(const GlobalData &p_Global, const char *p_String, ...)
 {
 	//引数チェック
 	if (NULL == p_String)
 	{
 		ERROR_MESSAGE("画面上にデバック表示（設定）をする 引数エラー\n" \
-			"p_String = %x\n", (unsigned int)p_String);
+					  "p_String = %x\n", reinterpret_cast<uint32_t>(p_String));
 		return;
 	}
 
@@ -157,7 +159,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 	// マルチバイト文字 から ワイド文字 に変換
 
 	wchar_t *w_String = NULL;	//テクスチャファイルへのパス（ワイド文字）
-	int StrLength = 0;			//読み込むテクスチャファイル名の長さ（バイト数）
+	uint32_t StrLength = 0;			//読み込むテクスチャファイル名の長さ（バイト数）
 
 	//ロケールを日本に設定
 	setlocale(LC_CTYPE, "jpn");
@@ -174,7 +176,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 	//////////////////////////////////////////
 	// FreeTypeで文字をラスタライズ
 
-	unsigned int DebugSumWidth = WIDTH_SPACING;		//デバッグ表示用の文字列の合計幅
+	uint32_t DebugSumWidth = WIDTH_SPACING;		//デバッグ表示用の文字列の合計幅
 	FT_Bitmap bitmap;		//FreeTypeでラスタライズしたビットマップデータ
 
 	//ビットマップフォントのサイズ（幅と高さ）を指定
@@ -182,7 +184,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 	FT_Set_Pixel_Sizes(m_ft_Face, 0, DEBUG_FONT_SIZE);
 
 	//文字数分ループして文字列を作り出す
-	for (int index = 0; L'\0' != w_String[index]; index++)
+	for (uint32_t index = 0; L'\0' != w_String[index]; index++)
 	{
 		//FreeTypeで処理しても結果が得られないものがあるので自前で処理する
 		switch (w_String[index])
@@ -220,7 +222,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 			bitmap = m_ft_Face->glyph->bitmap;
 
 			//文字がウィンドウの幅を超えるのであれば改行する
-			if (DebugSumWidth + bitmap.width >= (unsigned int)p_Global.WindowSize.x)
+			if (DebugSumWidth + bitmap.width >= p_Global.WindowSize.x)
 			{
 				//改行のため文字列の合計高さを加算
 				DebugSumRows += DEBUG_ROWS_SPACING;
@@ -236,12 +238,12 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char* p_String, 
 			}
 			
 			//ラスタライズ結果のピクセル分ループ
-			for (unsigned int Rows = 0; Rows < bitmap.rows; Rows++)
+			for (uint32_t Rows = 0; Rows < bitmap.rows; Rows++)
 			{
-				for (unsigned int Width = 0; Width < bitmap.width; Width++)
+				for (uint32_t Width = 0; Width < bitmap.width; Width++)
 				{
 					//文字を格納する場所を計算する
-					int PixelPos =
+					uint32_t PixelPos =
 						//高さの計算
 						(((DebugSumRows + Rows) + (DEBUG_FONT_SIZE - m_ft_Face->glyph->bitmap_top)) * p_Global.WindowSize.x)
 						// 幅の計算
