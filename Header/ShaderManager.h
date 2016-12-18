@@ -241,6 +241,7 @@ public:
 	*	関数説明
 	*	　Uniform変数へデータを送信（関連付け）します。（ほぼ glUniformMatrix2fv, glUniformMatrix3fv, glUniformMatrix4fv と同じです）
 	*	　エラーや情報管理を一元化して利便性の向上を図っています。
+	*	　※純正関数との主な違いとして、第5引数が「GLfloat*」でなく「mat4*」にっています。利便性のためです。
 	*	引数
 	*	　p_index		：[I/ ]　Uniform変数のロケーションを呼び出すためのインデックス値
 	*					　		（GetUniformLocationで取得した返り値）
@@ -254,7 +255,7 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void UniformMatrixXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLboolean p_transpose, const GLfloat *p_value);
+	void UniformMatrixXfv(const GLint p_index, const GLint p_scalar, const GLsizei p_count, const GLboolean p_transpose, const mat4 *p_value);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明

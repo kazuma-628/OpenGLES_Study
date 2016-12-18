@@ -293,16 +293,16 @@ void ModelManager::DataDraw(const mat4 &p_ModelViewMat, const mat4 &p_Projection
 	m_ModelShader.UniformXi(m_unif_FileFotmat, 1, m_ModelInfo.FileFotmat, 0, 0, 0);
 
 	//モデルビューマトリクスを設定
-	m_ModelShader.UniformMatrixXfv(m_unif_ModelViewMat, 4, 1, GL_FALSE, (GLfloat*)&p_ModelViewMat);
+	m_ModelShader.UniformMatrixXfv(m_unif_ModelViewMat, 4, 1, GL_FALSE, &p_ModelViewMat);
 
 	//プロジェクションマトリクスを設定
-	m_ModelShader.UniformMatrixXfv(m_unif_ProjectionMat, 4, 1, GL_FALSE, (GLfloat*)&p_ProjectionMat);
+	m_ModelShader.UniformMatrixXfv(m_unif_ProjectionMat, 4, 1, GL_FALSE, &p_ProjectionMat);
 
 	//モデルビューマトリクスから回転成分を算出する
 	mat4 RotateMat = inverseTranspose(p_ModelViewMat);
 
 	//回転行列を設定
-	m_ModelShader.UniformMatrixXfv(m_unif_RotateMat, 4, 1, GL_FALSE, (GLfloat*)&RotateMat);
+	m_ModelShader.UniformMatrixXfv(m_unif_RotateMat, 4, 1, GL_FALSE, &RotateMat);
 
 	//////////////////////////////////
 	// 残りの変数の初期値を設定
