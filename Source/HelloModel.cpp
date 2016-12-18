@@ -1,15 +1,18 @@
 ﻿#include "HelloModel.h"
+#include "ModelManager.h"
 
 //コンストラクタ
 HelloModel::HelloModel()
 {
-	m_Model = NULL;
 }
 
 //デストラクタ
 HelloModel::~HelloModel()
 {
-	SAFE_DELETE(m_Model);
+	if (nullptr == m_Model)
+	{
+		m_Model->FileDataFree();
+	}
 }
 
 /*-------------------------------------------------------------------------------
@@ -26,10 +29,10 @@ void HelloModel::Prepare(const GlobalData &p_Global)
 	if (false == PrepareCompFlag)
 	{
 		//モデル管理オブジェクトが未生成の場合は、生成後にモデルデータの読み込みを行う
-		if (NULL == m_Model)
+		if (nullptr == m_Model)
 		{
-			m_Model = new ModelManager;
-			m_Model->FileDataLoad("Handgun1/Handgun_obj.obj", FILE_FORMAT_OBJ);
+			m_Model = make_shared<ModelManager>();
+			m_Model->FileDataLoad("Handgun1/Handgun_obj.obj", ModelFormat::OBJ);
 		}
 
 		//描画準備完了とする
@@ -48,7 +51,7 @@ void HelloModel::Prepare(const GlobalData &p_Global)
 void HelloModel::Drawing(const GlobalData &p_Global)
 {
 	//モデルビューマトリクスをコピー
-	mat4 ModelViewMat = p_Global.ModelViewMat;;
+	mat4 ModelViewMat = p_Global.ModelViewMat;
 	
 	//モデルデータを拡大（元データが小さいので）
 	ModelViewMat *= scale(vec3(15.0f, 15.0f, 15.0f));

@@ -1,22 +1,14 @@
 ﻿#include "HelloWorld.h"
+#include "ShaderManager.h"
 
 //コンストラクタ
 HelloWorld::HelloWorld()
 {
-	//変数初期化
-	m_MainShader = NULL;
-
-	m_attr_pos = -1;
-	m_attr_color = -1;
-	m_ProjModel_matrix = 0;
-
 }
 
 //デストラクタ
 HelloWorld::~HelloWorld()
 {
-	//Mainシェーダー管理用のオブジェクト破棄
-	SAFE_DELETE(m_MainShader);
 }
 
 /*-------------------------------------------------------------------------------
@@ -33,10 +25,10 @@ void HelloWorld::Prepare(const GlobalData &p_Global)
 	if (false == PrepareCompFlag)
 	{
 		//データが作成されていなければ
-		if (NULL == m_MainShader)
+		if (nullptr == m_MainShader)
 		{
 			//Mainシェーダー管理用のオブジェクト生成
-			m_MainShader = new ShaderManager;
+			m_MainShader = make_shared<ShaderManager>();
 
 			//シェーダーの読み込みを行う
 			//「Shader」フォルダに格納されている必要があります。

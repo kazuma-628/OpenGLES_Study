@@ -4,7 +4,8 @@
 //include定義
 #include "Common.h"
 #include "BaseDraw.h"
-#include "ModelManager.h"
+
+class ModelManager;
 
 class HelloModel : public BaseDraw
 {
@@ -38,6 +39,6 @@ public:
 
 private:
 
-	ModelManager *m_Model;		//モデル管理オブジェクト
+	shared_ptr<ModelManager> m_Model = nullptr;		//モデル管理オブジェクト
 };
 #endif

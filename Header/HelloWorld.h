@@ -4,7 +4,8 @@
 //include定義
 #include "Common.h"
 #include "BaseDraw.h"
-#include "ShaderManager.h"
+
+class ShaderManager;
 
 class HelloWorld : public BaseDraw
 {
@@ -45,9 +46,9 @@ private:
 		bColor3 Color;
 	}Vec3_bColor3;
 
-	ShaderManager *m_MainShader;		//メインシェーダーオブジェクト
-	GLint m_attr_pos;					//頂点データ
-	GLint m_attr_color;					//カラーデータ
-	GLint m_ProjModel_matrix;			//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
+	shared_ptr<ShaderManager> m_MainShader = nullptr;		//メインシェーダーオブジェクト
+	GLint m_attr_pos = -1;					//頂点データ
+	GLint m_attr_color = -1;				//カラーデータ
+	GLint m_ProjModel_matrix = -1;			//座標変換マトリクス（プロジェクションマトリクス × モデルビューマトリックス）
 };
 #endif

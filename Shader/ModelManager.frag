@@ -4,7 +4,7 @@
 precision mediump float;
 
 //モデルデータのフォーマット
-//ここの定義を変更する場合は、「Model.h」のemun「FileFotmat」定義も同じように変更してください
+//ここの定義を変更する場合は、「Model.h」のemun「ModelFormat」定義も同じように変更してください
 #define	FILE_FORMAT_OBJ					1		//OBJ形式のモデルファイル（OBJファイルに指定があればMTLファイルも読み込まれる）
 #define	ORIGINAL_FORMAT_PIERCED_CUBE	2		//オリジナルフォーマットで穴あきのキューブデータ（エッジ有り）
 #define ORIGINAL_FORMAT_PIERCED_CUBE2	3		//オリジナルフォーマットで穴あきのキューブデータ（エッジ無し）
@@ -14,7 +14,7 @@ in mediump vec3 f_attr_Normal;				//法線
 in mediump vec4 f_attr_Color;				//カラー
 in mediump vec2 f_attr_TexCoord;			//テクスチャ座標
 
-uniform lowp int unif_FileFotmat;			//モデルデータのフォーマット
+uniform lowp int unif_ModelFormat;			//モデルデータのフォーマット
 uniform lowp vec3 unif_Ambient;				//アンビエント値
 uniform lowp vec3 unif_Diffuse;				//ディフューズ値
 uniform lowp vec3 unif_Specular;			//スペキュラ値
@@ -38,7 +38,7 @@ void main()
 	//最終的な色情報（何か表示されるように赤にしておく）
 	mediump vec4 FinalColor = vec4(1.0, 0.0, 0.0, 1.0);
 
-	switch(unif_FileFotmat)
+	switch(unif_ModelFormat)
 	{
 		//OBJファイル
 		case FILE_FORMAT_OBJ:

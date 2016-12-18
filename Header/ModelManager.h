@@ -3,23 +3,20 @@
 
 //include定義
 #include "Common.h"
-#include "OBJLoader.h"
-#include "ShaderManager.h"
-#include "Texture.h"
 
-//#define定義
-#define MODEL_FILE_DIR	"../Resource/Model/"	//モデルファイルの保存ディレクトリ
+class ShaderManager;
 
 //モデルデータのフォーマット
 //ここの定義を変更する場合は、「Model.frag」の上部「#define」定義も同じように変更してください
-typedef enum
+enum class ModelFormat : uint16_t
 {
-	FILE_FORMAT_OBJ = 1,				//OBJ形式のモデルファイル（OBJファイルに指定があればMTLファイルも読み込まれる）
+	UNDEFINED = 0,				//未定義（初期化された状態）
+	OBJ,						//OBJ形式のモデルファイル（OBJファイルに指定があればMTLファイルも読み込まれる）
 	
 	//以下、自作モデルデータ（特殊パターン）
-	ORIGINAL_FORMAT_PIERCED_CUBE,		//オリジナルフォーマットで穴あきのキューブデータ（エッジ有り）
-	ORIGINAL_FORMAT_PIERCED_CUBE2,		//オリジナルフォーマットで穴あきのキューブデータ（エッジ無し）
-}FileFotmat;
+	ORIGINAL_PIERCED_CUBE,		//オリジナルフォーマットで穴あきのキューブデータ（エッジ有り）
+	ORIGINAL_PIERCED_CUBE2,		//オリジナルフォーマットで穴あきのキューブデータ（エッジ無し）
+};
 	
 class ModelManager
 {
@@ -40,16 +37,14 @@ public:
 	*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
 	*							 [Resource/Model/]フォルダ以降のファイルパスを入力してください。
 	*							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.obj」）
-	*					　　　※「p_FileFotmat」で自作モデルデータ（特殊パターン）を指定するときは、
-	*							「p_FileName」は「NULL」を指定してください。
-	*	　p_FileFotmat	：[I/ ]　モデルファイルのフォーマット（詳細は定義部分のコメント参照）
+	*					　　　※「p_ModelFormat」で自作モデルデータ（特殊パターン）を指定するときは、
+	*							「p_FileName」は「空("")」を指定してください。
+	*	　p_ModelFormat	：[I/ ]　モデルファイルのフォーマット（詳細は定義部分のコメント参照）
 	*
-	*					　　　※「p_FileFotmat」で自作モデルデータ（特殊パターン）を指定するときは、
-	*							「p_FileName」は「NULL」を指定してください。
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void FileDataLoad(const char* p_FileName, FileFotmat p_FileFotmat);
+	void FileDataLoad(const string &p_FileName, ModelFormat p_ModelFormat);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -76,27 +71,9 @@ public:
 	*-------------------------------------------------------------------------------*/
 	void DataDraw(const mat4 &p_ModelViewMat, const mat4 &p_ProjectionMat);
 
-	/*-------------------------------------------------------------------------------
-	*	関数説明
-	*	　モデルデータを描画するための準備をします
-	*	引数
-	*	　p_Global		：[I/ ]　グローバルデータ
-	*	戻り値
-	*	　なし
-	*-------------------------------------------------------------------------------*/
-	static void Prepare(void);
-
-	/*-------------------------------------------------------------------------------
-	*	関数説明
-	*	　破棄(終了)処理（変数などを破棄します）
-	*	引数
-	*	　なし
-	*	戻り値
-	*	　なし
-	*-------------------------------------------------------------------------------*/
-	static void Destroy(void);
-
 private:
+
+	static const string MODEL_FILE_DIR;		//モデルファイルの保存ディレクトリ
 
 	///////////////////////////////
 	// 描画情報データ構造体
@@ -178,7 +155,7 @@ private:
 
 	typedef struct
 	{
-		char *Name;
+		string Name;
 		GLuint *TexObj;
 	}MaterialTex;
 
@@ -192,26 +169,25 @@ private:
 		VertexAttribPointerInfo Normal;				//法線情報
 		VertexAttribPointerInfo Color;				//カラー情報
 		VertexAttribPointerInfo TexCoord;			//テクスチャ座標情報
-		std::vector<DrawElementsInfo> DrawElements;	//描画情報（DrawElements版）
-		std::vector<MaterialInfo> Material;			//マテリアル情報
+		vector<DrawElementsInfo> DrawElements;		//描画情報（DrawElements版）
+		vector<MaterialInfo> Material;				//マテリアル情報
 		GLuint BufferObj_v;							//VBO、バッファーオブジェクト（頂点データ用）
 		GLuint BufferObj_i;							//VBO、バッファーオブジェクト（インデックスデータ用）
-		FileFotmat FileFotmat;						//モデルデータのフォーマット
-		void *ClassObj;								//モデルデータの読み込み処理をしたクラスのオブジェクト
+		ModelFormat ModelFormat;					//モデルデータのフォーマット
 	}ModelInfo;
 
 	///////////////////////////////
 	// メンバ変数定義
 
-	ModelInfo m_ModelInfo;
+	ModelInfo m_ModelInfo = { 0 };
 	
 	//ロケーション
-	static ShaderManager m_ModelShader;		//モデル描画用のシェーダーオブジェクト
+	static shared_ptr<ShaderManager> m_ModelShader;		//モデル描画用のシェーダーオブジェクト
 	static GLint m_attr_Position;			//頂点座標のロケーション
 	static GLint m_attr_Normal;				//法線ロケーション
 	static GLint m_attr_Color;				//カラーロケーション
 	static GLint m_attr_TexCoord;			//テクスチャ座標のロケーション
-	static GLint m_unif_FileFotmat;			//モデルデータのフォーマットのロケーション
+	static GLint m_unif_ModelFormat;		//モデルデータのフォーマットのロケーション
 	static GLint m_unif_ModelViewMat;		//モデルビューマトリクスのロケーション
 	static GLint m_unif_ProjectionMat;		//プロジェクションマトリクスのロケーション
 	static GLint m_unif_RotateMat;			//回転行列のロケーション
@@ -237,14 +213,12 @@ private:
 	*	関数説明
 	*	　OBJ形式のモデルファイルからモデルデータの読み込みを行います
 	*	引数
-	*	　p_FileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
-	*					　		（ディレクトリ構造を含まないファイル名を設定、デバッグ情報表示として使用）
 	*	　p_DirFileName	：[I/ ]　読み込みを行う拡張子付きのモデルファイル名
 	*					　		（ディレクトリ構造も含んだフルパスを設定）
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void FileLoad_OBJ(const char* p_FileName, const char* p_DirFileName);
+	void FileLoad_OBJ(const string &p_DirFileName);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明

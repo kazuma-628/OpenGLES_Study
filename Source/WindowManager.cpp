@@ -28,10 +28,10 @@ WindowManager::~WindowManager()
 void WindowManager::CreateNewWindow(const uint16_t p_Width, const uint16_t p_Height, const string &p_Title)
 {
 	//引数チェック
-	if (0 == p_Width || 0 == p_Height)
+	if (0 == p_Width || 0 == p_Height || 0 == p_Title.length())
 	{
 		ERROR_MESSAGE("ウィンドウを作成する 引数エラー\n" \
-			"p_Width = %d, p_Height = %d\n", p_Width, p_Height);
+			"p_Width = %d, p_Height = %d, p_Title = %s\n", p_Width, p_Height, p_Title.c_str());
 		return;
 	}
 

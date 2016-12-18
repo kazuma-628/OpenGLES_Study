@@ -1,5 +1,10 @@
 ﻿#include "Texture.h"
 
+/////////////////////////////////////////////
+//static変数の実体を定義
+
+const string Texture::TEXTURE_FILE_DIR = "../Resource/Texture/";    //テクスチャファイルの保存ディレクトリ
+
 //コンストラクタ
 Texture::Texture()
 {
@@ -17,11 +22,13 @@ Texture::~Texture()
 *	　画像ファイルからテクスチャデータの読み込みを行います
 *	引数
 *	　p_FileName	：[I/ ]　読み込みを行う拡張子付きの画像ファイル名
-*							 [Resource/Texture/]フォルダ以降のファイルパスを入力してください。
+*							 [Resource/Texture/]フォルダ以降のファイルパスを入力してください。（例外あり、「p_FullPathFlag」引数を参照）
 *							 また、ディレクトリをまたぐときは「/」で区切ってください（例「xxx/xxx.png」）
-*							 ※ただし、モデルデータのテクスチャを読み込むときはマテリアルファイルに記載のテクスチャが読み込まれます。
+*	　p_FullPathFlag：[I/ ]　フルパスでファイル名を指定する場合は「ture」にしてください
+*							 （[Resource/Texture/]フォルダ以降のファイル名を入力したくない場合に「ture」にする）
+*							 ※現状は「モデルデータのテクスチャを読み込む」場合に使用
 *	　p_PixelFotmat	：[I/ ]　画像ファイルのフォーマット
-*							 [PIXELFORMAT_24BIT_RGB] or [PIXELFORMAT_32BIT_RGBA] で指定（詳細は定義部分のコメント参照）
+*							 [RGB_24BIT] or [RGBA_32BIT] で指定（詳細は定義部分のコメント参照）
 *	　p_TextureData	：[ /O]　テクスチャデータ
 *							 ※注意※
 *							 テクスチャデータが不要になった時点で、必ず[FileDataFree]をコールしてください。
@@ -29,29 +36,26 @@ Texture::~Texture()
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotmat, TextureInfo *p_TextureData)
+void Texture::FileDataLoad(const string &p_FileName, const bool p_FullPathFlag, const PixelFotmat p_PixelFotmat, TextureInfo *p_TextureData)
 {
-	//モデルデータのテクスチャを読み込むかの判定
-	int ModelTexFlag = strncmp(p_FileName, MODEL_FILE_DIR, strlen(MODEL_FILE_DIR));
-
 	//モデルデータのテクスチャを読み込む場合は、
-	//モデルデータが格納されているディレクトリへのパスを読み飛ばしてファイル名を表示
-	if (0 == ModelTexFlag)
+	//（長くなるので）格納されているディレクトリへのパスを読み飛ばしてファイル名を表示
+	if (true == p_FullPathFlag)
 	{
-		printf("テクスチャ「%s」の読み込みを開始します...", p_FileName + strlen(MODEL_FILE_DIR));
+		printf("テクスチャ「%s」の読み込みを開始します...", p_FileName.substr(p_FileName.rfind("/") + 1).c_str());
 	}
 	else
 	{
-		printf("テクスチャ「%s」の読み込みを開始します...", p_FileName);
+		printf("テクスチャ「%s」の読み込みを開始します...", p_FileName.c_str());
 	}
 
 	//引数チェック
-	if (NULL == p_FileName || NULL == p_TextureData)
+	if (0 == p_FileName.length())
 	{
 		printf("失敗\n");
 		ERROR_MESSAGE("テクスチャデータの読み込み 引数エラー\n" \
 					  "p_FileName = %s, p_TextureData = %x\n" \
-					  , p_FileName, (unsigned int)p_TextureData);
+					  , p_FileName.c_str(), reinterpret_cast<uint32_t>(p_TextureData));
 		return;
 	}
 
@@ -59,51 +63,34 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 	//////////////////////////////////////////
 	// テクスチャファイルへのパス（ワイド文字）を作成
 
-	char *texture_dir_file_name = NULL;			//テクスチャファイルへのパス（マルチバイト文字）
+	string texture_dir_file_name;				//テクスチャファイルへのパス（マルチバイト文字）	
 	wchar_t *w_texture_dir_file_name = NULL;	//テクスチャファイルへのパス（ワイド文字）
 	int StrLength = 0;							//読み込むテクスチャファイル名の長さ（バイト数）
-
+	
 	//モデルデータのテクスチャを読み込む場合とそれ以外で処理を分ける。
 	//（モデルデータのテクスチャはフルパスが入っているのでそのまま使用して、
 	//　それ以外はファイル名だけが入っているのでフルパスにする）
-	if (0 == ModelTexFlag)
+	if (true == p_FullPathFlag)
 	{
-		//ロケールを日本に設定
-		setlocale(LC_CTYPE, "jpn");
-
-		//マルチバイト文字の文字数を取得して、ワイド文字に変換した場合のバイト数を算出する
-		StrLength = _mbstrlen(p_FileName) * 2;
-
-		// 文字列の長さを取得してメモリ確保（終端を明確にするため +2(ワイド文字なので) する。[\0]となる）
-		w_texture_dir_file_name = (wchar_t*)calloc(StrLength + 2, sizeof(char));
-
-		//マルチバイト文字列 → ワイド文字列に変換（[\0]までコピー）
-		mbstowcs(w_texture_dir_file_name, p_FileName, _mbstrlen(p_FileName) + 1);
+		texture_dir_file_name = p_FileName;
 	}
 	else
 	{
-		// 文字列の長さを取得してメモリ確保（終端を明確にするため +1 する。[\0]となる）
-		StrLength = strlen(TEXTURE_FILE_DIR) + strlen(p_FileName);
-		texture_dir_file_name = (char*)calloc(StrLength + 1, sizeof(char));
-
-		//テクスチャファイルへのパスを生成する（マルチバイト文字）
-		sprintf(texture_dir_file_name, "%s%s", TEXTURE_FILE_DIR, p_FileName);
-
-		//ロケールを日本に設定
-		setlocale(LC_CTYPE, "jpn");
-
-		//マルチバイト文字の文字数を取得して、ワイド文字に変換した場合のバイト数を算出する
-		StrLength = _mbstrlen(texture_dir_file_name) * 2;
-
-		// 文字列の長さを取得してメモリ確保（終端を明確にするため +2(ワイド文字なので) する。[\0]となる）
-		w_texture_dir_file_name = (wchar_t*)calloc(StrLength + 2, sizeof(char));
-
-		//マルチバイト文字列 → ワイド文字列に変換（[\0]までコピー）
-		mbstowcs(w_texture_dir_file_name, texture_dir_file_name, _mbstrlen(texture_dir_file_name) + 1);
-
-		//文字列変換したので不要なメモリを開放する
-		SAFE_FREE(texture_dir_file_name);
+		texture_dir_file_name = TEXTURE_FILE_DIR + p_FileName;
 	}
+
+	//ロケールを日本に設定
+	setlocale(LC_CTYPE, "jpn");
+
+	//マルチバイト文字の文字数を取得して、ワイド文字に変換した場合のバイト数を算出する
+	StrLength = _mbstrlen(texture_dir_file_name.c_str()) * 2;
+
+	// 文字列の長さを取得してメモリ確保（終端を明確にするため +2(ワイド文字なので) する。[\0]となる）
+	w_texture_dir_file_name = (wchar_t*)calloc(StrLength + 2, sizeof(char));
+
+	//マルチバイト文字列 → ワイド文字列に変換（[\0]までコピー）
+	mbstowcs(w_texture_dir_file_name, texture_dir_file_name.c_str(), _mbstrlen(texture_dir_file_name.c_str()) + 1);
+
 
 
 	//////////////////////////////////////////
@@ -122,19 +109,19 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 
 	//テクスチャデータ読み込み
 	Gdiplus::BitmapData BitmapData;
-	if (0 != Texture->LockBits(0, Gdiplus::ImageLockModeRead, p_PixelFotmat, &BitmapData))
+	if (0 != Texture->LockBits(0, Gdiplus::ImageLockModeRead, static_cast<uint32_t>(p_PixelFotmat), &BitmapData))
 	{
 		printf("失敗\n");
 
 		//モデルデータのテクスチャを読み込む場合とそれ以外で処理を分ける。
 		//（読み込み元となる基礎フォルダが違うのでエラーメッセージを切り替える）
-		if (0 == ModelTexFlag)
+		if (true == p_FullPathFlag)
 		{
 			//「+3」は不要な「../」の部分を読み飛ばして表示するためのもの
 			ERROR_MESSAGE("テクスチャファイルの読み込みに失敗しました。\n"\
 						  "「%s」にファイルがありますか？\n"\
 						  "マテリアルファイルに記載してあるテクスチャファイルへのパスが間違っていませんか？"\
-						 , p_FileName + 3);
+						 , p_FileName.substr(3).c_str());
 		}
 		else
 		{
@@ -153,12 +140,12 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 	// 返却する情報の設定
 	switch (p_PixelFotmat)
 	{
-	case PIXEL_FORMAT_24BIT_RGB:
+	case PixelFotmat::RGB_24BIT:
 		p_TextureData->internalFormat = GL_RGB;
 		p_TextureData->format = GL_RGB;
 		break;
 
-	case PIXEL_FORMAT_32BIT_RGBA:
+	case PixelFotmat::RGBA_32BIT:
 		p_TextureData->internalFormat = GL_RGBA;
 		p_TextureData->format = GL_RGBA;
 		break;
@@ -173,14 +160,14 @@ void Texture::FileDataLoad(const char* p_FileName, const PixelFotmat p_PixelFotm
 		return;
 	}
 
-	p_TextureData->width = (GLsizei)BitmapData.Width;
-	p_TextureData->height = (GLsizei)BitmapData.Height;
+	p_TextureData->width = static_cast<GLsizei>(BitmapData.Width);
+	p_TextureData->height = static_cast<GLsizei>(BitmapData.Height);
 	p_TextureData->border = 0;
 	p_TextureData->type = GL_UNSIGNED_BYTE;
-	p_TextureData->data = (GLvoid*)calloc(BitmapData.Height * BitmapData.Stride, sizeof(byte));
+	p_TextureData->data = reinterpret_cast<GLvoid*>(calloc(BitmapData.Height * BitmapData.Stride, sizeof(byte)));
 
 	//ロードしたテクスチャは「BGR」で格納されているので「RGB」に変換しつつ上下を反転しながらコピーする
-	DataBRGtoRGB_invert(p_PixelFotmat, &BitmapData, p_TextureData);
+	DataBRGtoRGB_invert(p_PixelFotmat, BitmapData, p_TextureData);
 
 	//読み込んだテクスチャ情報/データを破棄する
 	Texture->UnlockBits(&BitmapData);
@@ -214,32 +201,32 @@ void Texture::FileDataFree(TextureInfo *p_TextureData)
 *	　（VRAMにアップロードするときに上下が反転するので予め反転させておく）
 *	引数
 *	　p_PixelFotmat	：[I/ ]　画像ファイルのフォーマット
-*							 PIXELFORMAT_24BIT_RGB or PIXELFORMAT_32BIT_RGBA で指定（詳細は定義部分のコメント参照）
+*							 RGB_24BIT or RGBA_32BIT で指定（詳細は定義部分のコメント参照）
 *	　p_BitmapData	：[I/ ]　変換元のテクスチャデータ（Gdiplus::Bitmap クラスの LockBits関数で読み込んだしたデータ）
 *	　p_TextureData	：[ /O]　変換先のテクスチャデータ　
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void Texture::DataBRGtoRGB_invert(const int p_PixelFotmat, const Gdiplus::BitmapData* p_BitmapData, TextureInfo* p_TextureData)
+void Texture::DataBRGtoRGB_invert(const PixelFotmat p_PixelFotmat, const Gdiplus::BitmapData &p_BitmapData, TextureInfo* p_TextureData)
 {
 	//1色分の情報のバイト数
-	int ColorByte = 0;
+	uint32_t ColorByte = 0;
 
 	//画像のフォーマットから1色分の情報のバイト数を決定
-	if (PIXEL_FORMAT_24BIT_RGB == p_PixelFotmat)
+	if (PixelFotmat::RGB_24BIT == p_PixelFotmat)
 	{
 		ColorByte = 3;
 	}
-	else if (PIXEL_FORMAT_32BIT_RGBA)
+	else if (PixelFotmat::RGBA_32BIT == p_PixelFotmat)
 	{
 		ColorByte = 4;
 	}
 
 	//高さピクセル分繰り返す
-	for (unsigned int Height = 0; Height < p_BitmapData->Height; Height++)
+	for (uint32_t Height = 0; Height < p_BitmapData.Height; Height++)
 	{
 		//幅ピクセル × カラー色分繰り返す（幅分の変換量となる）
-		for (unsigned int Width = 0; Width < p_BitmapData->Width * ColorByte; Width = Width + ColorByte)
+		for (uint32_t Width = 0; Width < p_BitmapData.Width * ColorByte; Width = Width + ColorByte)
 		{
 			//「BGR(A)」を「RGB(A)」に変換する1画素の先頭位置を算出する。
 			//GPU（VRAM）にアップロードするときに上下が反転するので、
@@ -247,24 +234,24 @@ void Texture::DataBRGtoRGB_invert(const int p_PixelFotmat, const Gdiplus::Bitmap
 			//また、その際は「Stride」を考慮する
 
 			//変換する1画素の先頭位置
-			unsigned int DataPos = (Height * p_BitmapData->Stride) + Width;
+			uint32_t DataPos = (Height * p_BitmapData.Stride) + Width;
 
 			//「DataPos」と上下が反転する位置
-			unsigned int DataPos_invert = ((p_BitmapData->Height - 1 - Height ) * p_BitmapData->Stride) + Width;
+			uint32_t DataPos_invert = ((p_BitmapData.Height - 1 - Height ) * p_BitmapData.Stride) + Width;
 
 			//R成分をコピー
-			memmove((byte*)p_TextureData->data + DataPos, (byte*)p_BitmapData->Scan0 + DataPos_invert + 2, sizeof(byte));
+			memmove(reinterpret_cast<byte*>(p_TextureData->data) + DataPos, reinterpret_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert + 2, sizeof(byte));
 
 			//G成分をコピー
-			memmove((byte*)p_TextureData->data + DataPos + 1, (byte*)p_BitmapData->Scan0 + DataPos_invert + 1, sizeof(byte));
+			memmove(reinterpret_cast<byte*>(p_TextureData->data) + DataPos + 1, reinterpret_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert + 1, sizeof(byte));
 
 			//B成分をコピー
-			memmove((byte*)p_TextureData->data + DataPos + 2, (byte*)p_BitmapData->Scan0 + DataPos_invert, sizeof(byte));
+			memmove(reinterpret_cast<byte*>(p_TextureData->data) + DataPos + 2, reinterpret_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert, sizeof(byte));
 
 			//RGBAフォーマットではA成分もコピー
-			if (PIXEL_FORMAT_32BIT_RGBA == p_PixelFotmat)
+			if (PixelFotmat::RGBA_32BIT == p_PixelFotmat)
 			{
-				memmove((byte*)p_TextureData->data + DataPos + 3, (byte*)p_BitmapData->Scan0 + DataPos_invert + 3, sizeof(byte));
+				memmove(reinterpret_cast<byte*>(p_TextureData->data) + DataPos + 3, reinterpret_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert + 3, sizeof(byte));
 			}
 		}
 	}
