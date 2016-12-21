@@ -40,11 +40,11 @@ public:
 private:
 
 	// 頂点データ構造体
-	typedef struct
+	struct Vec3_Color3
 	{
 		vec3 Vector;
 		ucvec3 Color;
-	}Vec3_Color3;
+	};
 
 	shared_ptr<ShaderManager> m_MainShader = nullptr;		//メインシェーダーオブジェクト
 	GLint m_attr_pos = -1;					//頂点データ

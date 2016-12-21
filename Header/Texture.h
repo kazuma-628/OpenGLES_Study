@@ -14,7 +14,7 @@ enum class PixelFotmat : uint32_t
 };
 
 //テクスチャデータの情報
-typedef struct
+struct TextureInfo
 {
 	//各変数は[glTexImage2D(3D,etc...)]の引数となるもの（そのまま引数に設定すれば良い）
 	//ここに用意されてない引数は各自使用用途に合わせて設定すること
@@ -25,7 +25,7 @@ typedef struct
 	GLenum format;				//ピクセルフォーマット（ピクセル内部フォーマットと同じものが設定される）
 	GLenum type;				//ピクセル情報の型
 	GLvoid *data;				//ピクセルデータ
-}TextureInfo;
+};
 
 
 class Texture

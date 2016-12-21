@@ -121,7 +121,7 @@ typedef tvec1<uint16_t, highp>	usvec1;
 ////////////////////////////////////
 
 // 構造体
-typedef struct
+struct GlobalData
 {
 	mat4 ModelViewMat;			//モデルビューマトリクス（大元のマトリクスデータ）
 	mat4 ProjectionMat;			//プロジェクションマトリクス（大元のマトリクスデータ）
@@ -131,7 +131,7 @@ typedef struct
 	GLfloat Aspect;				//アスペクト比（幅 ÷ 高さ）（横の大きさを[?]とした時、縦の大きさは[? * Aspect]となる）
 	vec3 TranslateAmount;		//初期位置（X,Y,Z）からの移動量
 	vec3 RotateAmount;			//初期位置（X,Y,Z）からの回転量
-}GlobalData;
+};
 
 
 

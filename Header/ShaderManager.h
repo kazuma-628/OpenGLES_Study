@@ -8,14 +8,14 @@
 
 //トランスフォームフィードバックの設定情報
 //（[glTransformFeedbackVaryings]の引数に登録するデータを設定する）
-typedef struct
+struct TransformFeedbackInfo
 {
 	//各変数に設定する内容は[glTransformFeedbackVaryings]の仕様を確認すること
 	//※プログラムオブジェクトは設定なし
 	GLsizei count;
 	const char **varyings;
 	GLenum bufferMode;
-}TransformFeedbackInfo;
+};
 
 class ShaderManager
 {

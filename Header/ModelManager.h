@@ -79,7 +79,7 @@ private:
 	// 描画情報データ構造体
 
 	//[glVertexAttribPointer]用パラメータ情報
-	typedef struct
+	struct VertexAttribPointerInfo
 	{
 		GLuint index;
 		GLint size;
@@ -87,18 +87,18 @@ private:
 		GLboolean normalized;
 		GLsizei stride;
 		GLvoid *pointer;
-	}VertexAttribPointerInfo;
+	};
 
 	//[glDrawArrays]用パラメータ情報
-	typedef struct
+	struct DrawArraysInfo
 	{
 		GLenum mode;
 		GLint first;
 		GLsizei count;
-	}DrawArraysInfo;
+	};
 
 	//[glDrawElements]用パラメータ情報
-	typedef struct
+	struct DrawElementsInfo
 	{
 		GLenum mode;
 		GLsizei count;
@@ -106,10 +106,10 @@ private:
 		GLvoid *indices;
 		uint16_t MaterialIndex;		//特殊パラメータ（glDrawElementsには直接使用しない）
 									//どのマテリアル情報を使用すればよいのかを示すパラメータ
-	}DrawElementsInfo;
+	};
 
 	//マテリアル情報
-	typedef struct
+	struct MaterialInfo
 	{
 		vec3 ambient;				//アンビエント値
 		vec3 diffuse;				//ディフューズ値
@@ -120,29 +120,29 @@ private:
 		GLuint diffuseTexObj;		//テクスチャオブジェクト（ディフューズ） 
 		GLuint specularTexObj;		//テクスチャオブジェクト（スペキュラ）
 		GLuint bumpMapTexObj;		//テクスチャオブジェクト（バンプマップ）
-	}MaterialInfo;
+	};
 
 	///////////////////////////////
 	// 通常構造体
 
 	// 頂点データ構造体
-	typedef struct
+	struct Vec3_Color3
 	{
 		vec3 Position;
 		ucvec3 Color;
-	}Vec3_Color3;
+	};
 
-	typedef struct
+	struct MaterialTex
 	{
 		string Name;
 		GLuint *TexObj;
-	}MaterialTex;
+	};
 
 	///////////////////////////////
 	//【モデルデータ情報】
 	// ※モデルデータのフォーマットによって設定されるメンバと設定されないメンバがある
 
-	typedef struct
+	struct ModelInfo
 	{
 		VertexAttribPointerInfo Position;			//頂点座標情報
 		VertexAttribPointerInfo Normal;				//法線情報
@@ -153,7 +153,7 @@ private:
 		GLuint BufferObj_v;							//VBO、バッファーオブジェクト（頂点データ用）
 		GLuint BufferObj_i;							//VBO、バッファーオブジェクト（インデックスデータ用）
 		ModelFormat ModelFormat;					//モデルデータのフォーマット
-	}ModelInfo;
+	};
 
 	///////////////////////////////
 	// メンバ変数定義

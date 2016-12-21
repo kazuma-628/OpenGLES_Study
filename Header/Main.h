@@ -15,7 +15,7 @@
 #define InertiaTranslateWeight	0.2f		//惰性移動量の重み（値が小さいほど惰性移動量は多くなる）
 
 //構造体
-typedef struct
+struct TmpGlobalData
 {
 	vec2 OldPosition;				//【1イベント前】マウスのカーソル座標
 	vec2 OldScrollAmount;			//【1イベント前】スクロールの合計量、初期状態は[x:0（横[左右]スクロール）][y:0（縦[上下]スクロール）]で、
@@ -27,14 +27,14 @@ typedef struct
 	vec3 InertiaRotate;				// 惰性に伴う1イベント分の回転量（フリックするとフリック速度に応じた値が入り徐々に[0]になる、マウスを動かさなければ[0]）
 	char LastKey;					// 最後に選択したキー（描画アイテムに関連付けられているもののみ更新される）
 	string DrawClass;				// 今描画している(選択している)クラス名
-}TmpGlobalData;
+};
 
 //描画するクラスの情報
-typedef struct
+struct DarwClassInfo
 {
 	char Key;						//描画を開始(選択)するキー
 	shared_ptr<BaseDraw> Class;		//描画するクラス
-}DarwClassInfo;
+};
 
 /*-------------------------------------------------------------------------------
 *	関数説明
