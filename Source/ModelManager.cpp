@@ -669,7 +669,7 @@ void ModelManager::FileLoad_OBJ(const string &p_DirFileName)
 void ModelManager::DataLoad_PiercedCube(void)
 {
 	// 頂点データ
-	Vec3_bColor3 vertex[] =
+	Vec3_Color3 vertex[] =
 	{
 		// v0
 		{ { -10.0f, -10.0f, 10.0f },{ 50, 50, 50 } },
@@ -718,14 +718,14 @@ void ModelManager::DataLoad_PiercedCube(void)
 	m_ModelInfo.Position.size = sizeof(vertex[0].Position) / sizeof(vertex[0].Position.x);
 	m_ModelInfo.Position.type = GL_FLOAT;
 	m_ModelInfo.Position.normalized = GL_FALSE;
-	m_ModelInfo.Position.stride = sizeof(Vec3_bColor3);
+	m_ModelInfo.Position.stride = sizeof(Vec3_Color3);
 	m_ModelInfo.Position.pointer = 0;
 
 	//モデルデータ設定（カラー情報）
 	m_ModelInfo.Color.size = sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r);
 	m_ModelInfo.Color.type = GL_UNSIGNED_BYTE;
 	m_ModelInfo.Color.normalized = GL_TRUE;
-	m_ModelInfo.Color.stride = sizeof(Vec3_bColor3);
+	m_ModelInfo.Color.stride = sizeof(Vec3_Color3);
 	m_ModelInfo.Color.pointer = reinterpret_cast<GLvoid*>(sizeof(vertex[0].Position));
 
 	//描画情報設定
@@ -768,7 +768,7 @@ void ModelManager::DataLoad_PiercedCube(void)
 void ModelManager::DataLoad_PiercedCube2(void)
 {
 	// 頂点データ
-	Vec3_bColor3 vertex[] =
+	Vec3_Color3 vertex[] =
 	{
 		// v0
 		{ { -10.0f, -10.0f, 10.0f },{ 90, 0, 0 } },
@@ -805,14 +805,14 @@ void ModelManager::DataLoad_PiercedCube2(void)
 	m_ModelInfo.Position.size = sizeof(vertex[0].Position) / sizeof(vertex[0].Position.x);
 	m_ModelInfo.Position.type = GL_FLOAT;
 	m_ModelInfo.Position.normalized = GL_FALSE;
-	m_ModelInfo.Position.stride = sizeof(Vec3_bColor3);
+	m_ModelInfo.Position.stride = sizeof(Vec3_Color3);
 	m_ModelInfo.Position.pointer = 0;
 
 	//モデルデータ設定（カラー情報）
 	m_ModelInfo.Color.size = sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r);
 	m_ModelInfo.Color.type = GL_UNSIGNED_BYTE;
 	m_ModelInfo.Color.normalized = GL_TRUE;
-	m_ModelInfo.Color.stride = sizeof(Vec3_bColor3);
+	m_ModelInfo.Color.stride = sizeof(Vec3_Color3);
 	m_ModelInfo.Color.pointer = reinterpret_cast<GLvoid*>(sizeof(vertex[0].Position));
 
 	//描画情報設定

@@ -75,7 +75,7 @@ void HelloWorld::Drawing(const GlobalData &p_Global)
 
 	//穴あきキューブ形状のモデルデータを作成する
 	// 頂点データ
-	Vec3_bColor3 vertex[] =
+	Vec3_Color3 vertex[] =
 	{
 		// v0
 		{ { -10.0f, -10.0f, 10.0f },{ 50, 50, 50 } },
@@ -123,8 +123,8 @@ void HelloWorld::Drawing(const GlobalData &p_Global)
 	m_MainShader->UniformMatrixXfv(m_ProjModel_matrix, 4, 1, GL_FALSE, &ProjModelMat);
 
 	// [glDrawArrays]を使用した描画（一番オーソドックス（初歩的）な描画方法）
-	m_MainShader->VertexAttribPointer(m_attr_pos, sizeof(vertex[0].Vector) / sizeof(vertex[0].Vector.x), GL_FLOAT, GL_FALSE, sizeof(Vec3_bColor3), (GLvoid*)&vertex[0].Vector);
-	m_MainShader->VertexAttribPointer(m_attr_color, sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r), GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vec3_bColor3), (GLvoid*)&vertex[0].Color);
+	m_MainShader->VertexAttribPointer(m_attr_pos, sizeof(vertex[0].Vector) / sizeof(vertex[0].Vector.x), GL_FLOAT, GL_FALSE, sizeof(Vec3_Color3), (GLvoid*)&vertex[0].Vector);
+	m_MainShader->VertexAttribPointer(m_attr_color, sizeof(vertex[0].Color) / sizeof(vertex[0].Color.r), GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vec3_Color3), (GLvoid*)&vertex[0].Color);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof(vertex) / sizeof(vertex[0]));
 
 	//シェーダーの変数を無効化

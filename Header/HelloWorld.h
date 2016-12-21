@@ -43,8 +43,8 @@ private:
 	typedef struct
 	{
 		vec3 Vector;
-		bColor3 Color;
-	}Vec3_bColor3;
+		ucvec3 Color;
+	}Vec3_Color3;
 
 	shared_ptr<ShaderManager> m_MainShader = nullptr;		//メインシェーダーオブジェクト
 	GLint m_attr_pos = -1;					//頂点データ

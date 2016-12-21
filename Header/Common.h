@@ -92,22 +92,31 @@ inline void error_message_func(void)
 }
 
 ////////////////////////////////////
-// カラーベクトル構造体（256用）
+// GLMで足りないベクトル構造体を定義
 
-typedef struct
-{
-	GLubyte r;
-	GLubyte g;
-	GLubyte b;
-}bColor3;
+//(signed)8ビット, 一般的なsigned charを想定
+typedef tvec4<int8_t, highp>	cvec4;
+typedef tvec3<int8_t, highp>	cvec3;
+typedef tvec2<int8_t, highp>	cvec2;
+typedef tvec1<int8_t, highp>	cvec1;
 
-typedef struct
-{
-	GLubyte r;
-	GLubyte g;
-	GLubyte b;
-	GLubyte a;
-}bColor4;
+//(unsigned)8ビット, 一般的なunsigned charを想定
+typedef tvec4<uint8_t, highp>	ucvec4;
+typedef tvec3<uint8_t, highp>	ucvec3;
+typedef tvec2<uint8_t, highp>	ucvec2;
+typedef tvec1<uint8_t, highp>	ucvec1;
+
+//(signed)16ビット, 一般的なsigned shortを想定
+typedef tvec4<int16_t, highp>	svec4;
+typedef tvec3<int16_t, highp>	svec3;
+typedef tvec2<int16_t, highp>	svec2;
+typedef tvec1<int16_t, highp>	svec1;
+
+//(unsigned)16ビット, 一般的なunsigned shortを想定
+typedef tvec4<uint16_t, highp>	usvec4;
+typedef tvec3<uint16_t, highp>	usvec3;
+typedef tvec2<uint16_t, highp>	usvec2;
+typedef tvec1<uint16_t, highp>	usvec1;
 
 ////////////////////////////////////
 

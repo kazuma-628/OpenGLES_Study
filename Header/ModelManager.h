@@ -128,30 +128,9 @@ private:
 	// 頂点データ構造体
 	typedef struct
 	{
-		vec2 Position;
-		bColor3 Color;
-	}Vec2_bColor3;
-
-	// 頂点データ構造体
-	typedef struct
-	{
-		vec2 Position;
-		bColor4 Color;
-	}Vec2_bColor4;
-
-	// 頂点データ構造体
-	typedef struct
-	{
 		vec3 Position;
-		bColor3 Color;
-	}Vec3_bColor3;
-
-	// 頂点データ構造体
-	typedef struct
-	{
-		vec3 Position;
-		bColor4 Color;
-	}Vec3_bColor4;
+		ucvec3 Color;
+	}Vec3_Color3;
 
 	typedef struct
 	{
