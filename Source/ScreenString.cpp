@@ -53,7 +53,7 @@ void ScreenString::Prepare(const GlobalData &p_Global)
 		m_StringShader = make_shared<ShaderManager>();
 
 		//シェーダーの読み込みを行う
-		m_StringShader->CreateShaderProgram("ScreenString.vert", "ScreenString.frag", NULL, NULL, NULL, NULL);
+		m_StringShader->CreateShaderProgram("ScreenString.vert", "ScreenString.frag", "", "", "", nullptr);
 
 		//シェーダー内で使用する変数を取得します（頂点座標）
 		m_attr_pos = m_StringShader->GetAttribLocation("attr_pos");
@@ -130,7 +130,7 @@ void ScreenString::Destroy(void)
 void ScreenString::DebugPrint(const GlobalData &p_Global, const char *p_String, ...)
 {
 	//引数チェック
-	if (NULL == p_String)
+	if (nullptr == p_String)
 	{
 		ERROR_MESSAGE("画面上にデバック表示（設定）をする 引数エラー\n" \
 					  "p_String = %x\n", reinterpret_cast<uint32_t>(p_String));
@@ -158,7 +158,7 @@ void ScreenString::DebugPrint(const GlobalData &p_Global, const char *p_String, 
 	//////////////////////////////////////////
 	// マルチバイト文字 から ワイド文字 に変換
 
-	wchar_t *w_String = NULL;	//テクスチャファイルへのパス（ワイド文字）
+	wchar_t *w_String = nullptr;	//テクスチャファイルへのパス（ワイド文字）
 	uint32_t StrLength = 0;			//読み込むテクスチャファイル名の長さ（バイト数）
 
 	//ロケールを日本に設定

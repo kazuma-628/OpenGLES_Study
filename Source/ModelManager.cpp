@@ -43,7 +43,7 @@ ModelManager::ModelManager()
 
 		//シェーダーの読み込みを行う
 		//「Shader」フォルダに格納されている必要があります。
-		m_ModelShader->CreateShaderProgram("ModelManager.vert", "ModelManager.frag", NULL, NULL, NULL, NULL);
+		m_ModelShader->CreateShaderProgram("ModelManager.vert", "ModelManager.frag", "", "", "", nullptr);
 
 		///////////////////////////////////////////////////
 		// シェーダー内で使用する変数のロケーションを取得

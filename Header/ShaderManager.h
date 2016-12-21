@@ -4,11 +4,6 @@
 //include定義
 #include "Common.h"
 
-//Define定義
-#define SHADER_FILE_DIR				"../Shader/"	//シェーダーファイルの保存ディレクトリ
-#define ATTRIB_INFO_MAX				128				//アトリビュート変数管理用の最大数
-#define UNIFORM_INFO_MAX			128				//ユニフォーム変数管理用の最大数
-
 //構造体定義
 
 //トランスフォームフィードバックの設定情報
@@ -41,10 +36,10 @@ public:
 	*	引数
 	*	　p_vertex_file_name			：[I/ ]　バーテックスシェーダーのファイル名
 	*	　p_fragment_file_name			：[I/ ]　フラグメントシェーダーのファイル名
-	*	　p_geometry_file_name			：[I/ ]　ジオメトリシェーダーのファイル名（使用しない場合はNULLを指定）
-	*	　p_tess_control_file_name		：[I/ ]　テッセレーションコントロールシェーダーのファイル名（使用しない場合はNULLを指定）
-	*	　p_tess_evaluation_file_name	：[I/ ]　テッセレーション評価シェーダーのファイル名（使用しない場合はNULLを指定）
-	*	　p_TransformFeedbackInfo		：[I/ ]　トランスフォームフィードバックの設定情報（使用しない場合はNULLを指定）
+	*	　p_geometry_file_name			：[I/ ]　ジオメトリシェーダーのファイル名（使用しない場合は「空("")」を指定）
+	*	　p_tess_control_file_name		：[I/ ]　テッセレーションコントロールシェーダーのファイル名（使用しない場合は「空("")」を指定）
+	*	　p_tess_evaluation_file_name	：[I/ ]　テッセレーション評価シェーダーのファイル名（使用しない場合は「空("")」を指定）
+	*	　p_TransformFeedbackInfo		：[I/ ]　トランスフォームフィードバックの設定情報（使用しない場合は「nullptr」を指定）
 	*
 	*	※どのファイル名も[Shader]フォルダ以降のファイルパスを入力してください
 	*	　ディレクトリをまたぐときは「/」で区切ってください。（例「xxx/xxx.vert」)
@@ -52,11 +47,11 @@ public:
 	*	戻り値
 	*	　なし
 	*-------------------------------------------------------------------------------*/
-	void CreateShaderProgram(const char* p_vertex_file_name,
-							 const char* p_fragment_file_name,
-							 const char* p_geometry_file_name,
-							 const char* p_tess_control_file_name,
-							 const char* p_tess_evaluation_file_name,
+	void CreateShaderProgram(const string &p_vertex_file_name,
+							 const string &p_fragment_file_name,
+							 const string &p_geometry_file_name,
+							 const string &p_tess_control_file_name,
+							 const string &p_tess_evaluation_file_name,
 							 const TransformFeedbackInfo *p_TransformFeedbackInfo);
 
 	/*-------------------------------------------------------------------------------
@@ -82,7 +77,7 @@ public:
 	*	　インデックス値ではなく、素のAttribute変数のロケーションを取得したい場合は、
 	*	　本関数実行後に「GetAttribLocationOriginal」関数を利用し取得してください。
 	*-------------------------------------------------------------------------------*/
-	GLint GetAttribLocation(const GLchar* p_name);
+	GLint GetAttribLocation(const string &p_name);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -96,7 +91,7 @@ public:
 	*	　インデックス値ではなく、素のUniform変数のロケーションを取得したい場合は、
 	*	　本関数実行後に「GetUniformLocationOriginal」関数を利用し取得してください。
 	*-------------------------------------------------------------------------------*/
-	GLint GetUniformLocation(const GLchar* p_name);
+	GLint GetUniformLocation(const string &p_name);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -316,6 +311,7 @@ public:
 	}
 
 private:
+	static const string SHADER_FILE_DIR;	//シェーダーファイルの保存ディレクトリ
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -327,7 +323,7 @@ private:
 	*	戻り値
 	*	　シェーダーオブジェクト
 	*-------------------------------------------------------------------------------*/
-	GLuint CreateShader(const char* p_file_name, const GLuint p_gl_xxxx_shader);
+	GLuint CreateShader(const string &p_file_name, const GLuint p_gl_xxxx_shader);
 
 	/*-------------------------------------------------------------------------------
 	*	関数説明
@@ -341,38 +337,30 @@ private:
 	*	戻り値
 	*	　シェーダーソースへの先頭ポインタ
 	*-------------------------------------------------------------------------------*/
-	char* ShaderFileLoad(const char* p_file_name);
+	shared_ptr<string> ShaderFileLoad(const string &p_file_name);
 
 	///////////////////////////////
 	//構造体定義
 
-	//アトリビュート変数管理用の構造体
-	typedef struct
+	//ロケーション管理用の構造体
+	struct LocationInfo
 	{
-		char *Name;				//変数名
+		string Name;			//変数名
 		GLint Location;			//ロケーション
-	}AttribInfo;
-
-	//ユニフォーム変数管理用の構造体
-	typedef struct
-	{
-		char *Name;				//変数名
-		GLint Location;			//ロケーション
-	}UniformInfo;
-
+	};
 
 	//変数定義
-	GLuint m_ProgramObject;					//プログラムオブジェクト
-	char *m_vertex_file_name;				//バーテックスシェーダーファイル名
-	char *m_fragment_file_name;				//フラグメントシェーダーファイル名
-	char *m_geometry_file_name;				//フラグメントシェーダーファイル名
-	char *m_tess_control_file_name;			//テッセレーションコントロールシェーダーのオブジェクト名
-	char *m_tess_evaluation_file_name;		//テッセレーション評価シェーダーのオブジェクト名
-	char *m_AllShaderFileName;				//全シェーダーのファイル名をまとめたもの
+	GLuint m_ProgramObject = 0;				//プログラムオブジェクト
+	string m_vertex_file_name;				//バーテックスシェーダーファイル名
+	string m_fragment_file_name;			//フラグメントシェーダーファイル名
+	string m_geometry_file_name;			//フラグメントシェーダーファイル名
+	string m_tess_control_file_name;		//テッセレーションコントロールシェーダーのオブジェクト名
+	string m_tess_evaluation_file_name;		//テッセレーション評価シェーダーのオブジェクト名
+	string m_AllShaderFileName;				//全シェーダーのファイル名をまとめたもの
 
-	AttribInfo m_AttribInfo[ATTRIB_INFO_MAX];			//アトリビュート変数管理用の変数
-	int m_AttribInfoIndex;								//アトリビュート変数管理用のインデックス値
-	UniformInfo m_UniformInfo[UNIFORM_INFO_MAX];		//ユニフォーム変数管理用の変数
-	int m_UniformInfoIndex;								//ユニフォーム変数管理用のインデックス値
+	vector<LocationInfo> m_AttribInfo;		//アトリビュート変数管理用の変数
+	uint32_t m_AttribInfoIndex = 0;			//アトリビュート変数管理用のインデックス値
+	vector<LocationInfo> m_UniformInfo;		//ユニフォーム変数管理用の変数
+	uint32_t m_UniformInfoIndex = 0;		//ユニフォーム変数管理用のインデックス値
 };
 #endif

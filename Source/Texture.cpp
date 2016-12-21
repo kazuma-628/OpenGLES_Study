@@ -64,7 +64,7 @@ void Texture::FileDataLoad(const string &p_FileName, const bool p_FullPathFlag, 
 	// テクスチャファイルへのパス（ワイド文字）を作成
 
 	string texture_dir_file_name;				//テクスチャファイルへのパス（マルチバイト文字）	
-	wchar_t *w_texture_dir_file_name = NULL;	//テクスチャファイルへのパス（ワイド文字）
+	wchar_t *w_texture_dir_file_name = nullptr;	//テクスチャファイルへのパス（ワイド文字）
 	int StrLength = 0;							//読み込むテクスチャファイル名の長さ（バイト数）
 	
 	//モデルデータのテクスチャを読み込む場合とそれ以外で処理を分ける。
@@ -183,7 +183,7 @@ void Texture::FileDataLoad(const string &p_FileName, const bool p_FullPathFlag, 
 *	関数説明
 *	　テクスチャデータのメモリを解放します
 *	引数
-*	　p_TextureData	：[ /O]　テクスチャデータ（メモリを解放後「NULL」が格納されるという意味で[ /O]指定）
+*	　p_TextureData	：[ /O]　テクスチャデータ（メモリを解放後「nullptr」が格納されるという意味で[ /O]指定）
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
@@ -192,7 +192,7 @@ void Texture::FileDataFree(TextureInfo *p_TextureData)
 	//メモリを開放する
 	SAFE_FREE(p_TextureData->data);
 
-	p_TextureData = NULL;
+	p_TextureData = nullptr;
 }
 
 /*-------------------------------------------------------------------------------
@@ -240,18 +240,18 @@ void Texture::DataBRGtoRGB_invert(const PixelFotmat p_PixelFotmat, const Gdiplus
 			uint32_t DataPos_invert = ((p_BitmapData.Height - 1 - Height ) * p_BitmapData.Stride) + Width;
 
 			//R成分をコピー
-			memmove(reinterpret_cast<byte*>(p_TextureData->data) + DataPos, reinterpret_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert + 2, sizeof(byte));
+			memmove(static_cast<byte*>(p_TextureData->data) + DataPos, static_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert + 2, sizeof(byte));
 
 			//G成分をコピー
-			memmove(reinterpret_cast<byte*>(p_TextureData->data) + DataPos + 1, reinterpret_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert + 1, sizeof(byte));
+			memmove(static_cast<byte*>(p_TextureData->data) + DataPos + 1, static_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert + 1, sizeof(byte));
 
 			//B成分をコピー
-			memmove(reinterpret_cast<byte*>(p_TextureData->data) + DataPos + 2, reinterpret_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert, sizeof(byte));
+			memmove(static_cast<byte*>(p_TextureData->data) + DataPos + 2, static_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert, sizeof(byte));
 
 			//RGBAフォーマットではA成分もコピー
 			if (PixelFotmat::RGBA_32BIT == p_PixelFotmat)
 			{
-				memmove(reinterpret_cast<byte*>(p_TextureData->data) + DataPos + 3, reinterpret_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert + 3, sizeof(byte));
+				memmove(static_cast<byte*>(p_TextureData->data) + DataPos + 3, static_cast<byte*>(p_BitmapData.Scan0) + DataPos_invert + 3, sizeof(byte));
 			}
 		}
 	}

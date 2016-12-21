@@ -32,7 +32,7 @@ void HelloWorld::Prepare(const GlobalData &p_Global)
 
 			//シェーダーの読み込みを行う
 			//「Shader」フォルダに格納されている必要があります。
-			m_MainShader->CreateShaderProgram("HelloWorld.vert", "HelloWorld.frag", NULL, NULL, NULL, NULL);
+			m_MainShader->CreateShaderProgram("HelloWorld.vert", "HelloWorld.frag", "", "", "", nullptr);
 
 			///////////////////////////////////////////////////
 			// シェーダー内で使用する変数のロケーションを取得
