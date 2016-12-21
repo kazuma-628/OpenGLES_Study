@@ -104,8 +104,8 @@ private:
 		GLsizei count;
 		GLenum type;
 		GLvoid *indices;
-		unsigned int MaterialIndex;		//特殊パラメータ（glDrawElementsには直接使用しない）
-										//どのマテリアル情報を使用すればよいのかを示すパラメータ
+		uint16_t MaterialIndex;		//特殊パラメータ（glDrawElementsには直接使用しない）
+									//どのマテリアル情報を使用すればよいのかを示すパラメータ
 	}DrawElementsInfo;
 
 	//マテリアル情報

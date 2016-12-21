@@ -65,9 +65,9 @@ void DeviceManager::MouseButtonCallback(GLFWwindow* p_window, int p_button, int 
 	//座標管理用の変数宣言
 	//　座標取得APIの引数が[double]の為、無駄だが仕方なくこのような橋渡しをしている
 	//　（このようにしないと、コンパイラでワーニングが出るので）
-	vec2 Pos;
-	Pos.x = (GLfloat)PosX;
-	Pos.y = (GLfloat)PosY;
+	ivec2 Pos;
+	Pos.x = static_cast<uint32_t>(PosX);
+	Pos.y = static_cast<uint32_t>(PosY);
 
 	//右クリックに関する処理
 	if (GLFW_MOUSE_BUTTON_RIGHT == p_button)
@@ -174,9 +174,9 @@ void DeviceManager::CursorPosCallback(GLFWwindow* p_window, double p_xpos, doubl
 	//座標用の変数宣言
 	//　コールバック用APIの引数が[double]の為、無駄だが仕方なくこのような橋渡しをしている
 	//　（このようにしないと、コンパイラでワーニングが出るので）
-	vec2 Pos;
-	Pos.x = (GLfloat)p_xpos;
-	Pos.y = (GLfloat)p_ypos;
+	ivec2 Pos;
+	Pos.x = static_cast<uint32_t>(p_xpos);
+	Pos.y = static_cast<uint32_t>(p_ypos);
 
 	//座標をコピーして保存
 	Device->m_MouseInfo.Position = Pos;
@@ -223,7 +223,7 @@ void DeviceManager::ScrollCallback(GLFWwindow* p_window, double p_xoffset, doubl
 	shared_ptr<DeviceManager> Device = Window->GetDevice();
 
 	//ひとまずスクロール上下しか使わない予定なので「p_yoffset」のみ取得
-	Device->m_MouseInfo.ScrollAmount.y += (GLfloat)p_yoffset;
+	Device->m_MouseInfo.ScrollAmount.y += static_cast<uint32_t>(p_yoffset);
 
 	/////////////////////////////////////////////
 	//	デバッグ用
@@ -326,7 +326,7 @@ void DeviceManager::KeyCallback(GLFWwindow* p_window, int p_key, int p_scancode,
 	if (GLFW_PRESS == p_action || GLFW_RELEASE == p_action)
 	{
 		//各キー（キーボード）の情報分ループする
-		for (int index = 0; (sizeof(KeySummary) / sizeof(KeySummary[0])) > index; index++)
+		for (uint16_t index = 0; (sizeof(KeySummary) / sizeof(KeySummary[0])) > index; index++)
 		{
 			//該当するキーがあれば
 			if (KeySummary[index].KeyDefine == p_key)

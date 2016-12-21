@@ -88,7 +88,7 @@ public:
 	*	　閉じられている：GL_TRUE
 	*	　閉じられていない：GL_FALSE
 	*-------------------------------------------------------------------------------*/
-	inline const int GetWindowShouldClose() const
+	inline const uint16_t GetWindowShouldClose() const
 	{
 		return glfwWindowShouldClose(m_window);
 	}

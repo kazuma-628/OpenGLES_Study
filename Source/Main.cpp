@@ -56,7 +56,7 @@ void main(void)
 	//	各オブジェクト生成
 
 	//ウィンドウ管理用のオブジェクト生成
-	WindowManager *m_Window = new WindowManager;
+	shared_ptr<WindowManager> m_Window = make_shared<WindowManager>();
 
 	//グローバルデータ生成
 	GlobalData m_Global = { 0 };
@@ -71,12 +71,12 @@ void main(void)
 		// { 描画を開始(選択)するキー, 描画するクラス }
 		//	（英数字(大文字)のみ）
 
-		{ '0', new HelloWorld },		//ハローワールド描画（OpenGLの基本的な描画）
-		{ '1', new HelloModel },		//ハローモデル描画（モデルデータのお試し描画）
+		{ '0', make_shared<HelloWorld>() },		//ハローワールド描画（OpenGLの基本的な描画）
+		{ '1', make_shared<HelloModel>() },		//ハローモデル描画（モデルデータのお試し描画）
 	};
 
 	//描画するクラスの最大数
-	int DrawClassMax = sizeof(DrawClass) / sizeof(DrawClass[0]);
+	uint16_t DrawClassMax = sizeof(DrawClass) / sizeof(DrawClass[0]);
 
 
 	//////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ void main(void)
 		glfwPollEvents();
 
 		//描画に必要な各種情報を設定/更新
-		SetVarietyOfInformation(*m_Window, &m_Global);
+		SetVarietyOfInformation(m_Window, &m_Global);
 
 
 		/////////////////////////////
@@ -118,7 +118,7 @@ void main(void)
 		if (true == TmpGlobal.ChangeWindowSize)
 		{
 			//描画リスト分ループ
-			for (int index = 0; index < DrawClassMax; index++)
+			for (uint16_t index = 0; index < DrawClassMax; index++)
 			{
 				//描画の再準備（資源の再作成）フラグを立てる
 				//個々の描画準備のときにフラグをチェックして必要であれば再準備処理する
@@ -139,7 +139,7 @@ void main(void)
 		// 切替時に描画が2重で行われる不効率さがあるが現状維持とする。
 
 		//描画リスト分ループ
-		for (int index = 0; index < DrawClassMax; index++)
+		for (uint16_t index = 0; index < DrawClassMax; index++)
 		{
 			if (DrawClass[index].Key == m_Window->GetDevice()->GetKeyInfo().LastKey ||
 				DrawClass[index].Key == TmpGlobal.LastKey)
@@ -148,7 +148,7 @@ void main(void)
 				TmpGlobal.LastKey = DrawClass[index].Key;
 
 				//選択した描画クラス名を保存
-				strcpy(TmpGlobal.DrawClass, typeid(*DrawClass[index].Class).name());
+				TmpGlobal.DrawClass = typeid(*DrawClass[index].Class).name();
 
 				//描画準備
 				DrawClass[index].Class->Prepare(m_Global);
@@ -177,18 +177,8 @@ void main(void)
 
 
 	//////////////////////////////////////////////////////
-	//	生成したオブジェクトの破棄
+	//	不要なデータの破棄処理
 
-	//描画リスト分ループ
-	for (int index = 0; index < DrawClassMax; index++)
-	{
-		//各描画オブジェクトを破棄
-		//「SAFE_DELETE」マクロを使用すべきだが、
-		//「const」修飾子がついているのでなので特別に「delete」直呼び許可
-		delete DrawClass[index].Class;	//
-	}
-
-	SAFE_DELETE(m_Window);
 	ScreenString::Destroy();
 }
 
@@ -202,22 +192,22 @@ void main(void)
 *	戻り値
 *	　なし
 *-------------------------------------------------------------------------------*/
-void SetVarietyOfInformation(const WindowManager &p_WindowManager, GlobalData *p_Global)
+void SetVarietyOfInformation(const shared_ptr<WindowManager> p_WindowManager, GlobalData *p_Global)
 {
 	//ウィンドウサイズの取得
-	const uvec2 WindowSize = p_WindowManager.GetWindowSize();
+	const uvec2 WindowSize = p_WindowManager->GetWindowSize();
 	//マウスの情報を取得
-	const MouseInfo MouseButton = p_WindowManager.GetDevice()->GetMouseInfo();
+	const MouseInfo MouseButton = p_WindowManager->GetDevice()->GetMouseInfo();
 	//キー（キーボード）の情報を取得
-	const KeyInfo KeyBoard = p_WindowManager.GetDevice()->GetKeyInfo();
+	const KeyInfo KeyBoard = p_WindowManager->GetDevice()->GetKeyInfo();
 
 	//今描画している(選択している)クラスと、表示している位置と回転の座標を表示
 	//（1フレーム前の情報だけど、一番上に表示したいので良しとする）
-	ScreenString::DebugPrint(*p_Global, "描画クラス：%s", TmpGlobal.DrawClass + 6);		//「+6」は不要な「class 」の部分を読み飛ばして表示するためのもの
-	ScreenString::DebugPrint(*p_Global, "位置 X：%d, Y：%d, Z：%d"\
-							 ,(int)p_Global->TranslateAmount.x, (int)p_Global->TranslateAmount.y, (int)p_Global->TranslateAmount.z);
-	ScreenString::DebugPrint(*p_Global, "回転 X：%d, Y：%d, Z：%d"\
-							 ,(int)(p_Global->RotateAmount.y / RotateSpeedWeight), (int)(p_Global->RotateAmount.x / RotateSpeedWeight), (int)(p_Global->RotateAmount.z / RotateSpeedWeight));
+	ScreenString::DebugPrint(*p_Global, "描画クラス：%s", TmpGlobal.DrawClass.c_str() + 6);		//「+6」は不要な「class 」の部分を読み飛ばして表示するためのもの
+	ScreenString::DebugPrint(*p_Global, "位置 X：%.0f, Y：%.0f, Z：%.0f"\
+							 ,p_Global->TranslateAmount.x, p_Global->TranslateAmount.y, p_Global->TranslateAmount.z);
+	ScreenString::DebugPrint(*p_Global, "回転 X：%.0f, Y：%.0f, Z：%.0f"\
+							 ,p_Global->RotateAmount.y / RotateSpeedWeight, p_Global->RotateAmount.x / RotateSpeedWeight, p_Global->RotateAmount.z / RotateSpeedWeight);
 
 	///////////////////////////////////
 	// オブジェクト移動関係の処理
@@ -233,7 +223,7 @@ void SetVarietyOfInformation(const WindowManager &p_WindowManager, GlobalData *p
 	if (GLFW_PRESS == MouseButton.Left.StateChange)
 	{
 		//デバッグ表示する
-		ScreenString::DebugPrint(*p_Global, "左クリック：%d, %d", (int)MouseButton.Position.x, (int)MouseButton.Position.y);
+		ScreenString::DebugPrint(*p_Global, "左クリック：%d, %d", MouseButton.Position.x, MouseButton.Position.y);
 		p_Global->TranslateAmount.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
 		p_Global->TranslateAmount.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
 	}
@@ -293,7 +283,7 @@ void SetVarietyOfInformation(const WindowManager &p_WindowManager, GlobalData *p
 	//本来であれば360度回転したら変数を初期化した方が良いが、サンプルなので割愛
 	if (GLFW_PRESS == MouseButton.Right.StateChange)
 	{
-		ScreenString::DebugPrint(*p_Global, "右クリック：%d, %d", (int)MouseButton.Position.x, (int)MouseButton.Position.y);
+		ScreenString::DebugPrint(*p_Global, "右クリック：%d, %d", MouseButton.Position.x, MouseButton.Position.y);
 		p_Global->RotateAmount.x += MouseButton.Position.x - TmpGlobal.OldPosition.x;
 		p_Global->RotateAmount.y += MouseButton.Position.y - TmpGlobal.OldPosition.y;
 		//360度を超えたら0度に戻す（360度と0度は同じなので）
@@ -338,7 +328,7 @@ void SetVarietyOfInformation(const WindowManager &p_WindowManager, GlobalData *p
 	mat4 ProjectionMat;
 
 	//アスペクト比（幅 ÷ 高さ）を算出
-	GLfloat Aspect = (GLfloat)WindowSize.x / WindowSize.y;
+	GLfloat Aspect = static_cast<GLfloat>(WindowSize.x) / WindowSize.y;
 
 	//カメラの映る位置に移動させる
 	ModelViewMat *= translate(vec3(0.0f, 0.0f, -40.0f));

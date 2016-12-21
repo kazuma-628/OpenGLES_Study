@@ -13,9 +13,9 @@ typedef struct
 {
 	bool StateChange;		//マウスがクリックされていると「true」、されていないと「false」（クリック状態でチェンジする）							
 	bool StateKeep;			//マウスをクリックするたびに「true」と「false」が交互に切り替わる（クリック状態をキープする）
-	int PushCount;			//マウスを押した（クリックした）合計回数
+	uint16_t PushCount;		//マウスを押した（クリックした）合計回数
 							//　初期状態は[0]で、押した（クリックした）回数分、値が加算されていく
-	vec2 ClickDiffPos;		//マウスがクリックされた座標からの差分座標（クリックされていない時は [0] ）
+	ivec2 ClickDiffPos;		//マウスがクリックされた座標からの差分座標（クリックされていない時は [0] ）
 							//　例：[x:50][y:50]でクリックして、ドラッグ状態で[x:40][y:60]に移動させた場合、
 							//　　　格納される値は[x:-10][y:10]となる
 }MouseDetail;
@@ -26,8 +26,8 @@ typedef struct
 	MouseDetail Right;			//マウスの右クリックの情報
 	MouseDetail Left;			//マウスの左クリックの情報
 //	MouseDetail Middle;			//マウスの中央クリックの情報
-	vec2 Position;				//マウスのカーソル座標
-	vec2 ScrollAmount;			//スクロールの合計量、初期状態は[x:0（横[左右]スクロール）][y:0（縦[上下]スクロール）]で、
+	ivec2 Position;				//マウスのカーソル座標
+	ivec2 ScrollAmount;			//スクロールの合計量、初期状態は[x:0（横[左右]スクロール）][y:0（縦[上下]スクロール）]で、
 								//　スクロールした分だけ値が蓄積（加算/減算）されていく
 }MouseInfo;
 
@@ -178,7 +178,7 @@ private:
 	typedef struct
 	{
 		char *KeyChar;			//キーの文字列
-		int KeyDefine;			//キーの定義値
+		uint32_t KeyDefine;		//キーの定義値
 		bool *StateChange;		//「KeyInfo」の「StateChange」メンバと同等（詳細は左記メンバ参照のこと）
 		bool *StateKeep;		//「KeyInfo」の「StateKeep」メンバと同等（詳細は左記メンバ参照のこと）
 		bool *PushCount;		//「KeyInfo」の「PushCount」メンバと同等（詳細は左記メンバ参照のこと）
@@ -186,9 +186,9 @@ private:
 
 	MouseInfo m_MouseInfo = { 0 };	//マウスの情報
 	KeyInfo m_KeyInfo = { 0 };		//キー（キーボード）の情報
-	vec2 m_RightClickPos = { 0 };	//マウスが右クリックされた時のカーソル座標
-	vec2 m_LeftClickPos = { 0 };	//マウスが左クリックされた時のカーソル座標
-	vec2 m_MiddleClickPos = { 0 };	//マウスが中央クリックされた時のカーソル座標
+	ivec2 m_RightClickPos = { 0 };	//マウスが右クリックされた時のカーソル座標
+	ivec2 m_LeftClickPos = { 0 };	//マウスが左クリックされた時のカーソル座標
+	ivec2 m_MiddleClickPos = { 0 };	//マウスが中央クリックされた時のカーソル座標
 
 };
 

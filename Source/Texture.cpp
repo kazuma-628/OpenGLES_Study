@@ -65,7 +65,7 @@ void Texture::FileDataLoad(const string &p_FileName, const bool p_FullPathFlag, 
 
 	string texture_dir_file_name;				//テクスチャファイルへのパス（マルチバイト文字）	
 	wchar_t *w_texture_dir_file_name = nullptr;	//テクスチャファイルへのパス（ワイド文字）
-	int StrLength = 0;							//読み込むテクスチャファイル名の長さ（バイト数）
+	uint32_t StrLength = 0;						//読み込むテクスチャファイル名の長さ（バイト数）
 	
 	//モデルデータのテクスチャを読み込む場合とそれ以外で処理を分ける。
 	//（モデルデータのテクスチャはフルパスが入っているのでそのまま使用して、
