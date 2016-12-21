@@ -1,4 +1,4 @@
-﻿/***************************************************************************/
+/***************************************************************************/
 /*                                                                         */
 /*  tttypes.h                                                              */
 /*                                                                         */
@@ -1392,6 +1392,12 @@ FT_BEGIN_HEADER
                                                 /* for this face           */
     FT_Bool               sph_compatibility_mode;
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+    /* since 2.7 */
+    FT_ULong              ebdt_start;  /* either `CBDT', `EBDT', or `bdat' */
+    FT_ULong              ebdt_size;
+#endif
 
   } TT_FaceRec;
 

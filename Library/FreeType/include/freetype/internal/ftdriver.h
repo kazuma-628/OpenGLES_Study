@@ -1,4 +1,4 @@
-﻿/***************************************************************************/
+/***************************************************************************/
 /*                                                                         */
 /*  ftdriver.h                                                             */
 /*                                                                         */
@@ -65,15 +65,6 @@ FT_BEGIN_HEADER
                        FT_Size       size,
                        FT_UInt       glyph_index,
                        FT_Int32      load_flags );
-
-
-  typedef FT_UInt
-  (*FT_CharMap_CharIndexFunc)( FT_CharMap  charmap,
-                               FT_Long     charcode );
-
-  typedef FT_Long
-  (*FT_CharMap_CharNextFunc)( FT_CharMap  charmap,
-                              FT_Long     charcode );
 
 
   typedef FT_Error

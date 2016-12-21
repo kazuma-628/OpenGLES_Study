@@ -6,8 +6,8 @@ http://www.glfw.org/
 ・GLEW Version : 2.0.0
 http://glew.sourceforge.net/
 
-・FreeType Version : 2.6.5
-https://www.freetype.org/index.html
+・FreeType Version : 2.7
+https://www.freetype.org/
 
 ・GLM Version : 0.9.8.3
 http://glm.g-truc.net/

@@ -169,7 +169,7 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
 		gdiplus.lib
 		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2015/glfw3.lib
-		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype265MT.lib
+		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype.lib
 	)
 
 #サポートしていない「Vusual Studio(2013以前)」バージョンの場合はエラーメッセージを表示

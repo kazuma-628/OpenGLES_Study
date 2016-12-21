@@ -1,4 +1,4 @@
-﻿/***************************************************************************/
+/***************************************************************************/
 /*                                                                         */
 /*  ftoutln.h                                                              */
 /*                                                                         */
@@ -89,7 +89,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Walk over an outline's structure to decompose it into individual   */
-  /*    segments and B辿zier arcs.  This function also emits `move to'      */
+  /*    segments and Bézier arcs.  This function also emits `move to'      */
   /*    operations to indicate the start of new contours in the outline.   */
   /*                                                                       */
   /* <Input>                                                               */
@@ -114,6 +114,10 @@ FT_BEGIN_HEADER
   /*    most cases, it is best to filter this out before using the         */
   /*    outline for stroking purposes (otherwise it would result in a      */
   /*    visible dot when round caps are used).                             */
+  /*                                                                       */
+  /*    Similarly, the function returns success for an empty outline also  */
+  /*    (doing nothing, this is, not calling any emitter); if necessary,   */
+  /*    you should filter this out, too.                                   */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Decompose( FT_Outline*              outline,
@@ -213,6 +217,10 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0~means success.                             */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    An empty outline, or an outline with a single point only is also   */
+  /*    valid.                                                             */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Outline_Check( FT_Outline*  outline );
 
@@ -224,10 +232,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Return an outline's `control box'.  The control box encloses all   */
-  /*    the outline's points, including B辿zier control points.  Though it  */
+  /*    the outline's points, including Bézier control points.  Though it  */
   /*    coincides with the exact bounding box for most glyphs, it can be   */
   /*    slightly larger in some situations (like when rotating an outline  */
-  /*    that contains B辿zier outside arcs).                                */
+  /*    that contains Bézier outside arcs).                                */
   /*                                                                       */
   /*    Computing the control box is very fast, while getting the bounding */
   /*    box can take much more time as it needs to walk over all segments  */
