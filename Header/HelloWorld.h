@@ -17,6 +17,10 @@ public:
 	//デストラクタ
 	~HelloWorld();
 
+	void TestFunc0(const GlobalData &p_Global);
+	void TestFunc(const GlobalData &p_Global);
+	void TestFunc2(const GlobalData &p_Global);
+
 	/*-------------------------------------------------------------------------------
 	*	関数説明
 	*	　ハローワールド描画（OpenGLの基本的な描画）の準備をする
@@ -46,6 +50,7 @@ private:
 		ucvec3 Color;
 	};
 
+	std::thread abcdefg_;
 	shared_ptr<ShaderManager> m_MainShader = nullptr;		//メインシェーダーオブジェクト
 	GLint m_attr_pos = -1;					//頂点データ
 	GLint m_attr_color = -1;				//カラーデータ

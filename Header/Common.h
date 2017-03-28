@@ -22,6 +22,8 @@
 #include <string>
 #include <memory>
 #include <cstdint>
+#include <thread>
+
 using namespace std;	//stdライブラリの名前空間を適応
 //以下GLSL言語で使用する変数をC言語でも使用できるようにするヘッダー
 //#define GLM_FORCE_EXPLICIT_CTOR
