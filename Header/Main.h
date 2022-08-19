@@ -3,7 +3,6 @@
 
 #include "Common.h"
 #include "HelloWorld.h"
-#include "HelloModel.h"
 #include "DeviceManager.h"
 #include "WindowManager.h"
 #include "ModelManager.h"
