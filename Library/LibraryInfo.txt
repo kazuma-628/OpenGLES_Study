@@ -1,9 +1,9 @@
 各ライブラリの情報です。
 
-・GLFW Version : 3.2.1
+・GLFW Version : 3.4
 http://www.glfw.org/
 
-・GLEW Version : 2.0.0
+・GLEW Version : 2.1.0
 http://glew.sourceforge.net/
 
 ・FreeType Version : 2.7

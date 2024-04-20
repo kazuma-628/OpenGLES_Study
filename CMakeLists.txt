@@ -158,22 +158,49 @@ include_directories(
 ##############################################################
 #「ライブラリ」を指定する（バージョンごとに切り替える）
 
-#Visual Studio 2015
+#「共通ライブラリ」を指定する
+set(LINK_LIBRARIES
+	opengl32.lib
+	gdiplus.lib
+	${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
+	${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype.lib
+)
+
+#「バージョン毎のライブラリ」を指定する
 if(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
-	target_link_libraries(
-	#使用する元の「プロジェクト名」を指定する
-		Main
-
-	#「ライブラリ」を指定する
-		opengl32.lib
-		gdiplus.lib
-		${CMAKE_SOURCE_DIR}/Library/GLEW/lib/Release/Win32/glew32s.lib
+	#Visual Studio 2015
+	set(LINK_LIBRARIES
+		${LINK_LIBRARIES}
 		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2015/glfw3.lib
-		${CMAKE_SOURCE_DIR}/Library/FreeType/lib/freetype.lib
 	)
-
+elseif(${CMAKE_GENERATOR} MATCHES "Visual Studio 15")
+	#Visual Studio 2017
+	set(LINK_LIBRARIES
+		${LINK_LIBRARIES}
+		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2017/glfw3.lib
+	)
+elseif(${CMAKE_GENERATOR} MATCHES "Visual Studio 16")
+	#Visual Studio 2019
+	set(LINK_LIBRARIES
+		${LINK_LIBRARIES}
+		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2019/glfw3.lib
+	)
+elseif(${CMAKE_GENERATOR} MATCHES "Visual Studio 17")
+	#Visual Studio 2022
+	set(LINK_LIBRARIES
+		${LINK_LIBRARIES}
+		${CMAKE_SOURCE_DIR}/Library/GLFW/lib-vc2022/glfw3.lib
+	)
 #サポートしていない「Vusual Studio(2013以前)」バージョンの場合はエラーメッセージを表示
 else(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
 	message(FATAL_ERROR "Unsupported \"Visual Studio\" version \n Please use the \"Visual Studio 2015\" version or later version")
 endif(${CMAKE_GENERATOR} MATCHES "Visual Studio 14")
 
+#「ライブラリ」を指定する
+target_link_libraries(
+# 使用する元の「プロジェクト名」を指定する
+	Main
+
+#「ライブラリ」を指定する
+	${LINK_LIBRARIES}
+)
